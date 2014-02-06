@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                 report: 'min',
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
-            build: {
+            js: {
                 files: {
                     "app/resources/css/<%= pkg.name %>.css": ["app/resources/css/*.css"]
                 }
@@ -42,7 +42,7 @@ module.exports = function (grunt) {
                     "app/components/bootstrap/dist/css/bootstrap.min.css",
                     "app/components/bootstrap/dist/css/bootstrap-responsive.min.css",
                     "app/components/font-awesome/css/font-awesome.min.css",
-                    "app/resources/css/all.css"
+                    "app/resources/css/main.css"
                 ],
                 dest: "app/resources/css/<%= pkg.name %>.css"
             },
@@ -56,16 +56,36 @@ module.exports = function (grunt) {
                 ],
                 dest: "app/resources/js/<%= pkg.name %>_components.js"
             },
-            build: {
+            js: {
                 src: [
-                    "app/scripts/**/*.js"
+                    'app/scripts/**/*.js'
                 ],
-                dest: "app/resources/js/<%= pkg.name %>.js"
+                dest: 'app/resources/js/<%= pkg.name %>.js'
               }
+        },
+        jshint: {
+            options: {
+                curly: true,
+                eqeqeq: true,
+                eqnull: true,
+                browser: true,
+                globals: {
+                    jQuery: true
+                },
+            },
+            SomeWithOverrides: {
+                options: {
+                    curly: false,
+                    undef: false,
+                },
+                files: {
+                  src: ['app/scripts/**/*.js']
+                }
+            }
         },
         watch: {
             options: {
-                nospawn: true
+                nospawn: false
             },
             less: {
                 files: ['app/styles/*.less'],
@@ -81,6 +101,14 @@ module.exports = function (grunt) {
                     'app/scripts/{,*/}*.js',
                     'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
+            },
+            css: {
+                files: ['app/resources/css/*.css'],
+                tasks: ['concat:css']
+            },
+            js: {
+                files: ['app/scripts/**/*.js'],
+                tasks: ['jshint', 'concat:js']
             }
         },
         connect: {
@@ -120,13 +148,29 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     grunt.registerTask('server', function (target) {
 
         grunt.task.run([
+            'jshint',
             'concat:css',
             'concat:components',
-            'concat:build',
+            'concat:js',
+            'less:server',
+            'connect:livereload',
+            'open',
+            'watch'
+        ]);
+    });
+
+    grunt.registerTask('default', function (target) {
+
+        grunt.task.run([
+            'jshint',
+            'concat:css',
+            'concat:components',
+            'concat:js',
             'less:server',
             'connect:livereload',
             'open',
