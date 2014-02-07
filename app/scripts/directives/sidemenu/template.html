@@ -1,0 +1,70 @@
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-menu nav-collapse">
+        <div class="divide-20"></div>
+        <!-- SEARCH BAR -->
+        <div id="search-bar">
+            <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+        </div>
+        <!-- /SEARCH BAR -->
+        
+        <!-- SIDEBAR MENU -->
+        <ul>
+            <li class="active">
+                <a href="#">
+                <i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
+                </a>                    
+            </li>
+            <li class="has-sub">
+                <a href="javascript:;" class="">
+                <i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text">Clouds</span>
+                <span class="arrow"></span>
+                </a>
+                <ul class="sub">
+                    <li><a class="" href="#"><span class="sub-menu-text">Cloud Accounts</span></a></li>
+                    <?php if (isset($_SESSION['cloudaccountsbyname']['AWS']) and !empty($_SESSION['cloudaccountsbyname']['AWS'])) { ?>
+                    <li class="has-sub-sub">
+                        <a class="" href="javascript:;">
+                            <span class="sub-menu-text">Amazon Web Services</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-sub">
+                            <?php foreach($_SESSION['cloudaccountsbyname']['AWS'] as $cloudaccount) { ?>
+                            <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['cloudaccountsbyname']['EWS']) and !empty($_SESSION['cloudaccountsbyname']['EWS'])) { ?>
+                    <li class="has-sub-sub">
+                        <a class="" href="javascript:;">
+                            <span class="sub-menu-text">Eucalyptus</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-sub">
+                            <?php foreach($_SESSION['cloudaccountsbyname']['EWS'] as $cloudaccount) { ?>
+                            <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    <?php } ?>
+                    <?php if (isset($_SESSION['cloudaccountsbyname']['OWS']) and !empty($_SESSION['cloudaccountsbyname']['OWS'])) { ?>
+                    <li class="has-sub-sub">
+                        <a class="" href="javascript:;">
+                            <span class="sub-menu-text">OWS</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul class="sub-sub">
+                            <?php foreach($_SESSION['cloudaccountsbyname']['OWS'] as $cloudaccount) { ?>
+                            <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                            <?php } ?>
+                        </ul>
+                    </li>
+                    <?php } ?>
+                </ul>
+            </li>
+        </ul>
+        <!-- /SIDEBAR MENU -->
+    </div>
+</div>
+<!-- /SIDEBAR -->

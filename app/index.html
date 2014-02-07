@@ -1,8 +1,15 @@
 <!doctype html>
-<html ng-app="myApp">
+<html ng-app="ews">
     <head>
-        <meta charset="UTF-8">
-        <title>Test Document</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title>EWS-Network | Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
+        <!-- FONTS -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
         <!-- EWS CSS -->
         <link rel="stylesheet" href="resources/css/ews.css">
         <!-- Components js resources -->
@@ -11,8 +18,117 @@
         <script src="http://localhost:35729/livereload.js"></script>
     </head>
     <body>
-        <h1>Hello {{ name }} !</h1>
-        <button type="button" class="btn btn-primary">EWS</button>
+        <!-- HEADER -->
+        <header class="navbar clearfix" id="header">
+            <div class="container">
+                    <div class="navbar-brand">
+                        <!-- COMPANY LOGO -->
+                        <img src="resources/images/logo/logo.png" alt="Cloud Admin Logo" class="img-responsive" height="30" width="120">
+                        <!-- /COMPANY LOGO -->
+                        <!-- SIDEBAR COLLAPSE -->
+                        <div id="sidebar-collapse" class="sidebar-collapse btn">
+                            <i class="fa fa-bars" 
+                                data-icon1="fa fa-bars" 
+                                data-icon2="fa fa-bars" ></i>
+                        </div>
+                        <!-- /SIDEBAR COLLAPSE -->
+                    </div>
+                    <!-- BEGIN TOP NAVIGATION MENU -->                  
+                    <ul class="nav navbar-nav pull-right">
+                        <!-- BEGIN USER LOGIN DROPDOWN -->
+                        <li class="dropdown user" id="header-user">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="username">David PRAK</span>
+                                <i class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li></i> My Profile</li>
+                                <li><i class="fa fa-cog"></i> Account Settings</li>
+                                <li><i class="fa fa-eye"></i> Privacy Settings</li>
+                                <li><i class="fa fa-power-off"></i> Log Out</li>
+                            </ul>
+                        </li>
+                        <!-- END USER LOGIN DROPDOWN -->
+                    </ul>
+                    <!-- END TOP NAVIGATION MENU -->
+            </div>
+        </header>
+        <!--/HEADER -->
+        <section id="page">
+            <!-- SIDEBAR -->
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar-menu nav-collapse">
+                    <div class="divide-20"></div>
+                    <!-- SEARCH BAR -->
+                    <div id="search-bar">
+                        <input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+                    </div>
+                    <!-- /SEARCH BAR -->
+                    
+                    <!-- SIDEBAR MENU -->
+                    <ul>
+                        <li class="active">
+                            <a href="#">
+                            <i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
+                            </a>                    
+                        </li>
+                        <li class="has-sub">
+                            <a href="javascript:;" class="">
+                            <i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text">Clouds</span>
+                            <span class="arrow"></span>
+                            </a>
+                            <ul class="sub">
+                                <li><a class="" href="#"><span class="sub-menu-text">Cloud Accounts</span></a></li>
+                                <?php if (isset($_SESSION['cloudaccountsbyname']['AWS']) and !empty($_SESSION['cloudaccountsbyname']['AWS'])) { ?>
+                                <li class="has-sub-sub">
+                                    <a class="" href="javascript:;">
+                                        <span class="sub-menu-text">Amazon Web Services</span>
+                                        <span class="arrow"></span>
+                                    </a>
+                                    <ul class="sub-sub">
+                                        <?php foreach($_SESSION['cloudaccountsbyname']['AWS'] as $cloudaccount) { ?>
+                                        <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+                                <?php if (isset($_SESSION['cloudaccountsbyname']['EWS']) and !empty($_SESSION['cloudaccountsbyname']['EWS'])) { ?>
+                                <li class="has-sub-sub">
+                                    <a class="" href="javascript:;">
+                                        <span class="sub-menu-text">Eucalyptus</span>
+                                        <span class="arrow"></span>
+                                    </a>
+                                    <ul class="sub-sub">
+                                        <?php foreach($_SESSION['cloudaccountsbyname']['EWS'] as $cloudaccount) { ?>
+                                        <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+                                <?php if (isset($_SESSION['cloudaccountsbyname']['OWS']) and !empty($_SESSION['cloudaccountsbyname']['OWS'])) { ?>
+                                <li class="has-sub-sub">
+                                    <a class="" href="javascript:;">
+                                        <span class="sub-menu-text">OWS</span>
+                                        <span class="arrow"></span>
+                                    </a>
+                                    <ul class="sub-sub">
+                                        <?php foreach($_SESSION['cloudaccountsbyname']['OWS'] as $cloudaccount) { ?>
+                                        <li><a class="" href="<?php echo WEBROOT . 'clouds/instance/' . $cloudaccount['cloudaccountid']; ?>"><span class="sub-sub-menu-text"><?php echo $cloudaccount['cloudaccountname']; ?></span></a></li>
+                                        <?php } ?>
+                                    </ul>
+                                </li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    </ul>
+                    <!-- /SIDEBAR MENU -->
+                </div>
+            </div>
+            <!-- /SIDEBAR -->
+            <div id="main-content">
+                <div ng-view></div>
+            </div>
+        </section><!--/PAGE -->
         <!-- EWS JS -->
         <script src="resources/js/ews.js"></script>
     </body>
