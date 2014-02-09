@@ -16,8 +16,8 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'app/resources/js/<%= pkg.name %>.js',
-                dest: 'app/resources/js/<%= pkg.name %>.js'
+                src: 'manager/resources/js/<%= pkg.name %>.js',
+                dest: 'manager/resources/js/<%= pkg.name %>.js'
             }
         },
         cssmin: {
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
             },
             js: {
                 files: {
-                    "app/resources/css/<%= pkg.name %>.css": ["app/resources/css/*.css"]
+                    "manager/resources/css/<%= pkg.name %>.css": ["manager/resources/css/*.css"]
                 }
             }
         },
@@ -39,69 +39,72 @@ module.exports = function (grunt) {
             },
             css: {
                 src: [
-                    "app/components/bootstrap/dist/css/bootstrap.min.css",
-                    "app/components/bootstrap/dist/css/bootstrap-responsive.min.css",
-                    "app/components/font-awesome/css/font-awesome.min.css",
-                    "app/components/cloud-admin/cloud-admin.min.css",
-                    "app/components/cloud-admin/themes/default.css",
-                    "app/components/cloud-admin/themes/responsive.min.css",
-                    "app/components/cloud-admin/animatecss/animate.min.css",
-                    "app/components/jquery-todo/css/styles.css",
-                    "app/components/fullcalendar/fullcalendar.css",
-                    "app/components/jquery.gritter/js/jquery.gritter.css",
-                    "app/components/bootstrap-daterangepicker/daterangepicker-bs3.css",
-                    "app/resources/css/main.css"
+                    "manager/components/bootstrap/dist/css/bootstrap.min.css",
+                    "manager/components/bootstrap/dist/css/bootstrap-responsive.min.css",
+                    "manager/components/font-awesome/css/font-awesome.min.css",
+                    "manager/components/cloud-admin/cloud-admin.min.css",
+                    "manager/components/cloud-admin/themes/default.css",
+                    "manager/components/cloud-admin/themes/responsive.min.css",
+                    "manager/components/cloud-admin/animatecss/animate.min.css",
+                    "manager/components/jquery-todo/css/styles.css",
+                    "manager/components/fullcalendar/fullcalendar.css",
+                    "manager/components/jquery.gritter/js/jquery.gritter.css",
+                    "manager/components/bootstrap-daterangepicker/daterangepicker-bs3.css",
+                    "manager/resources/css/main.css"
                 ],
-                dest: "app/resources/css/<%= pkg.name %>.css"
+                dest: "manager/resources/css/<%= pkg.name %>.css"
             },
             components: {
                 src: [
-                    "app/components/jquery/jquery.min.js",
-                    "app/components/jquery-ui/ui/minified/jquery-ui.min.js",
-                    "app/components/bootstrap/dist/js/bootstrap.min.js",
-                    "app/components/angular/angular.min.js",
-                    "app/components/angular-jquery/dist/angular-jquery.min.js",
-                    "app/components/jquery-todo/js/paddystodolist.js",
-                    "app/components/fullcalendar/fullcalendar.min.js",
-                    "app/components/jquery.gritter/css/jquery.gritter.min.css",
-                    "app/components/angular-route/angular-route.js"
+                    "manager/components/jquery/jquery.min.js",
+                    "manager/components/jquery-ui/ui/minified/jquery-ui.min.js",
+                    "manager/components/bootstrap/dist/js/bootstrap.min.js",
+                    "manager/components/angular/angular.min.js",
+                    "manager/components/angular-jquery/dist/angular-jquery.min.js",
+                    "manager/components/jquery-todo/js/paddystodolist.js",
+                    "manager/components/fullcalendar/fullcalendar.min.js",
+                    "manager/components/jquery.gritter/css/jquery.gritter.min.css",
+                    "manager/components/angular-route/angular-route.min.js",
+                    "manager/components/angular-cookies/angular-cookies.min.js",
+                    "manager/components/angular-resource/angular-resource.min.js",
+                    "manager/components/angular-sanitize/angular-sanitize.min.js"
                 ],
-                dest: "app/resources/js/<%= pkg.name %>_components.js"
+                dest: "manager/resources/js/<%= pkg.name %>_components.js"
             },
             js: {
                 src: [
-                    'app/scripts/**/*.js'
+                    'manager/scripts/**/*.js'
                 ],
-                dest: 'app/resources/js/<%= pkg.name %>.js'
+                dest: 'manager/resources/js/<%= pkg.name %>.js'
               }
         },
         copy: {
             others: {
                 files: [
                 {
-                    src: ['app/components/font-awesome/fonts/*'],
-                    dest: 'app/resources/fonts/',
+                    src: ['manager/components/font-awesome/fonts/*'],
+                    dest: 'manager/resources/fonts/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/bootstrap/fonts/*'],
-                    dest: 'app/resources/fonts/',
+                    src: ['manager/components/bootstrap/fonts/*'],
+                    dest: 'manager/resources/fonts/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/jquery.gritter/images/*'],
-                    dest: 'app/resources/images/',
+                    src: ['manager/components/jquery.gritter/images/*'],
+                    dest: 'manager/resources/images/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/angular/angular.min.js.map'],
-                    dest: 'app/resources/js/',
+                    src: ['manager/components/angular/angular.min.js.map'],
+                    dest: 'manager/resources/js/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
@@ -125,7 +128,7 @@ module.exports = function (grunt) {
                     undef: false,
                 },
                 files: {
-                  src: ['app/scripts/**/*.js']
+                  src: ['manager/scripts/**/*.js']
                 }
             }
         },
@@ -134,7 +137,7 @@ module.exports = function (grunt) {
                 nospawn: false
             },
             less: {
-                files: ['app/styles/*.less'],
+                files: ['manager/styles/*.less'],
                 tasks: ['less:server']
             },
             livereload: {
@@ -142,18 +145,18 @@ module.exports = function (grunt) {
                     livereload: LIVERELOAD_PORT
                 },
                 files: [
-                    'app/*.html',
-                    'app/styles/{,*/}*.css',
-                    'app/scripts/{,*/}*.js',
-                    'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    'manager/*.html',
+                    'manager/styles/{,*/}*.css',
+                    'manager/scripts/{,*/}*.js',
+                    'manager/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
             },
             css: {
-                files: ['app/resources/css/*.css'],
+                files: ['manager/resources/css/*.css'],
                 tasks: ['concat:css']
             },
             js: {
-                files: ['app/scripts/**/*.js'],
+                files: ['manager/scripts/**/*.js'],
                 tasks: ['jshint', 'concat:js']
             }
         },
@@ -167,7 +170,7 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
-                            mountFolder(connect, 'app'),
+                            mountFolder(connect, 'manager'),
                             lrSnippet
                         ];
                     }
@@ -182,10 +185,10 @@ module.exports = function (grunt) {
         less: {
             server: {
                 options: {
-                    paths: ['app/components/bootstrap/less', 'app/styles']
+                    paths: ['manager/components/bootstrap/less', 'manager/styles']
                 },
                 files: {
-                    'app/resources/css/main.css': 'app/resources/css/main.less'
+                    'manager/resources/css/main.css': 'manager/resources/css/main.less'
                 }
             }
         }
