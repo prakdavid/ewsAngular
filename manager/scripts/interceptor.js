@@ -10,7 +10,7 @@ app.factory('IntercepteurHTTP', function ($q, $location) {
             // fonction qui sera executé si Angular reçoit une erreur http
             console.log(response.status, ">>> status");
             if (response.status === "401") { // on teste si c'est une erreur 401'
-               $location.path('/login'); // l'utilisateur sera redirigé vers la partie login
+               $location.path('/'); // l'utilisateur sera redirigé vers la partie login
             }
             return $q.reject(response);
         }

@@ -146,6 +146,9 @@ module.exports = function (grunt) {
                 },
                 files: [
                     'manager/*.html',
+                    "manager/partials/**/*.html",
+                    "manager/scripts/directives/**/*.html",
+                    "manager/api/**/*.php",
                     'manager/styles/{,*/}*.css',
                     'manager/scripts/{,*/}*.js',
                     'manager/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'

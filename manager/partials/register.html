@@ -1,0 +1,56 @@
+<!-- REGISTER -->
+<section >
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="login-box-plain">
+					<h2 class="bigintro">Register</h2>
+					<div class="divide-40"></div>
+					<form ng-submit="register()">
+					  <div class="form-group">
+						<label for="Name">First Name</label>
+						<i class="fa fa-font"></i>
+						<input type="text" placeholder="Username" ng-model="user_name" required/>
+					  </div>
+					  <div class="form-group">
+						<label for="Last Name">Last Name</label>
+						<i class="fa fa-user"></i>
+						<input type="text" placeholder="Username" ng-model="user_lastname" required/>
+					  </div>
+					  <div class="form-group">
+						<label for="Email">Email address</label>
+						<i class="fa fa-envelope"></i>
+						<input type="text" placeholder="Username" ng-model="user_mail" required/>
+					  </div>
+						<div class="form-group">
+						<label for="Repeat Email">Repeat email address</label>
+						<i class="fa fa-envelope"></i>
+						<input type="text" placeholder="Username" ng-model="confirm_usermail" required/>
+					  </div>
+					  <div class="form-group"> 
+						<label for="Password">Password</label>
+						<i class="fa fa-lock"></i>
+						<input type="text" placeholder="Username" ng-model="user_password" required/>
+					  </div>
+					  <div class="form-group"> 
+						<label for="Repeat Password">Repeat Password</label>
+						<i class="fa fa-lock"></i>
+						<input type="text" placeholder="Username" ng-model="confirm_password" required/>
+					  <div class="form-group">
+						<label for="Account Type">Account Type</label>
+						<input type="text" placeholder="Username" ng-model="account_type" required/>
+					  </div>
+					  <div class="form-actions">
+						<label class="checkbox"> <input type="checkbox" class="uniform" name="acceptCGV" value="true"> I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+						<button type="submit" class="btn btn-success">Sign Up</button>
+					  </div>
+					</form>
+					<div class="login-helpers">
+						<a href="#" onclick="swapScreen('login');return false;"> Back to Login</a> <br>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--/REGISTER -->

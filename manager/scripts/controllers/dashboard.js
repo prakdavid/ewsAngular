@@ -12,17 +12,17 @@ app.controller('DashboardController', function($scope, $http) {
         'data':    {'id':42, 'name':'David'}
     };
 
-    $http({
-        url: 'api/dispatcher.php',
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        data: $scope.data
-    }).success(function(data, status, headers, config)
-    {
-        console.log(status + ' - ' + data);
-    })
-    .error(function(data, status, headers, config)
-    {
-        console.log('error');
-    });
+    // $http({
+    //     url: 'api/modules/dispatcher.php',
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     data: $scope.data
+    // }).success(function(data, status, headers, config)
+    // {
+    //     console.log(status + ' - ' + data);
+    // })
+    // .error(function(data, status, headers, config)
+    // {
+    //     console.log('error');
+    // });
 });

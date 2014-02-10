@@ -1,11 +1,12 @@
 <?php
 
-// include all files
-foreach (glob("*.php") as $filename)
+// include all php files
+foreach (glob("../**/*.php") as $filename)
 {
     require_once $filename;
 }
 
+// fetch data received from POST
 $received = json_decode(file_get_contents("php://input"));
 
 // Pointeurs des fonctions des class

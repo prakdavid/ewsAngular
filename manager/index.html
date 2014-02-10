@@ -19,7 +19,7 @@
     </head>
     <body>
         <!-- HEADER -->
-        <header class="navbar clearfix" id="header">
+        <header class="navbar clearfix" id="header" ng-show="{{isUserLooged }}">
             <div class="container">
                     <div class="navbar-brand">
                         <!-- COMPANY LOGO -->
@@ -42,10 +42,10 @@
                                 <i class="fa fa-angle-down"></i>
                             </a>
                             <ul class="dropdown-menu">
-                                <li></i> My Profile</li>
-                                <li><i class="fa fa-cog"></i> Account Settings</li>
-                                <li><i class="fa fa-eye"></i> Privacy Settings</li>
-                                <li><i class="fa fa-power-off"></i> Log Out</li>
+                                <li><a ng-href=""></i> My Profile</a></li>
+                                <li><a ng-href=""><i class="fa fa-cog"></i> Account Settings</a></li>
+                                <li><a ng-href=""><i class="fa fa-eye"></i> Privacy Settings</a></li>
+                                <li><a ng-href="" ng-click="logout()"><i class="fa fa-power-off"></i> Log Out</a></li>
                             </ul>
                         </li>
                         <!-- END USER LOGIN DROPDOWN -->
@@ -56,7 +56,7 @@
         <!--/HEADER -->
         <section id="page">
             <!-- SIDEBAR -->
-            <div id="sidebar" class="sidebar">
+            <div id="sidebar" class="sidebar" ng-show="{{isUserLooged }}">
                 <div class="sidebar-menu nav-collapse">
                     <div class="divide-20"></div>
                     <!-- SEARCH BAR -->

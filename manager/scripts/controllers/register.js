@@ -1,13 +1,15 @@
 var app = angular.module('ews');
 
-app.controller('LoginController', function($scope, $rootScope, $http, $location) {
+app.controller('RegisterController', function($scope, $rootScope, $http, $location) {
+
     // pour instant le password est en clair, je me hacherai plus tard
-    $scope.login = function(){
+    $scope.register = function(){
+        console.log("RegisterController");
+        
         $scope.data = {
             'class':   'Account',
-            'function':'login',
-            // 'data':    {'user_mail':'raphael.merrot@gmail.com', 'user_password':'cerise'}
-            'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+            'function':'register',
+            'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password}
         };
 
         $http({
@@ -22,7 +24,7 @@ app.controller('LoginController', function($scope, $rootScope, $http, $location)
         })
         .error(function(data, status, headers, config)
         {
-            // SessionService.setUserAuthenticated(false);
+            console.log(data, status, headers, config);
         });
     };
 });
