@@ -25,23 +25,21 @@
                         <div class="box-body big">
                             <form class="form-horizontal">
                                 <div class="form-group">
-                                    <label class="col-sm-4 control-label">Account Name {{toto.accountname}}</label>
+                                    <label class="col-sm-4 control-label">Account Name</label>
                                     <div class="col-sm-8">
-                                        <input type="text" class="form-control" placeholder="New account name" value="{{toto.accountname}}" ng-model="toto.accountname">
+                                        <input type="text" class="form-control" placeholder="New account name" ng-model="user.accountname">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Account Mail</label>
                                     <div class="col-sm-8">
-                                        <input type="email" class="form-control" placeholder="New account mail" value="{{toto.accountmail}}" ng-model="toto.accountmail">
+                                        <input type="email" class="form-control" placeholder="New account mail" ng-model="user.accountmail">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-4 control-label">Account Type</label>
                                     <div class="col-sm-8">
-                                        <select class="form-control" name="account_type" id="account_type">
-                                            <option ng-repeat="type in toto.account_type">{{type}}</option>
-                                        </select>
+                                        <select class="form-control" ng-model="user.account_type" ng-options="a for a in accountType"></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -54,6 +52,7 @@
                                         <button data-toggle="modal" data-target="#deleteModal" class="btn btn-danger">Delete your Account</button>
                                     </div>
                                 </div>
+                                {{user | json}}
                             </form>
                         </div>
                     </div>
@@ -93,7 +92,7 @@
                 </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
-            <div class="row" ng-if="toto">
+            <div class="row" ng-if="userList">
                 <div class="col-md-12">
                     <!-- BOX -->
                     <div class="box border primary">
@@ -112,8 +111,12 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="gradeX">
-
+                                    <tr class="gradeX" ng-repeat="user in userList">
+                                        <td>{{user.userlastname}}</td>
+                                        <td>{{user.username}}</td>
+                                        <td>{{user.usermail}}</td>
+                                        <td>{{user.userrole}}</td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -130,3 +133,13 @@
         </div><!-- /CONTENT-->
     </div>
 </div>
+<script type="text/javascript" src="/components/datatables/media/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/components/datatables/media/assets/js/datatables.min.js"></script>
+<script type="text/javascript" src="/components/datatables/extras/TableTools/media/js/TableTools.min.js"></script>
+<script type="text/javascript" src="/components/datatables/extras/TableTools/media/js/ZeroClipboard.min.js"></script>
+<script>
+    jQuery(document).ready(function() {     
+        App.setPage("dynamic_table");  //Set current page
+        App.init(); //Initialise plugins and elements
+    });
+</script>

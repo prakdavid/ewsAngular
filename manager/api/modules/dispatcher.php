@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 // include all php files
 foreach (glob("../**/*.php") as $filename)
 {

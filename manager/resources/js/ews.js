@@ -5,7 +5,7 @@ app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
         $routeProvider.
             // Faudrait mettre le cas ou on est pas loggé
-            when('/', {
+            when('/dashboard', {
                 templateUrl:        '../partials/dashboard.html',
                 controller:         'DashboardController',
                 requireLogin:       true
@@ -26,79 +26,48 @@ app.config(['$httpProvider','$routeProvider',
                 requireLogin:       false
             }).
             otherwise({
-                redirectTo:         '/'
+                redirectTo:         '/dashboard'
             });
     }]
 );
 
-app.run(function($rootScope, $location, $cookies, $http) {
-    $rootScope.isUserLooged = ($cookies.session !== undefined) ? true : false;
-    // $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
-    // console.log($cookies.session);
-
-    // On surveille la route
-    $rootScope.$on("$routeChangeStart", function(event, next, current) {
-
-        // Si dans route la variable requireLogin est true, alors on check l'authentication
-        if (next.requireLogin) {
-            // Auth/session check here
-            if ($cookies.session === undefined) {
-                $location.path('/login');
-                event.preventDefault();
-            }
-        }
-    });
-
-    $rootScope.logout = function () {
-        $http({
-            url: 'api/modules/dispatcher.php',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            data: { 'class':   'Account','function':'logout'}
-        }).success(function(data, status, headers, config) {
-            $location.path('/login');
-        }).error(function(data, status, headers, config) {
-        });
-    };
-});
 var app = angular.module('ews');
 
 app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
-    $scope.session = $localStorage.session;
-    $scope.toto = {
-        accountname: "raphaelmerrot",
-        accountmail: "raphael.merrot@gmail.com",
-        account_type: ['enterprise', 'student']
-    };
-    // pour instant le password est en clair, je me hacherai plus tard
-    $scope.edit = function(){
-        $scope.data = {
-            'class':   'Account',
-            'function':'edit',
-            // 'data':    {'user_mail':'raphael.merrot@gmail.com', 'user_password':'cerise'}
-            'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
-        };
-        console.log("edit");
+	$scope.currentUser = $localStorage.session;
+	console.log($scope.currentUser);
 
-        // $http({
-        //     url: 'api/modules/dispatcher.php',
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     data: $scope.data
-        // }).success(function(data, status, headers, config)
-        // {
-        //     SessionService.setSession(data.session);
-        //     $location.path('/');
-        // })
-        // .error(function(data, status, headers, config)
-        // {
-        //     // SessionService.setUserAuthenticated(false);
-        // });
-    };
-    $scope.delete = function(){
+	$http({
+		url: 'api/modules/dispatcher.php',
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		data: { 'class':   'Account','function':'getUserList'}
+	}).success(function(data, status, headers, config) {
+		$scope.userList = data.users;
+	}) .error(function(data, status, headers, config) {
+		// SessionService.setUserAuthenticated(false);
+	});
 
-        console.log("delete");
-    };
+	$scope.accountType = ['student','enterprise'];
+	$scope.user = {
+		accountname: $scope.currentUser.accountname,
+		accountmail: $scope.currentUser.accountmail,
+		account_type: $scope.accountType[$scope.currentUser.userrole]
+	};
+
+	// pour instant le password est en clair, je me hacherai plus tard
+	$scope.edit = function(){
+		$scope.data = {
+			'class':   'Account',
+			'function':'edit',
+			'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+		};
+		console.log("edit");
+
+	};
+	$scope.delete = function(){
+		console.log("delete");
+	};
 });
 var app = angular.module('ews');
 
@@ -130,7 +99,7 @@ app.controller('DashboardController', function($scope, $http) {
 });
 var app = angular.module('ews');
 
-app.controller('LoginController', function($scope, $http, $location, $localStorage) {
+app.controller('LoginController', function($scope, $http, $location, $route, $localStorage, $cookies) {
     // pour instant le password est en clair, je me hacherai plus tard
     $scope.login = function(){
         $scope.data = {
@@ -148,13 +117,61 @@ app.controller('LoginController', function($scope, $http, $location, $localStora
         }).success(function(data, status, headers, config)
         {
             $localStorage.session = data.session;
-            $location.path('/');
+            $location.path('/dashboard');
+            window.location.reload();
         })
         .error(function(data, status, headers, config)
         {
             // SessionService.setUserAuthenticated(false);
         });
     };
+});
+var app = angular.module('ews');
+
+app.controller('MainCtrl', function($scope, $rootScope, $location, $route, $cookies, $http, $localStorage) {
+	$scope.isUserLooged = ($cookies.session !== undefined) ? true : false;
+	// $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
+	// console.log($cookies.session);
+	// delete $cookies.session;
+
+	// On surveille la route
+	$scope.$on("$routeChangeStart", function(event, next, current) {
+		// Si dans route la variable requireLogin est true, alors on check l'authentication
+		if (next.requireLogin) {
+			// Auth/session check here
+			if ($cookies.session === undefined) {
+				$location.path('/login');
+				event.preventDefault();
+			}
+		}
+	});
+
+	$scope.getStateVm = function() {
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Clouds','function':'cloudaccount'}
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+		}).error(function(data, status, headers, config) {
+		});
+	};
+	// $scope.getStateVm();
+
+	$scope.logout = function () {
+		console.log("log out");
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Account','function':'logout'}
+		}).success(function(data, status, headers, config) {
+			$location.path('/login');
+			window.location.reload();
+		}).error(function(data, status, headers, config) {
+		});
+	};
 });
 var app = angular.module('ews');
 

@@ -1,39 +1,38 @@
 var app = angular.module('ews');
 
 app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
-    $scope.session = $localStorage.session;
-    $scope.toto = {
-        accountname: "raphaelmerrot",
-        accountmail: "raphael.merrot@gmail.com",
-        account_type: ['enterprise', 'student']
-    };
-    // pour instant le password est en clair, je me hacherai plus tard
-    $scope.edit = function(){
-        $scope.data = {
-            'class':   'Account',
-            'function':'edit',
-            // 'data':    {'user_mail':'raphael.merrot@gmail.com', 'user_password':'cerise'}
-            'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
-        };
-        console.log("edit");
+	$scope.currentUser = $localStorage.session;
+	console.log($scope.currentUser);
 
-        // $http({
-        //     url: 'api/modules/dispatcher.php',
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     data: $scope.data
-        // }).success(function(data, status, headers, config)
-        // {
-        //     SessionService.setSession(data.session);
-        //     $location.path('/');
-        // })
-        // .error(function(data, status, headers, config)
-        // {
-        //     // SessionService.setUserAuthenticated(false);
-        // });
-    };
-    $scope.delete = function(){
+	$http({
+		url: 'api/modules/dispatcher.php',
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		data: { 'class':   'Account','function':'getUserList'}
+	}).success(function(data, status, headers, config) {
+		$scope.userList = data.users;
+	}) .error(function(data, status, headers, config) {
+		// SessionService.setUserAuthenticated(false);
+	});
 
-        console.log("delete");
-    };
+	$scope.accountType = ['student','enterprise'];
+	$scope.user = {
+		accountname: $scope.currentUser.accountname,
+		accountmail: $scope.currentUser.accountmail,
+		account_type: $scope.accountType[$scope.currentUser.userrole]
+	};
+
+	// pour instant le password est en clair, je me hacherai plus tard
+	$scope.edit = function(){
+		$scope.data = {
+			'class':   'Account',
+			'function':'edit',
+			'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+		};
+		console.log("edit");
+
+	};
+	$scope.delete = function(){
+		console.log("delete");
+	};
 });

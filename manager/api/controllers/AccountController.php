@@ -6,13 +6,8 @@ class Account
 {
 
 	public function test() {
-		setcookie(COOKIE_NAME, undefined);
-	}
-
-	public function getTest() {
-		$curl = new Curl(URL_API . "doc");
-		$response = $curl->get();
-		echo "ok";
+		echo "ici test()";
+		var_dump($_SESSION);
 	}
 
 	public function login($data)
@@ -39,10 +34,18 @@ class Account
 	// Log out the user
 	public function logout()
 	{
+		echo "log out in php";
 		$curl = new Curl(URL_API . 'logout');
 		$response = $curl->post();
-		$this->response($response, 'dashboard');
+		var_dump($response);
 		Session::delete();
+	}
+
+	public function getUserList()
+	{	
+		$curl = new Curl(URL_API . 'account/' . $_SESSION['session']['accountid'] . '/users/list');
+		$response = $curl->get();
+		echo $response;
 	}
 
 	// public function register($data)

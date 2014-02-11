@@ -33,10 +33,10 @@ class Session
 
 	public static function delete()
 	{
-		Cache::deleteAllBySession();
+        var_dump($_SESSION);
 		session_destroy();
 		unset($_SESSION);
-        setcookie(COOKIE_NAME, NULL, -1);
+        setcookie(COOKIE_NAME, NULL, -1, '/');
 	}
     
 	
