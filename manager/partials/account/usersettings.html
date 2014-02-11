@@ -1,0 +1,78 @@
+<!-- PAGE -->
+	<section id="page">
+		<div id="main-content">
+			<div class="container">
+				<div class="row">
+					<div id="content" class="col-lg-12">
+						<!-- PAGE HEADER-->
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="page-header">
+									<breadcrumbs title="Account Settings"></breadcrumbs>
+									<div class="clearfix">
+										<h3 class="content-title pull-left">User Settings</h3>
+									</div>
+									<div class="description">User's settings & information</div>
+								</div>
+							</div>
+						</div>
+						<!-- /PAGE HEADER -->
+						<!-- CONTENT -->
+						<div class="row">
+							<?php require_once(ROOT . 'views/templates/response.php'); ?>
+							<?php if ((isset($user_form) and !empty($user_form)) and (isset($user_info) and !empty($user_info))) { ?>
+							<div class="col-md-6">
+								<?php echo "<pre>"; var_dump($user_info); echo "</pre>"; ?>
+								<div class="box border primary">
+									<div class="box-title">
+										<h4><i class="fa fa-bars"></i>Edit your Profil</h4>
+									</div>
+									<div class="box-body big">
+										<form class="form-horizontal" role="form" method="post" action="<?php echo WEBROOT . 'account/userupdate/' . $user_info['userid']; ?>">
+											<div class="form-group">
+												<label class="col-sm-4 control-label">First Name:</label>
+												<div class="col-sm-8">
+													<?php echo Form::inputText($user_form, 'user_name', $user_info['username']); ?>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Last Name:</label>
+												<div class="col-sm-8">
+													<?php echo Form::inputText($user_form, 'last_name', $user_info['userlastname']); ?>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Password:</label>
+												<div class="col-sm-8">
+													<?php echo Form::inputText($user_form, 'user_password', 'user_password'); ?>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Confirm Your Password:</label>
+												<div class="col-sm-8">
+													<?php echo Form::inputText($user_form, 'confrim_password', 'user_password'); ?>
+												</div>
+											</div>
+											<div class="form-group">
+												<label class="col-sm-4 control-label">Email:</label>
+												<div class="col-sm-8">
+													<?php echo Form::inputText($user_form, 'user_mail', $user_info['usermail']); ?>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-sm-12 center">
+									  				<button type="submit" class="btn btn-primary">Edit Your Profil</button>
+									  			</div>
+									  		</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<?php } ?>
+						</div>
+					</div><!-- /CONTENT-->
+				</div>
+			</div>
+		</div>
+	</section>
+	<!--/PAGE -->

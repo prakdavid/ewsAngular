@@ -57,9 +57,10 @@ module.exports = function (grunt) {
             components: {
                 src: [
                     "manager/components/jquery/jquery.min.js",
+                    "manager/components/angular/angular.min.js",
+                    "manager/components/script.js",
                     "manager/components/jquery-ui/ui/minified/jquery-ui.min.js",
                     "manager/components/bootstrap/dist/js/bootstrap.min.js",
-                    "manager/components/angular/angular.min.js",
                     "manager/components/angular-jquery/dist/angular-jquery.min.js",
                     "manager/components/jquery-todo/js/paddystodolist.js",
                     "manager/components/fullcalendar/fullcalendar.min.js",
@@ -68,7 +69,8 @@ module.exports = function (grunt) {
                     "manager/components/angular-cookies/angular-cookies.min.js",
                     "manager/components/angular-resource/angular-resource.min.js",
                     "manager/components/angular-sanitize/angular-sanitize.min.js",
-                    "manager/components/ngstorage/ngStorage.min.js"
+                    "manager/components/ngstorage/ngStorage.min.js",
+                    "manager/components/jQuery-Cookie/jquery.cookie.min.js"
                 ],
                 dest: "manager/resources/js/<%= pkg.name %>_components.js"
             },
