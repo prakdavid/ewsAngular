@@ -1,0 +1,13 @@
+#header .container .nav.navbar-nav.pull-right li#header-user { float:right; }
+.table-width {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.sparklinepie-loading { float:right; }
+.sparklinepie-information { float:right; }
+.legend{ display:block; width:100%; text-align:center; }
+.contextMenu {
+    position: absolute;
+    display:none;
+}

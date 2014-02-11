@@ -39,10 +39,10 @@ module.exports = function (grunt) {
             },
             css: {
                 src: [
+                    "manager/components/cloud-admin/cloud-admin.min.css",
                     "manager/components/bootstrap/dist/css/bootstrap.min.css",
                     "manager/components/bootstrap/dist/css/bootstrap-responsive.min.css",
                     "manager/components/font-awesome/css/font-awesome.min.css",
-                    "manager/components/cloud-admin/cloud-admin.min.css",
                     "manager/components/cloud-admin/themes/default.css",
                     "manager/components/cloud-admin/themes/responsive.min.css",
                     "manager/components/cloud-admin/animatecss/animate.min.css",
