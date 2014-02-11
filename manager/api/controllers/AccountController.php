@@ -23,13 +23,13 @@ class Account
 			$curl = new Curl(URL_API . "login",  (array)$data);
 			$response = $curl->post();
 			$response_obj = json_decode($response);
-			var_dump($response_obj);
 			if (isset($response_obj->error)) {
 				header("HTTP/1.0 401 Unauthorized");
 			} else {
 				list($header, $content) = explode("\r\n\r\n", $response, 2);
 				Session::create($content, $header);
 				unset($curl);
+				echo $content;
 			}
 		} else {
 			header("HTTP/1.0 400 Bad Request");

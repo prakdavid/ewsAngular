@@ -1,13 +1,18 @@
-/*! ews 2014-02-10 */
-var app = angular.module('ews', ['ngRoute', 'ngCookies']);
+/*! ews 2014-02-11 */
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage']);
   
 app.config(['$httpProvider','$routeProvider',
-    function($httpProvider, $routeProvider, $cookies) {
+    function($httpProvider, $routeProvider) {
         $routeProvider.
             // Faudrait mettre le cas ou on est pas loggé
             when('/', {
                 templateUrl:        '../partials/dashboard.html',
                 controller:         'DashboardController',
+                requireLogin:       true
+            }).
+            when('/account/settings', {
+                templateUrl:        '../partials/account/accountsettings.html',
+                controller:         'AccountSettingController',
                 requireLogin:       true
             }).
             when('/login', {
@@ -28,7 +33,7 @@ app.config(['$httpProvider','$routeProvider',
 
 app.run(function($rootScope, $location, $cookies, $http) {
     $rootScope.isUserLooged = ($cookies.session !== undefined) ? true : false;
-    $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
+    // $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
     // console.log($cookies.session);
 
     // On surveille la route
@@ -54,6 +59,45 @@ app.run(function($rootScope, $location, $cookies, $http) {
             $location.path('/login');
         }).error(function(data, status, headers, config) {
         });
+    };
+});
+var app = angular.module('ews');
+
+app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
+    $scope.session = $localStorage.session;
+    $scope.toto = {
+        accountname: "raphaelmerrot",
+        accountmail: "raphael.merrot@gmail.com",
+        account_type: ['enterprise', 'student']
+    };
+    // pour instant le password est en clair, je me hacherai plus tard
+    $scope.edit = function(){
+        $scope.data = {
+            'class':   'Account',
+            'function':'edit',
+            // 'data':    {'user_mail':'raphael.merrot@gmail.com', 'user_password':'cerise'}
+            'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+        };
+        console.log("edit");
+
+        // $http({
+        //     url: 'api/modules/dispatcher.php',
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     data: $scope.data
+        // }).success(function(data, status, headers, config)
+        // {
+        //     SessionService.setSession(data.session);
+        //     $location.path('/');
+        // })
+        // .error(function(data, status, headers, config)
+        // {
+        //     // SessionService.setUserAuthenticated(false);
+        // });
+    };
+    $scope.delete = function(){
+
+        console.log("delete");
     };
 });
 var app = angular.module('ews');
@@ -86,7 +130,7 @@ app.controller('DashboardController', function($scope, $http) {
 });
 var app = angular.module('ews');
 
-app.controller('LoginController', function($scope, $rootScope, $http, $location) {
+app.controller('LoginController', function($scope, $http, $location, $localStorage) {
     // pour instant le password est en clair, je me hacherai plus tard
     $scope.login = function(){
         $scope.data = {
@@ -103,7 +147,7 @@ app.controller('LoginController', function($scope, $rootScope, $http, $location)
             data: $scope.data
         }).success(function(data, status, headers, config)
         {
-            console.log(status + ' - ' + data);
+            $localStorage.session = data.session;
             $location.path('/');
         })
         .error(function(data, status, headers, config)
@@ -144,6 +188,22 @@ app.controller('RegisterController', function($scope, $rootScope, $http, $locati
 });
 var app = angular.module('ews');
 
+app.directive('breadcrumbs', function () {
+    return {
+      restrict: 'E',
+      template: '<ul class="breadcrumb">'+
+                    '<li ng-if="!title"><i class="fa fa-home"></i>Dashboard</a></li>'+
+                    '<li ng-if="title"><i class="fa fa-home"></i><a href="/">Dashboard</a>'+
+                    '</li>'+
+                    '<li ng-if="title">{{title}}</li>'+
+                '</ul>',
+      scope: {
+        title: '@'
+      }
+    };
+});
+var app = angular.module('ews');
+
 app.controller('SideMenuController', function($scope) {
     console.log("SideMenuController");
      
@@ -180,13 +240,13 @@ app.factory('IntercepteurHTTP', function ($q, $location) {
 var app = angular.module('ews');
 
 app.service('SessionService', function(){
-    var userIsAuthenticated = false;
+    var session = null;
 
-    this.setUserAuthenticated = function(value) {
-        userIsAuthenticated = value;
+    this.setSession = function(value) {
+        session = value;
     };
 
-    this.getUserAuthenticated = function() {
-        return userIsAuthenticated;
+    this.getSession = function() {
+        return session;
     };
 });

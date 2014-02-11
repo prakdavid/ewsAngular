@@ -1,13 +1,13 @@
 var app = angular.module('ews');
 
 app.service('SessionService', function(){
-    var userIsAuthenticated = false;
+    var session = null;
 
-    this.setUserAuthenticated = function(value) {
-        userIsAuthenticated = value;
+    this.setSession = function(value) {
+        session = value;
     };
 
-    this.getUserAuthenticated = function() {
-        return userIsAuthenticated;
+    this.getSession = function() {
+        return session;
     };
 });

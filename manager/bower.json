@@ -26,6 +26,7 @@
     "jquery.gritter": "*",
     "angular-cookies": "~1.2.11",
     "angular-sanitize": "~1.2.11",
-    "angular-resource": "~1.2.11"
+    "angular-resource": "~1.2.11",
+    "ngstorage": "~0.3.0"
   }
 }

@@ -1,6 +1,6 @@
 var app = angular.module('ews');
 
-app.controller('LoginController', function($scope, $rootScope, $http, $location) {
+app.controller('LoginController', function($scope, $http, $location, $localStorage) {
     // pour instant le password est en clair, je me hacherai plus tard
     $scope.login = function(){
         $scope.data = {
@@ -17,7 +17,7 @@ app.controller('LoginController', function($scope, $rootScope, $http, $location)
             data: $scope.data
         }).success(function(data, status, headers, config)
         {
-            console.log(status + ' - ' + data);
+            $localStorage.session = data.session;
             $location.path('/');
         })
         .error(function(data, status, headers, config)

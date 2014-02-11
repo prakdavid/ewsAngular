@@ -67,7 +67,8 @@ module.exports = function (grunt) {
                     "manager/components/angular-route/angular-route.min.js",
                     "manager/components/angular-cookies/angular-cookies.min.js",
                     "manager/components/angular-resource/angular-resource.min.js",
-                    "manager/components/angular-sanitize/angular-sanitize.min.js"
+                    "manager/components/angular-sanitize/angular-sanitize.min.js",
+                    "manager/components/ngstorage/ngStorage.min.js"
                 ],
                 dest: "manager/resources/js/<%= pkg.name %>_components.js"
             },

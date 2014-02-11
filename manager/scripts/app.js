@@ -1,12 +1,17 @@
-var app = angular.module('ews', ['ngRoute', 'ngCookies']);
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage']);
   
 app.config(['$httpProvider','$routeProvider',
-    function($httpProvider, $routeProvider, $cookies) {
+    function($httpProvider, $routeProvider) {
         $routeProvider.
             // Faudrait mettre le cas ou on est pas loggé
             when('/', {
                 templateUrl:        '../partials/dashboard.html',
                 controller:         'DashboardController',
+                requireLogin:       true
+            }).
+            when('/account/settings', {
+                templateUrl:        '../partials/account/accountsettings.html',
+                controller:         'AccountSettingController',
                 requireLogin:       true
             }).
             when('/login', {
@@ -27,7 +32,7 @@ app.config(['$httpProvider','$routeProvider',
 
 app.run(function($rootScope, $location, $cookies, $http) {
     $rootScope.isUserLooged = ($cookies.session !== undefined) ? true : false;
-    $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
+    // $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
     // console.log($cookies.session);
 
     // On surveille la route
