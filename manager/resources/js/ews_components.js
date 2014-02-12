@@ -3635,6 +3635,1521 @@ if(n){if(a=this._find(s),a.length)return a.find(".ui-tooltip-content").html(n),v
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
 if("undefined"==typeof jQuery)throw new Error("Bootstrap requires jQuery");+function(a){"use strict";function b(){var a=document.createElement("bootstrap"),b={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd otransitionend",transition:"transitionend"};for(var c in b)if(void 0!==a.style[c])return{end:b[c]};return!1}a.fn.emulateTransitionEnd=function(b){var c=!1,d=this;a(this).one(a.support.transition.end,function(){c=!0});var e=function(){c||a(d).trigger(a.support.transition.end)};return setTimeout(e,b),this},a(function(){a.support.transition=b()})}(jQuery),+function(a){"use strict";var b='[data-dismiss="alert"]',c=function(c){a(c).on("click",b,this.close)};c.prototype.close=function(b){function c(){f.trigger("closed.bs.alert").remove()}var d=a(this),e=d.attr("data-target");e||(e=d.attr("href"),e=e&&e.replace(/.*(?=#[^\s]*$)/,""));var f=a(e);b&&b.preventDefault(),f.length||(f=d.hasClass("alert")?d:d.parent()),f.trigger(b=a.Event("close.bs.alert")),b.isDefaultPrevented()||(f.removeClass("in"),a.support.transition&&f.hasClass("fade")?f.one(a.support.transition.end,c).emulateTransitionEnd(150):c())};var d=a.fn.alert;a.fn.alert=function(b){return this.each(function(){var d=a(this),e=d.data("bs.alert");e||d.data("bs.alert",e=new c(this)),"string"==typeof b&&e[b].call(d)})},a.fn.alert.Constructor=c,a.fn.alert.noConflict=function(){return a.fn.alert=d,this},a(document).on("click.bs.alert.data-api",b,c.prototype.close)}(jQuery),+function(a){"use strict";var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.isLoading=!1};b.DEFAULTS={loadingText:"loading..."},b.prototype.setState=function(b){var c="disabled",d=this.$element,e=d.is("input")?"val":"html",f=d.data();b+="Text",f.resetText||d.data("resetText",d[e]()),d[e](f[b]||this.options[b]),setTimeout(a.proxy(function(){"loadingText"==b?(this.isLoading=!0,d.addClass(c).attr(c,c)):this.isLoading&&(this.isLoading=!1,d.removeClass(c).removeAttr(c))},this),0)},b.prototype.toggle=function(){var a=!0,b=this.$element.closest('[data-toggle="buttons"]');if(b.length){var c=this.$element.find("input");"radio"==c.prop("type")&&(c.prop("checked")&&this.$element.hasClass("active")?a=!1:b.find(".active").removeClass("active")),a&&c.prop("checked",!this.$element.hasClass("active")).trigger("change")}a&&this.$element.toggleClass("active")};var c=a.fn.button;a.fn.button=function(c){return this.each(function(){var d=a(this),e=d.data("bs.button"),f="object"==typeof c&&c;e||d.data("bs.button",e=new b(this,f)),"toggle"==c?e.toggle():c&&e.setState(c)})},a.fn.button.Constructor=b,a.fn.button.noConflict=function(){return a.fn.button=c,this},a(document).on("click.bs.button.data-api","[data-toggle^=button]",function(b){var c=a(b.target);c.hasClass("btn")||(c=c.closest(".btn")),c.button("toggle"),b.preventDefault()})}(jQuery),+function(a){"use strict";var b=function(b,c){this.$element=a(b),this.$indicators=this.$element.find(".carousel-indicators"),this.options=c,this.paused=this.sliding=this.interval=this.$active=this.$items=null,"hover"==this.options.pause&&this.$element.on("mouseenter",a.proxy(this.pause,this)).on("mouseleave",a.proxy(this.cycle,this))};b.DEFAULTS={interval:5e3,pause:"hover",wrap:!0},b.prototype.cycle=function(b){return b||(this.paused=!1),this.interval&&clearInterval(this.interval),this.options.interval&&!this.paused&&(this.interval=setInterval(a.proxy(this.next,this),this.options.interval)),this},b.prototype.getActiveIndex=function(){return this.$active=this.$element.find(".item.active"),this.$items=this.$active.parent().children(),this.$items.index(this.$active)},b.prototype.to=function(b){var c=this,d=this.getActiveIndex();return b>this.$items.length-1||0>b?void 0:this.sliding?this.$element.one("slid.bs.carousel",function(){c.to(b)}):d==b?this.pause().cycle():this.slide(b>d?"next":"prev",a(this.$items[b]))},b.prototype.pause=function(b){return b||(this.paused=!0),this.$element.find(".next, .prev").length&&a.support.transition&&(this.$element.trigger(a.support.transition.end),this.cycle(!0)),this.interval=clearInterval(this.interval),this},b.prototype.next=function(){return this.sliding?void 0:this.slide("next")},b.prototype.prev=function(){return this.sliding?void 0:this.slide("prev")},b.prototype.slide=function(b,c){var d=this.$element.find(".item.active"),e=c||d[b](),f=this.interval,g="next"==b?"left":"right",h="next"==b?"first":"last",i=this;if(!e.length){if(!this.options.wrap)return;e=this.$element.find(".item")[h]()}if(e.hasClass("active"))return this.sliding=!1;var j=a.Event("slide.bs.carousel",{relatedTarget:e[0],direction:g});return this.$element.trigger(j),j.isDefaultPrevented()?void 0:(this.sliding=!0,f&&this.pause(),this.$indicators.length&&(this.$indicators.find(".active").removeClass("active"),this.$element.one("slid.bs.carousel",function(){var b=a(i.$indicators.children()[i.getActiveIndex()]);b&&b.addClass("active")})),a.support.transition&&this.$element.hasClass("slide")?(e.addClass(b),e[0].offsetWidth,d.addClass(g),e.addClass(g),d.one(a.support.transition.end,function(){e.removeClass([b,g].join(" ")).addClass("active"),d.removeClass(["active",g].join(" ")),i.sliding=!1,setTimeout(function(){i.$element.trigger("slid.bs.carousel")},0)}).emulateTransitionEnd(1e3*d.css("transition-duration").slice(0,-1))):(d.removeClass("active"),e.addClass("active"),this.sliding=!1,this.$element.trigger("slid.bs.carousel")),f&&this.cycle(),this)};var c=a.fn.carousel;a.fn.carousel=function(c){return this.each(function(){var d=a(this),e=d.data("bs.carousel"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c),g="string"==typeof c?c:f.slide;e||d.data("bs.carousel",e=new b(this,f)),"number"==typeof c?e.to(c):g?e[g]():f.interval&&e.pause().cycle()})},a.fn.carousel.Constructor=b,a.fn.carousel.noConflict=function(){return a.fn.carousel=c,this},a(document).on("click.bs.carousel.data-api","[data-slide], [data-slide-to]",function(b){var c,d=a(this),e=a(d.attr("data-target")||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,"")),f=a.extend({},e.data(),d.data()),g=d.attr("data-slide-to");g&&(f.interval=!1),e.carousel(f),(g=d.attr("data-slide-to"))&&e.data("bs.carousel").to(g),b.preventDefault()}),a(window).on("load",function(){a('[data-ride="carousel"]').each(function(){var b=a(this);b.carousel(b.data())})})}(jQuery),+function(a){"use strict";var b=function(c,d){this.$element=a(c),this.options=a.extend({},b.DEFAULTS,d),this.transitioning=null,this.options.parent&&(this.$parent=a(this.options.parent)),this.options.toggle&&this.toggle()};b.DEFAULTS={toggle:!0},b.prototype.dimension=function(){var a=this.$element.hasClass("width");return a?"width":"height"},b.prototype.show=function(){if(!this.transitioning&&!this.$element.hasClass("in")){var b=a.Event("show.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.$parent&&this.$parent.find("> .panel > .in");if(c&&c.length){var d=c.data("bs.collapse");if(d&&d.transitioning)return;c.collapse("hide"),d||c.data("bs.collapse",null)}var e=this.dimension();this.$element.removeClass("collapse").addClass("collapsing")[e](0),this.transitioning=1;var f=function(){this.$element.removeClass("collapsing").addClass("collapse in")[e]("auto"),this.transitioning=0,this.$element.trigger("shown.bs.collapse")};if(!a.support.transition)return f.call(this);var g=a.camelCase(["scroll",e].join("-"));this.$element.one(a.support.transition.end,a.proxy(f,this)).emulateTransitionEnd(350)[e](this.$element[0][g])}}},b.prototype.hide=function(){if(!this.transitioning&&this.$element.hasClass("in")){var b=a.Event("hide.bs.collapse");if(this.$element.trigger(b),!b.isDefaultPrevented()){var c=this.dimension();this.$element[c](this.$element[c]())[0].offsetHeight,this.$element.addClass("collapsing").removeClass("collapse").removeClass("in"),this.transitioning=1;var d=function(){this.transitioning=0,this.$element.trigger("hidden.bs.collapse").removeClass("collapsing").addClass("collapse")};return a.support.transition?void this.$element[c](0).one(a.support.transition.end,a.proxy(d,this)).emulateTransitionEnd(350):d.call(this)}}},b.prototype.toggle=function(){this[this.$element.hasClass("in")?"hide":"show"]()};var c=a.fn.collapse;a.fn.collapse=function(c){return this.each(function(){var d=a(this),e=d.data("bs.collapse"),f=a.extend({},b.DEFAULTS,d.data(),"object"==typeof c&&c);!e&&f.toggle&&"show"==c&&(c=!c),e||d.data("bs.collapse",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.collapse.Constructor=b,a.fn.collapse.noConflict=function(){return a.fn.collapse=c,this},a(document).on("click.bs.collapse.data-api","[data-toggle=collapse]",function(b){var c,d=a(this),e=d.attr("data-target")||b.preventDefault()||(c=d.attr("href"))&&c.replace(/.*(?=#[^\s]+$)/,""),f=a(e),g=f.data("bs.collapse"),h=g?"toggle":d.data(),i=d.attr("data-parent"),j=i&&a(i);g&&g.transitioning||(j&&j.find('[data-toggle=collapse][data-parent="'+i+'"]').not(d).addClass("collapsed"),d[f.hasClass("in")?"addClass":"removeClass"]("collapsed")),f.collapse(h)})}(jQuery),+function(a){"use strict";function b(b){a(d).remove(),a(e).each(function(){var d=c(a(this)),e={relatedTarget:this};d.hasClass("open")&&(d.trigger(b=a.Event("hide.bs.dropdown",e)),b.isDefaultPrevented()||d.removeClass("open").trigger("hidden.bs.dropdown",e))})}function c(b){var c=b.attr("data-target");c||(c=b.attr("href"),c=c&&/#[A-Za-z]/.test(c)&&c.replace(/.*(?=#[^\s]*$)/,""));var d=c&&a(c);return d&&d.length?d:b.parent()}var d=".dropdown-backdrop",e="[data-toggle=dropdown]",f=function(b){a(b).on("click.bs.dropdown",this.toggle)};f.prototype.toggle=function(d){var e=a(this);if(!e.is(".disabled, :disabled")){var f=c(e),g=f.hasClass("open");if(b(),!g){"ontouchstart"in document.documentElement&&!f.closest(".navbar-nav").length&&a('<div class="dropdown-backdrop"/>').insertAfter(a(this)).on("click",b);var h={relatedTarget:this};if(f.trigger(d=a.Event("show.bs.dropdown",h)),d.isDefaultPrevented())return;f.toggleClass("open").trigger("shown.bs.dropdown",h),e.focus()}return!1}},f.prototype.keydown=function(b){if(/(38|40|27)/.test(b.keyCode)){var d=a(this);if(b.preventDefault(),b.stopPropagation(),!d.is(".disabled, :disabled")){var f=c(d),g=f.hasClass("open");if(!g||g&&27==b.keyCode)return 27==b.which&&f.find(e).focus(),d.click();var h=" li:not(.divider):visible a",i=f.find("[role=menu]"+h+", [role=listbox]"+h);if(i.length){var j=i.index(i.filter(":focus"));38==b.keyCode&&j>0&&j--,40==b.keyCode&&j<i.length-1&&j++,~j||(j=0),i.eq(j).focus()}}}};var g=a.fn.dropdown;a.fn.dropdown=function(b){return this.each(function(){var c=a(this),d=c.data("bs.dropdown");d||c.data("bs.dropdown",d=new f(this)),"string"==typeof b&&d[b].call(c)})},a.fn.dropdown.Constructor=f,a.fn.dropdown.noConflict=function(){return a.fn.dropdown=g,this},a(document).on("click.bs.dropdown.data-api",b).on("click.bs.dropdown.data-api",".dropdown form",function(a){a.stopPropagation()}).on("click.bs.dropdown.data-api",e,f.prototype.toggle).on("keydown.bs.dropdown.data-api",e+", [role=menu], [role=listbox]",f.prototype.keydown)}(jQuery),+function(a){"use strict";var b=function(b,c){this.options=c,this.$element=a(b),this.$backdrop=this.isShown=null,this.options.remote&&this.$element.find(".modal-content").load(this.options.remote,a.proxy(function(){this.$element.trigger("loaded.bs.modal")},this))};b.DEFAULTS={backdrop:!0,keyboard:!0,show:!0},b.prototype.toggle=function(a){return this[this.isShown?"hide":"show"](a)},b.prototype.show=function(b){var c=this,d=a.Event("show.bs.modal",{relatedTarget:b});this.$element.trigger(d),this.isShown||d.isDefaultPrevented()||(this.isShown=!0,this.escape(),this.$element.on("click.dismiss.bs.modal",'[data-dismiss="modal"]',a.proxy(this.hide,this)),this.backdrop(function(){var d=a.support.transition&&c.$element.hasClass("fade");c.$element.parent().length||c.$element.appendTo(document.body),c.$element.show().scrollTop(0),d&&c.$element[0].offsetWidth,c.$element.addClass("in").attr("aria-hidden",!1),c.enforceFocus();var e=a.Event("shown.bs.modal",{relatedTarget:b});d?c.$element.find(".modal-dialog").one(a.support.transition.end,function(){c.$element.focus().trigger(e)}).emulateTransitionEnd(300):c.$element.focus().trigger(e)}))},b.prototype.hide=function(b){b&&b.preventDefault(),b=a.Event("hide.bs.modal"),this.$element.trigger(b),this.isShown&&!b.isDefaultPrevented()&&(this.isShown=!1,this.escape(),a(document).off("focusin.bs.modal"),this.$element.removeClass("in").attr("aria-hidden",!0).off("click.dismiss.bs.modal"),a.support.transition&&this.$element.hasClass("fade")?this.$element.one(a.support.transition.end,a.proxy(this.hideModal,this)).emulateTransitionEnd(300):this.hideModal())},b.prototype.enforceFocus=function(){a(document).off("focusin.bs.modal").on("focusin.bs.modal",a.proxy(function(a){this.$element[0]===a.target||this.$element.has(a.target).length||this.$element.focus()},this))},b.prototype.escape=function(){this.isShown&&this.options.keyboard?this.$element.on("keyup.dismiss.bs.modal",a.proxy(function(a){27==a.which&&this.hide()},this)):this.isShown||this.$element.off("keyup.dismiss.bs.modal")},b.prototype.hideModal=function(){var a=this;this.$element.hide(),this.backdrop(function(){a.removeBackdrop(),a.$element.trigger("hidden.bs.modal")})},b.prototype.removeBackdrop=function(){this.$backdrop&&this.$backdrop.remove(),this.$backdrop=null},b.prototype.backdrop=function(b){var c=this.$element.hasClass("fade")?"fade":"";if(this.isShown&&this.options.backdrop){var d=a.support.transition&&c;if(this.$backdrop=a('<div class="modal-backdrop '+c+'" />').appendTo(document.body),this.$element.on("click.dismiss.bs.modal",a.proxy(function(a){a.target===a.currentTarget&&("static"==this.options.backdrop?this.$element[0].focus.call(this.$element[0]):this.hide.call(this))},this)),d&&this.$backdrop[0].offsetWidth,this.$backdrop.addClass("in"),!b)return;d?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()}else!this.isShown&&this.$backdrop?(this.$backdrop.removeClass("in"),a.support.transition&&this.$element.hasClass("fade")?this.$backdrop.one(a.support.transition.end,b).emulateTransitionEnd(150):b()):b&&b()};var c=a.fn.modal;a.fn.modal=function(c,d){return this.each(function(){var e=a(this),f=e.data("bs.modal"),g=a.extend({},b.DEFAULTS,e.data(),"object"==typeof c&&c);f||e.data("bs.modal",f=new b(this,g)),"string"==typeof c?f[c](d):g.show&&f.show(d)})},a.fn.modal.Constructor=b,a.fn.modal.noConflict=function(){return a.fn.modal=c,this},a(document).on("click.bs.modal.data-api",'[data-toggle="modal"]',function(b){var c=a(this),d=c.attr("href"),e=a(c.attr("data-target")||d&&d.replace(/.*(?=#[^\s]+$)/,"")),f=e.data("bs.modal")?"toggle":a.extend({remote:!/#/.test(d)&&d},e.data(),c.data());c.is("a")&&b.preventDefault(),e.modal(f,this).one("hide",function(){c.is(":visible")&&c.focus()})}),a(document).on("show.bs.modal",".modal",function(){a(document.body).addClass("modal-open")}).on("hidden.bs.modal",".modal",function(){a(document.body).removeClass("modal-open")})}(jQuery),+function(a){"use strict";var b=function(a,b){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",a,b)};b.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1},b.prototype.init=function(b,c,d){this.enabled=!0,this.type=b,this.$element=a(c),this.options=this.getOptions(d);for(var e=this.options.trigger.split(" "),f=e.length;f--;){var g=e[f];if("click"==g)this.$element.on("click."+this.type,this.options.selector,a.proxy(this.toggle,this));else if("manual"!=g){var h="hover"==g?"mouseenter":"focusin",i="hover"==g?"mouseleave":"focusout";this.$element.on(h+"."+this.type,this.options.selector,a.proxy(this.enter,this)),this.$element.on(i+"."+this.type,this.options.selector,a.proxy(this.leave,this))}}this.options.selector?this._options=a.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.getOptions=function(b){return b=a.extend({},this.getDefaults(),this.$element.data(),b),b.delay&&"number"==typeof b.delay&&(b.delay={show:b.delay,hide:b.delay}),b},b.prototype.getDelegateOptions=function(){var b={},c=this.getDefaults();return this._options&&a.each(this._options,function(a,d){c[a]!=d&&(b[a]=d)}),b},b.prototype.enter=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="in",c.options.delay&&c.options.delay.show?void(c.timeout=setTimeout(function(){"in"==c.hoverState&&c.show()},c.options.delay.show)):c.show()},b.prototype.leave=function(b){var c=b instanceof this.constructor?b:a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type);return clearTimeout(c.timeout),c.hoverState="out",c.options.delay&&c.options.delay.hide?void(c.timeout=setTimeout(function(){"out"==c.hoverState&&c.hide()},c.options.delay.hide)):c.hide()},b.prototype.show=function(){var b=a.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){if(this.$element.trigger(b),b.isDefaultPrevented())return;var c=this,d=this.tip();this.setContent(),this.options.animation&&d.addClass("fade");var e="function"==typeof this.options.placement?this.options.placement.call(this,d[0],this.$element[0]):this.options.placement,f=/\s?auto?\s?/i,g=f.test(e);g&&(e=e.replace(f,"")||"top"),d.detach().css({top:0,left:0,display:"block"}).addClass(e),this.options.container?d.appendTo(this.options.container):d.insertAfter(this.$element);var h=this.getPosition(),i=d[0].offsetWidth,j=d[0].offsetHeight;if(g){var k=this.$element.parent(),l=e,m=document.documentElement.scrollTop||document.body.scrollTop,n="body"==this.options.container?window.innerWidth:k.outerWidth(),o="body"==this.options.container?window.innerHeight:k.outerHeight(),p="body"==this.options.container?0:k.offset().left;e="bottom"==e&&h.top+h.height+j-m>o?"top":"top"==e&&h.top-m-j<0?"bottom":"right"==e&&h.right+i>n?"left":"left"==e&&h.left-i<p?"right":e,d.removeClass(l).addClass(e)}var q=this.getCalculatedOffset(e,h,i,j);this.applyPlacement(q,e),this.hoverState=null;var r=function(){c.$element.trigger("shown.bs."+c.type)};a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,r).emulateTransitionEnd(150):r()}},b.prototype.applyPlacement=function(b,c){var d,e=this.tip(),f=e[0].offsetWidth,g=e[0].offsetHeight,h=parseInt(e.css("margin-top"),10),i=parseInt(e.css("margin-left"),10);isNaN(h)&&(h=0),isNaN(i)&&(i=0),b.top=b.top+h,b.left=b.left+i,a.offset.setOffset(e[0],a.extend({using:function(a){e.css({top:Math.round(a.top),left:Math.round(a.left)})}},b),0),e.addClass("in");var j=e[0].offsetWidth,k=e[0].offsetHeight;if("top"==c&&k!=g&&(d=!0,b.top=b.top+g-k),/bottom|top/.test(c)){var l=0;b.left<0&&(l=-2*b.left,b.left=0,e.offset(b),j=e[0].offsetWidth,k=e[0].offsetHeight),this.replaceArrow(l-f+j,j,"left")}else this.replaceArrow(k-g,k,"top");d&&e.offset(b)},b.prototype.replaceArrow=function(a,b,c){this.arrow().css(c,a?50*(1-a/b)+"%":"")},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle();a.find(".tooltip-inner")[this.options.html?"html":"text"](b),a.removeClass("fade in top bottom left right")},b.prototype.hide=function(){function b(){"in"!=c.hoverState&&d.detach(),c.$element.trigger("hidden.bs."+c.type)}var c=this,d=this.tip(),e=a.Event("hide.bs."+this.type);return this.$element.trigger(e),e.isDefaultPrevented()?void 0:(d.removeClass("in"),a.support.transition&&this.$tip.hasClass("fade")?d.one(a.support.transition.end,b).emulateTransitionEnd(150):b(),this.hoverState=null,this)},b.prototype.fixTitle=function(){var a=this.$element;(a.attr("title")||"string"!=typeof a.attr("data-original-title"))&&a.attr("data-original-title",a.attr("title")||"").attr("title","")},b.prototype.hasContent=function(){return this.getTitle()},b.prototype.getPosition=function(){var b=this.$element[0];return a.extend({},"function"==typeof b.getBoundingClientRect?b.getBoundingClientRect():{width:b.offsetWidth,height:b.offsetHeight},this.$element.offset())},b.prototype.getCalculatedOffset=function(a,b,c,d){return"bottom"==a?{top:b.top+b.height,left:b.left+b.width/2-c/2}:"top"==a?{top:b.top-d,left:b.left+b.width/2-c/2}:"left"==a?{top:b.top+b.height/2-d/2,left:b.left-c}:{top:b.top+b.height/2-d/2,left:b.left+b.width}},b.prototype.getTitle=function(){var a,b=this.$element,c=this.options;return a=b.attr("data-original-title")||("function"==typeof c.title?c.title.call(b[0]):c.title)},b.prototype.tip=function(){return this.$tip=this.$tip||a(this.options.template)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},b.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},b.prototype.enable=function(){this.enabled=!0},b.prototype.disable=function(){this.enabled=!1},b.prototype.toggleEnabled=function(){this.enabled=!this.enabled},b.prototype.toggle=function(b){var c=b?a(b.currentTarget)[this.type](this.getDelegateOptions()).data("bs."+this.type):this;c.tip().hasClass("in")?c.leave(c):c.enter(c)},b.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var c=a.fn.tooltip;a.fn.tooltip=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tooltip"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.tooltip",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.tooltip.Constructor=b,a.fn.tooltip.noConflict=function(){return a.fn.tooltip=c,this}}(jQuery),+function(a){"use strict";var b=function(a,b){this.init("popover",a,b)};if(!a.fn.tooltip)throw new Error("Popover requires tooltip.js");b.DEFAULTS=a.extend({},a.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),b.prototype=a.extend({},a.fn.tooltip.Constructor.prototype),b.prototype.constructor=b,b.prototype.getDefaults=function(){return b.DEFAULTS},b.prototype.setContent=function(){var a=this.tip(),b=this.getTitle(),c=this.getContent();a.find(".popover-title")[this.options.html?"html":"text"](b),a.find(".popover-content")[this.options.html?"string"==typeof c?"html":"append":"text"](c),a.removeClass("fade top bottom left right in"),a.find(".popover-title").html()||a.find(".popover-title").hide()},b.prototype.hasContent=function(){return this.getTitle()||this.getContent()},b.prototype.getContent=function(){var a=this.$element,b=this.options;return a.attr("data-content")||("function"==typeof b.content?b.content.call(a[0]):b.content)},b.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},b.prototype.tip=function(){return this.$tip||(this.$tip=a(this.options.template)),this.$tip};var c=a.fn.popover;a.fn.popover=function(c){return this.each(function(){var d=a(this),e=d.data("bs.popover"),f="object"==typeof c&&c;(e||"destroy"!=c)&&(e||d.data("bs.popover",e=new b(this,f)),"string"==typeof c&&e[c]())})},a.fn.popover.Constructor=b,a.fn.popover.noConflict=function(){return a.fn.popover=c,this}}(jQuery),+function(a){"use strict";function b(c,d){var e,f=a.proxy(this.process,this);this.$element=a(a(c).is("body")?window:c),this.$body=a("body"),this.$scrollElement=this.$element.on("scroll.bs.scroll-spy.data-api",f),this.options=a.extend({},b.DEFAULTS,d),this.selector=(this.options.target||(e=a(c).attr("href"))&&e.replace(/.*(?=#[^\s]+$)/,"")||"")+" .nav li > a",this.offsets=a([]),this.targets=a([]),this.activeTarget=null,this.refresh(),this.process()}b.DEFAULTS={offset:10},b.prototype.refresh=function(){var b=this.$element[0]==window?"offset":"position";this.offsets=a([]),this.targets=a([]);{var c=this;this.$body.find(this.selector).map(function(){var d=a(this),e=d.data("target")||d.attr("href"),f=/^#./.test(e)&&a(e);return f&&f.length&&f.is(":visible")&&[[f[b]().top+(!a.isWindow(c.$scrollElement.get(0))&&c.$scrollElement.scrollTop()),e]]||null}).sort(function(a,b){return a[0]-b[0]}).each(function(){c.offsets.push(this[0]),c.targets.push(this[1])})}},b.prototype.process=function(){var a,b=this.$scrollElement.scrollTop()+this.options.offset,c=this.$scrollElement[0].scrollHeight||this.$body[0].scrollHeight,d=c-this.$scrollElement.height(),e=this.offsets,f=this.targets,g=this.activeTarget;if(b>=d)return g!=(a=f.last()[0])&&this.activate(a);if(g&&b<=e[0])return g!=(a=f[0])&&this.activate(a);for(a=e.length;a--;)g!=f[a]&&b>=e[a]&&(!e[a+1]||b<=e[a+1])&&this.activate(f[a])},b.prototype.activate=function(b){this.activeTarget=b,a(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var c=this.selector+'[data-target="'+b+'"],'+this.selector+'[href="'+b+'"]',d=a(c).parents("li").addClass("active");d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active")),d.trigger("activate.bs.scrollspy")};var c=a.fn.scrollspy;a.fn.scrollspy=function(c){return this.each(function(){var d=a(this),e=d.data("bs.scrollspy"),f="object"==typeof c&&c;e||d.data("bs.scrollspy",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.scrollspy.Constructor=b,a.fn.scrollspy.noConflict=function(){return a.fn.scrollspy=c,this},a(window).on("load",function(){a('[data-spy="scroll"]').each(function(){var b=a(this);b.scrollspy(b.data())})})}(jQuery),+function(a){"use strict";var b=function(b){this.element=a(b)};b.prototype.show=function(){var b=this.element,c=b.closest("ul:not(.dropdown-menu)"),d=b.data("target");if(d||(d=b.attr("href"),d=d&&d.replace(/.*(?=#[^\s]*$)/,"")),!b.parent("li").hasClass("active")){var e=c.find(".active:last a")[0],f=a.Event("show.bs.tab",{relatedTarget:e});if(b.trigger(f),!f.isDefaultPrevented()){var g=a(d);this.activate(b.parent("li"),c),this.activate(g,g.parent(),function(){b.trigger({type:"shown.bs.tab",relatedTarget:e})})}}},b.prototype.activate=function(b,c,d){function e(){f.removeClass("active").find("> .dropdown-menu > .active").removeClass("active"),b.addClass("active"),g?(b[0].offsetWidth,b.addClass("in")):b.removeClass("fade"),b.parent(".dropdown-menu")&&b.closest("li.dropdown").addClass("active"),d&&d()}var f=c.find("> .active"),g=d&&a.support.transition&&f.hasClass("fade");g?f.one(a.support.transition.end,e).emulateTransitionEnd(150):e(),f.removeClass("in")};var c=a.fn.tab;a.fn.tab=function(c){return this.each(function(){var d=a(this),e=d.data("bs.tab");e||d.data("bs.tab",e=new b(this)),"string"==typeof c&&e[c]()})},a.fn.tab.Constructor=b,a.fn.tab.noConflict=function(){return a.fn.tab=c,this},a(document).on("click.bs.tab.data-api",'[data-toggle="tab"], [data-toggle="pill"]',function(b){b.preventDefault(),a(this).tab("show")})}(jQuery),+function(a){"use strict";var b=function(c,d){this.options=a.extend({},b.DEFAULTS,d),this.$window=a(window).on("scroll.bs.affix.data-api",a.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",a.proxy(this.checkPositionWithEventLoop,this)),this.$element=a(c),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};b.RESET="affix affix-top affix-bottom",b.DEFAULTS={offset:0},b.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(b.RESET).addClass("affix");var a=this.$window.scrollTop(),c=this.$element.offset();return this.pinnedOffset=c.top-a},b.prototype.checkPositionWithEventLoop=function(){setTimeout(a.proxy(this.checkPosition,this),1)},b.prototype.checkPosition=function(){if(this.$element.is(":visible")){var c=a(document).height(),d=this.$window.scrollTop(),e=this.$element.offset(),f=this.options.offset,g=f.top,h=f.bottom;"top"==this.affixed&&(e.top+=d),"object"!=typeof f&&(h=g=f),"function"==typeof g&&(g=f.top(this.$element)),"function"==typeof h&&(h=f.bottom(this.$element));var i=null!=this.unpin&&d+this.unpin<=e.top?!1:null!=h&&e.top+this.$element.height()>=c-h?"bottom":null!=g&&g>=d?"top":!1;if(this.affixed!==i){this.unpin&&this.$element.css("top","");var j="affix"+(i?"-"+i:""),k=a.Event(j+".bs.affix");this.$element.trigger(k),k.isDefaultPrevented()||(this.affixed=i,this.unpin="bottom"==i?this.getPinnedOffset():null,this.$element.removeClass(b.RESET).addClass(j).trigger(a.Event(j.replace("affix","affixed"))),"bottom"==i&&this.$element.offset({top:c-h-this.$element.height()}))}}};var c=a.fn.affix;a.fn.affix=function(c){return this.each(function(){var d=a(this),e=d.data("bs.affix"),f="object"==typeof c&&c;e||d.data("bs.affix",e=new b(this,f)),"string"==typeof c&&e[c]()})},a.fn.affix.Constructor=b,a.fn.affix.noConflict=function(){return a.fn.affix=c,this},a(window).on("load",function(){a('[data-spy="affix"]').each(function(){var b=a(this),c=b.data();c.offset=c.offset||{},c.offsetBottom&&(c.offset.bottom=c.offsetBottom),c.offsetTop&&(c.offset.top=c.offsetTop),b.affix(c)})})}(jQuery);
+(function(window, angular, undefined) {'use strict';
+
+/* jshint maxlen: false */
+
+/**
+ * @ngdoc overview
+ * @name ngAnimate
+ * @description
+ *
+ * # ngAnimate
+ *
+ * The `ngAnimate` module provides support for JavaScript, CSS3 transition and CSS3 keyframe animation hooks within existing core and custom directives.
+ *
+ * {@installModule animate}
+ *
+ * <div doc-module-components="ngAnimate"></div>
+ *
+ * # Usage
+ *
+ * To see animations in action, all that is required is to define the appropriate CSS classes
+ * or to register a JavaScript animation via the myModule.animation() function. The directives that support animation automatically are:
+ * `ngRepeat`, `ngInclude`, `ngIf`, `ngSwitch`, `ngShow`, `ngHide`, `ngView` and `ngClass`. Custom directives can take advantage of animation
+ * by using the `$animate` service.
+ *
+ * Below is a more detailed breakdown of the supported animation events provided by pre-existing ng directives:
+ *
+ * | Directive                                                 | Supported Animations                               |
+ * |---------------------------------------------------------- |----------------------------------------------------|
+ * | {@link ng.directive:ngRepeat#usage_animations ngRepeat}         | enter, leave and move                              |
+ * | {@link ngRoute.directive:ngView#usage_animations ngView}        | enter and leave                                    |
+ * | {@link ng.directive:ngInclude#usage_animations ngInclude}       | enter and leave                                    |
+ * | {@link ng.directive:ngSwitch#usage_animations ngSwitch}         | enter and leave                                    |
+ * | {@link ng.directive:ngIf#usage_animations ngIf}                 | enter and leave                                    |
+ * | {@link ng.directive:ngClass#usage_animations ngClass}           | add and remove                                     |
+ * | {@link ng.directive:ngShow#usage_animations ngShow & ngHide}    | add and remove (the ng-hide class value)           |
+ *
+ * You can find out more information about animations upon visiting each directive page.
+ *
+ * Below is an example of how to apply animations to a directive that supports animation hooks:
+ *
+ * <pre>
+ * <style type="text/css">
+ * .slide.ng-enter, .slide.ng-leave {
+ *   -webkit-transition:0.5s linear all;
+ *   transition:0.5s linear all;
+ * }
+ *
+ * .slide.ng-enter { }        /&#42; starting animations for enter &#42;/
+ * .slide.ng-enter-active { } /&#42; terminal animations for enter &#42;/
+ * .slide.ng-leave { }        /&#42; starting animations for leave &#42;/
+ * .slide.ng-leave-active { } /&#42; terminal animations for leave &#42;/
+ * </style>
+ *
+ * <!--
+ * the animate service will automatically add .ng-enter and .ng-leave to the element
+ * to trigger the CSS transition/animations
+ * -->
+ * <ANY class="slide" ng-include="..."></ANY>
+ * </pre>
+ *
+ * Keep in mind that if an animation is running, any child elements cannot be animated until the parent element's
+ * animation has completed.
+ *
+ * <h2>CSS-defined Animations</h2>
+ * The animate service will automatically apply two CSS classes to the animated element and these two CSS classes
+ * are designed to contain the start and end CSS styling. Both CSS transitions and keyframe animations are supported
+ * and can be used to play along with this naming structure.
+ *
+ * The following code below demonstrates how to perform animations using **CSS transitions** with Angular:
+ *
+ * <pre>
+ * <style type="text/css">
+ * /&#42;
+ *  The animate class is apart of the element and the ng-enter class
+ *  is attached to the element once the enter animation event is triggered
+ * &#42;/
+ * .reveal-animation.ng-enter {
+ *  -webkit-transition: 1s linear all; /&#42; Safari/Chrome &#42;/
+ *  transition: 1s linear all; /&#42; All other modern browsers and IE10+ &#42;/
+ *
+ *  /&#42; The animation preparation code &#42;/
+ *  opacity: 0;
+ * }
+ *
+ * /&#42;
+ *  Keep in mind that you want to combine both CSS
+ *  classes together to avoid any CSS-specificity
+ *  conflicts
+ * &#42;/
+ * .reveal-animation.ng-enter.ng-enter-active {
+ *  /&#42; The animation code itself &#42;/
+ *  opacity: 1;
+ * }
+ * </style>
+ *
+ * <div class="view-container">
+ *   <div ng-view class="reveal-animation"></div>
+ * </div>
+ * </pre>
+ *
+ * The following code below demonstrates how to perform animations using **CSS animations** with Angular:
+ *
+ * <pre>
+ * <style type="text/css">
+ * .reveal-animation.ng-enter {
+ *   -webkit-animation: enter_sequence 1s linear; /&#42; Safari/Chrome &#42;/
+ *   animation: enter_sequence 1s linear; /&#42; IE10+ and Future Browsers &#42;/
+ * }
+ * &#64-webkit-keyframes enter_sequence {
+ *   from { opacity:0; }
+ *   to { opacity:1; }
+ * }
+ * &#64keyframes enter_sequence {
+ *   from { opacity:0; }
+ *   to { opacity:1; }
+ * }
+ * </style>
+ *
+ * <div class="view-container">
+ *   <div ng-view class="reveal-animation"></div>
+ * </div>
+ * </pre>
+ *
+ * Both CSS3 animations and transitions can be used together and the animate service will figure out the correct duration and delay timing.
+ *
+ * Upon DOM mutation, the event class is added first (something like `ng-enter`), then the browser prepares itself to add
+ * the active class (in this case `ng-enter-active`) which then triggers the animation. The animation module will automatically
+ * detect the CSS code to determine when the animation ends. Once the animation is over then both CSS classes will be
+ * removed from the DOM. If a browser does not support CSS transitions or CSS animations then the animation will start and end
+ * immediately resulting in a DOM element that is at its final state. This final state is when the DOM element
+ * has no CSS transition/animation classes applied to it.
+ *
+ * <h3>CSS Staggering Animations</h3>
+ * A Staggering animation is a collection of animations that are issued with a slight delay in between each successive operation resulting in a
+ * curtain-like effect. The ngAnimate module, as of 1.2.0, supports staggering animations and the stagger effect can be
+ * performed by creating a **ng-EVENT-stagger** CSS class and attaching that class to the base CSS class used for
+ * the animation. The style property expected within the stagger class can either be a **transition-delay** or an
+ * **animation-delay** property (or both if your animation contains both transitions and keyframe animations).
+ *
+ * <pre>
+ * .my-animation.ng-enter {
+ *   /&#42; standard transition code &#42;/
+ *   -webkit-transition: 1s linear all;
+ *   transition: 1s linear all;
+ *   opacity:0;
+ * }
+ * .my-animation.ng-enter-stagger {
+ *   /&#42; this will have a 100ms delay between each successive leave animation &#42;/
+ *   -webkit-transition-delay: 0.1s;
+ *   transition-delay: 0.1s;
+ *
+ *   /&#42; in case the stagger doesn't work then these two values
+ *    must be set to 0 to avoid an accidental CSS inheritance &#42;/
+ *   -webkit-transition-duration: 0s;
+ *   transition-duration: 0s;
+ * }
+ * .my-animation.ng-enter.ng-enter-active {
+ *   /&#42; standard transition styles &#42;/
+ *   opacity:1;
+ * }
+ * </pre>
+ *
+ * Staggering animations work by default in ngRepeat (so long as the CSS class is defined). Outside of ngRepeat, to use staggering animations
+ * on your own, they can be triggered by firing multiple calls to the same event on $animate. However, the restrictions surrounding this
+ * are that each of the elements must have the same CSS className value as well as the same parent element. A stagger operation
+ * will also be reset if more than 10ms has passed after the last animation has been fired.
+ *
+ * The following code will issue the **ng-leave-stagger** event on the element provided:
+ *
+ * <pre>
+ * var kids = parent.children();
+ *
+ * $animate.leave(kids[0]); //stagger index=0
+ * $animate.leave(kids[1]); //stagger index=1
+ * $animate.leave(kids[2]); //stagger index=2
+ * $animate.leave(kids[3]); //stagger index=3
+ * $animate.leave(kids[4]); //stagger index=4
+ *
+ * $timeout(function() {
+ *   //stagger has reset itself
+ *   $animate.leave(kids[5]); //stagger index=0
+ *   $animate.leave(kids[6]); //stagger index=1
+ * }, 100, false);
+ * </pre>
+ *
+ * Stagger animations are currently only supported within CSS-defined animations.
+ *
+ * <h2>JavaScript-defined Animations</h2>
+ * In the event that you do not want to use CSS3 transitions or CSS3 animations or if you wish to offer animations on browsers that do not
+ * yet support CSS transitions/animations, then you can make use of JavaScript animations defined inside of your AngularJS module.
+ *
+ * <pre>
+ * //!annotate="YourApp" Your AngularJS Module|Replace this or ngModule with the module that you used to define your application.
+ * var ngModule = angular.module('YourApp', ['ngAnimate']);
+ * ngModule.animation('.my-crazy-animation', function() {
+ *   return {
+ *     enter: function(element, done) {
+ *       //run the animation here and call done when the animation is complete
+ *       return function(cancelled) {
+ *         //this (optional) function will be called when the animation
+ *         //completes or when the animation is cancelled (the cancelled
+ *         //flag will be set to true if cancelled).
+ *       };
+ *     },
+ *     leave: function(element, done) { },
+ *     move: function(element, done) { },
+ *
+ *     //animation that can be triggered before the class is added
+ *     beforeAddClass: function(element, className, done) { },
+ *
+ *     //animation that can be triggered after the class is added
+ *     addClass: function(element, className, done) { },
+ *
+ *     //animation that can be triggered before the class is removed
+ *     beforeRemoveClass: function(element, className, done) { },
+ *
+ *     //animation that can be triggered after the class is removed
+ *     removeClass: function(element, className, done) { }
+ *   };
+ * });
+ * </pre>
+ *
+ * JavaScript-defined animations are created with a CSS-like class selector and a collection of events which are set to run
+ * a javascript callback function. When an animation is triggered, $animate will look for a matching animation which fits
+ * the element's CSS class attribute value and then run the matching animation event function (if found).
+ * In other words, if the CSS classes present on the animated element match any of the JavaScript animations then the callback function will
+ * be executed. It should be also noted that only simple, single class selectors are allowed (compound class selectors are not supported).
+ *
+ * Within a JavaScript animation, an object containing various event callback animation functions is expected to be returned.
+ * As explained above, these callbacks are triggered based on the animation event. Therefore if an enter animation is run,
+ * and the JavaScript animation is found, then the enter callback will handle that animation (in addition to the CSS keyframe animation
+ * or transition code that is defined via a stylesheet).
+ *
+ */
+
+angular.module('ngAnimate', ['ng'])
+
+  /**
+   * @ngdoc object
+   * @name ngAnimate.$animateProvider
+   * @description
+   *
+   * The `$animateProvider` allows developers to register JavaScript animation event handlers directly inside of a module.
+   * When an animation is triggered, the $animate service will query the $animate service to find any animations that match
+   * the provided name value.
+   *
+   * Requires the {@link ngAnimate `ngAnimate`} module to be installed.
+   *
+   * Please visit the {@link ngAnimate `ngAnimate`} module overview page learn more about how to use animations in your application.
+   *
+   */
+  .factory('$$animateReflow', ['$window', '$timeout', function($window, $timeout) {
+    var requestAnimationFrame = $window.requestAnimationFrame       ||
+                                $window.webkitRequestAnimationFrame ||
+                                function(fn) {
+                                  return $timeout(fn, 10, false);
+                                };
+
+    var cancelAnimationFrame = $window.cancelAnimationFrame       ||
+                               $window.webkitCancelAnimationFrame ||
+                               function(timer) {
+                                 return $timeout.cancel(timer);
+                               };
+    return function(fn) {
+      var id = requestAnimationFrame(fn);
+      return function() {
+        cancelAnimationFrame(id);
+      };
+    };
+  }])
+
+  .config(['$provide', '$animateProvider', function($provide, $animateProvider) {
+    var noop = angular.noop;
+    var forEach = angular.forEach;
+    var selectors = $animateProvider.$$selectors;
+
+    var ELEMENT_NODE = 1;
+    var NG_ANIMATE_STATE = '$$ngAnimateState';
+    var NG_ANIMATE_CLASS_NAME = 'ng-animate';
+    var rootAnimateState = {running: true};
+
+    function extractElementNode(element) {
+      for(var i = 0; i < element.length; i++) {
+        var elm = element[i];
+        if(elm.nodeType == ELEMENT_NODE) {
+          return elm;
+        }
+      }
+    }
+
+    function isMatchingElement(elm1, elm2) {
+      return extractElementNode(elm1) == extractElementNode(elm2);
+    }
+
+    $provide.decorator('$animate', ['$delegate', '$injector', '$sniffer', '$rootElement', '$timeout', '$rootScope', '$document',
+                            function($delegate,   $injector,   $sniffer,   $rootElement,   $timeout,   $rootScope,   $document) {
+
+      $rootElement.data(NG_ANIMATE_STATE, rootAnimateState);
+
+      // disable animations during bootstrap, but once we bootstrapped, wait again
+      // for another digest until enabling animations. The reason why we digest twice
+      // is because all structural animations (enter, leave and move) all perform a
+      // post digest operation before animating. If we only wait for a single digest
+      // to pass then the structural animation would render its animation on page load.
+      // (which is what we're trying to avoid when the application first boots up.)
+      $rootScope.$$postDigest(function() {
+        $rootScope.$$postDigest(function() {
+          rootAnimateState.running = false;
+        });
+      });
+
+      var classNameFilter = $animateProvider.classNameFilter();
+      var isAnimatableClassName = !classNameFilter
+              ? function() { return true; }
+              : function(className) {
+                return classNameFilter.test(className);
+              };
+
+      function async(fn) {
+        return $timeout(fn, 0, false);
+      }
+
+      function lookup(name) {
+        if (name) {
+          var matches = [],
+              flagMap = {},
+              classes = name.substr(1).split('.');
+
+          //the empty string value is the default animation
+          //operation which performs CSS transition and keyframe
+          //animations sniffing. This is always included for each
+          //element animation procedure if the browser supports
+          //transitions and/or keyframe animations
+          if ($sniffer.transitions || $sniffer.animations) {
+            classes.push('');
+          }
+
+          for(var i=0; i < classes.length; i++) {
+            var klass = classes[i],
+                selectorFactoryName = selectors[klass];
+            if(selectorFactoryName && !flagMap[klass]) {
+              matches.push($injector.get(selectorFactoryName));
+              flagMap[klass] = true;
+            }
+          }
+          return matches;
+        }
+      }
+
+      /**
+       * @ngdoc object
+       * @name ngAnimate.$animate
+       * @function
+       *
+       * @description
+       * The `$animate` service provides animation detection support while performing DOM operations (enter, leave and move) as well as during addClass and removeClass operations.
+       * When any of these operations are run, the $animate service
+       * will examine any JavaScript-defined animations (which are defined by using the $animateProvider provider object)
+       * as well as any CSS-defined animations against the CSS classes present on the element once the DOM operation is run.
+       *
+       * The `$animate` service is used behind the scenes with pre-existing directives and animation with these directives
+       * will work out of the box without any extra configuration.
+       *
+       * Requires the {@link ngAnimate `ngAnimate`} module to be installed.
+       *
+       * Please visit the {@link ngAnimate `ngAnimate`} module overview page learn more about how to use animations in your application.
+       *
+       */
+      return {
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#enter
+         * @methodOf ngAnimate.$animate
+         * @function
+         *
+         * @description
+         * Appends the element to the parentElement element that resides in the document and then runs the enter animation. Once
+         * the animation is started, the following CSS classes will be present on the element for the duration of the animation:
+         *
+         * Below is a breakdown of each step that occurs during enter animation:
+         *
+         * | Animation Step                                                                               | What the element class attribute looks like |
+         * |----------------------------------------------------------------------------------------------|---------------------------------------------|
+         * | 1. $animate.enter(...) is called                                                             | class="my-animation"                        |
+         * | 2. element is inserted into the parentElement element or beside the afterElement element     | class="my-animation"                        |
+         * | 3. $animate runs any JavaScript-defined animations on the element                            | class="my-animation ng-animate"             |
+         * | 4. the .ng-enter class is added to the element                                               | class="my-animation ng-animate ng-enter"    |
+         * | 5. $animate scans the element styles to get the CSS transition/animation duration and delay  | class="my-animation ng-animate ng-enter"    |
+         * | 6. $animate waits for 10ms (this performs a reflow)                                          | class="my-animation ng-animate ng-enter"    |
+         * | 7. the .ng-enter-active and .ng-animate-active classes are added (this triggers the CSS transition/animation) | class="my-animation ng-animate ng-animate-active ng-enter ng-enter-active" |
+         * | 8. $animate waits for X milliseconds for the animation to complete                           | class="my-animation ng-animate ng-animate-active ng-enter ng-enter-active" |
+         * | 9. The animation ends and all generated CSS classes are removed from the element             | class="my-animation"                        |
+         * | 10. The doneCallback() callback is fired (if provided)                                       | class="my-animation"                        |
+         *
+         * @param {jQuery/jqLite element} element the element that will be the focus of the enter animation
+         * @param {jQuery/jqLite element} parentElement the parent element of the element that will be the focus of the enter animation
+         * @param {jQuery/jqLite element} afterElement the sibling element (which is the previous element) of the element that will be the focus of the enter animation
+         * @param {function()=} doneCallback the callback function that will be called once the animation is complete
+        */
+        enter : function(element, parentElement, afterElement, doneCallback) {
+          this.enabled(false, element);
+          $delegate.enter(element, parentElement, afterElement);
+          $rootScope.$$postDigest(function() {
+            performAnimation('enter', 'ng-enter', element, parentElement, afterElement, noop, doneCallback);
+          });
+        },
+
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#leave
+         * @methodOf ngAnimate.$animate
+         * @function
+         *
+         * @description
+         * Runs the leave animation operation and, upon completion, removes the element from the DOM. Once
+         * the animation is started, the following CSS classes will be added for the duration of the animation:
+         *
+         * Below is a breakdown of each step that occurs during leave animation:
+         *
+         * | Animation Step                                                                               | What the element class attribute looks like |
+         * |----------------------------------------------------------------------------------------------|---------------------------------------------|
+         * | 1. $animate.leave(...) is called                                                             | class="my-animation"                        |
+         * | 2. $animate runs any JavaScript-defined animations on the element                            | class="my-animation ng-animate"             |
+         * | 3. the .ng-leave class is added to the element                                               | class="my-animation ng-animate ng-leave"    |
+         * | 4. $animate scans the element styles to get the CSS transition/animation duration and delay  | class="my-animation ng-animate ng-leave"    |
+         * | 5. $animate waits for 10ms (this performs a reflow)                                          | class="my-animation ng-animate ng-leave"    |
+         * | 6. the .ng-leave-active and .ng-animate-active classes is added (this triggers the CSS transition/animation) | class="my-animation ng-animate ng-animate-active ng-leave ng-leave-active" |
+         * | 7. $animate waits for X milliseconds for the animation to complete                           | class="my-animation ng-animate ng-animate-active ng-leave ng-leave-active" |
+         * | 8. The animation ends and all generated CSS classes are removed from the element             | class="my-animation"                        |
+         * | 9. The element is removed from the DOM                                                       | ...                                         |
+         * | 10. The doneCallback() callback is fired (if provided)                                       | ...                                         |
+         *
+         * @param {jQuery/jqLite element} element the element that will be the focus of the leave animation
+         * @param {function()=} doneCallback the callback function that will be called once the animation is complete
+        */
+        leave : function(element, doneCallback) {
+          cancelChildAnimations(element);
+          this.enabled(false, element);
+          $rootScope.$$postDigest(function() {
+            performAnimation('leave', 'ng-leave', element, null, null, function() {
+              $delegate.leave(element);
+            }, doneCallback);
+          });
+        },
+
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#move
+         * @methodOf ngAnimate.$animate
+         * @function
+         *
+         * @description
+         * Fires the move DOM operation. Just before the animation starts, the animate service will either append it into the parentElement container or
+         * add the element directly after the afterElement element if present. Then the move animation will be run. Once
+         * the animation is started, the following CSS classes will be added for the duration of the animation:
+         *
+         * Below is a breakdown of each step that occurs during move animation:
+         *
+         * | Animation Step                                                                               | What the element class attribute looks like |
+         * |----------------------------------------------------------------------------------------------|---------------------------------------------|
+         * | 1. $animate.move(...) is called                                                              | class="my-animation"                        |
+         * | 2. element is moved into the parentElement element or beside the afterElement element        | class="my-animation"                        |
+         * | 3. $animate runs any JavaScript-defined animations on the element                            | class="my-animation ng-animate"             |
+         * | 4. the .ng-move class is added to the element                                                | class="my-animation ng-animate ng-move"     |
+         * | 5. $animate scans the element styles to get the CSS transition/animation duration and delay  | class="my-animation ng-animate ng-move"     |
+         * | 6. $animate waits for 10ms (this performs a reflow)                                          | class="my-animation ng-animate ng-move"     |
+         * | 7. the .ng-move-active and .ng-animate-active classes is added (this triggers the CSS transition/animation) | class="my-animation ng-animate ng-animate-active ng-move ng-move-active" |
+         * | 8. $animate waits for X milliseconds for the animation to complete                           | class="my-animation ng-animate ng-animate-active ng-move ng-move-active" |
+         * | 9. The animation ends and all generated CSS classes are removed from the element             | class="my-animation"                        |
+         * | 10. The doneCallback() callback is fired (if provided)                                       | class="my-animation"                        |
+         *
+         * @param {jQuery/jqLite element} element the element that will be the focus of the move animation
+         * @param {jQuery/jqLite element} parentElement the parentElement element of the element that will be the focus of the move animation
+         * @param {jQuery/jqLite element} afterElement the sibling element (which is the previous element) of the element that will be the focus of the move animation
+         * @param {function()=} doneCallback the callback function that will be called once the animation is complete
+        */
+        move : function(element, parentElement, afterElement, doneCallback) {
+          cancelChildAnimations(element);
+          this.enabled(false, element);
+          $delegate.move(element, parentElement, afterElement);
+          $rootScope.$$postDigest(function() {
+            performAnimation('move', 'ng-move', element, parentElement, afterElement, noop, doneCallback);
+          });
+        },
+
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#addClass
+         * @methodOf ngAnimate.$animate
+         *
+         * @description
+         * Triggers a custom animation event based off the className variable and then attaches the className value to the element as a CSS class.
+         * Unlike the other animation methods, the animate service will suffix the className value with {@type -add} in order to provide
+         * the animate service the setup and active CSS classes in order to trigger the animation (this will be skipped if no CSS transitions
+         * or keyframes are defined on the -add or base CSS class).
+         *
+         * Below is a breakdown of each step that occurs during addClass animation:
+         *
+         * | Animation Step                                                                                 | What the element class attribute looks like |
+         * |------------------------------------------------------------------------------------------------|---------------------------------------------|
+         * | 1. $animate.addClass(element, 'super') is called                                               | class="my-animation"                        |
+         * | 2. $animate runs any JavaScript-defined animations on the element                              | class="my-animation ng-animate"             |
+         * | 3. the .super-add class are added to the element                                               | class="my-animation ng-animate super-add"   |
+         * | 4. $animate scans the element styles to get the CSS transition/animation duration and delay    | class="my-animation ng-animate super-add"   |
+         * | 5. $animate waits for 10ms (this performs a reflow)                                            | class="my-animation ng-animate super-add"   |
+         * | 6. the .super, .super-add-active and .ng-animate-active classes are added (this triggers the CSS transition/animation) | class="my-animation ng-animate ng-animate-active super super-add super-add-active"          |
+         * | 7. $animate waits for X milliseconds for the animation to complete                             | class="my-animation super-add super-add-active"  |
+         * | 8. The animation ends and all generated CSS classes are removed from the element               | class="my-animation super"                  |
+         * | 9. The super class is kept on the element                                                      | class="my-animation super"                  |
+         * | 10. The doneCallback() callback is fired (if provided)                                         | class="my-animation super"                  |
+         *
+         * @param {jQuery/jqLite element} element the element that will be animated
+         * @param {string} className the CSS class that will be added to the element and then animated
+         * @param {function()=} doneCallback the callback function that will be called once the animation is complete
+        */
+        addClass : function(element, className, doneCallback) {
+          performAnimation('addClass', className, element, null, null, function() {
+            $delegate.addClass(element, className);
+          }, doneCallback);
+        },
+
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#removeClass
+         * @methodOf ngAnimate.$animate
+         *
+         * @description
+         * Triggers a custom animation event based off the className variable and then removes the CSS class provided by the className value
+         * from the element. Unlike the other animation methods, the animate service will suffix the className value with {@type -remove} in
+         * order to provide the animate service the setup and active CSS classes in order to trigger the animation (this will be skipped if
+         * no CSS transitions or keyframes are defined on the -remove or base CSS classes).
+         *
+         * Below is a breakdown of each step that occurs during removeClass animation:
+         *
+         * | Animation Step                                                                                | What the element class attribute looks like     |
+         * |-----------------------------------------------------------------------------------------------|---------------------------------------------|
+         * | 1. $animate.removeClass(element, 'super') is called                                           | class="my-animation super"                  |
+         * | 2. $animate runs any JavaScript-defined animations on the element                             | class="my-animation super ng-animate"       |
+         * | 3. the .super-remove class are added to the element                                           | class="my-animation super ng-animate super-remove"|
+         * | 4. $animate scans the element styles to get the CSS transition/animation duration and delay   | class="my-animation super ng-animate super-remove"   |
+         * | 5. $animate waits for 10ms (this performs a reflow)                                           | class="my-animation super ng-animate super-remove"   |
+         * | 6. the .super-remove-active and .ng-animate-active classes are added and .super is removed (this triggers the CSS transition/animation) | class="my-animation ng-animate ng-animate-active super-remove super-remove-active"          |
+         * | 7. $animate waits for X milliseconds for the animation to complete                            | class="my-animation ng-animate ng-animate-active super-remove super-remove-active"   |
+         * | 8. The animation ends and all generated CSS classes are removed from the element              | class="my-animation"                        |
+         * | 9. The doneCallback() callback is fired (if provided)                                         | class="my-animation"                        |
+         *
+         *
+         * @param {jQuery/jqLite element} element the element that will be animated
+         * @param {string} className the CSS class that will be animated and then removed from the element
+         * @param {function()=} doneCallback the callback function that will be called once the animation is complete
+        */
+        removeClass : function(element, className, doneCallback) {
+          performAnimation('removeClass', className, element, null, null, function() {
+            $delegate.removeClass(element, className);
+          }, doneCallback);
+        },
+
+        /**
+         * @ngdoc function
+         * @name ngAnimate.$animate#enabled
+         * @methodOf ngAnimate.$animate
+         * @function
+         *
+         * @param {boolean=} value If provided then set the animation on or off.
+         * @param {jQuery/jqLite element=} element If provided then the element will be used to represent the enable/disable operation
+         * @return {boolean} Current animation state.
+         *
+         * @description
+         * Globally enables/disables animations.
+         *
+        */
+        enabled : function(value, element) {
+          switch(arguments.length) {
+            case 2:
+              if(value) {
+                cleanup(element);
+              } else {
+                var data = element.data(NG_ANIMATE_STATE) || {};
+                data.disabled = true;
+                element.data(NG_ANIMATE_STATE, data);
+              }
+            break;
+
+            case 1:
+              rootAnimateState.disabled = !value;
+            break;
+
+            default:
+              value = !rootAnimateState.disabled;
+            break;
+          }
+          return !!value;
+         }
+      };
+
+      /*
+        all animations call this shared animation triggering function internally.
+        The animationEvent variable refers to the JavaScript animation event that will be triggered
+        and the className value is the name of the animation that will be applied within the
+        CSS code. Element, parentElement and afterElement are provided DOM elements for the animation
+        and the onComplete callback will be fired once the animation is fully complete.
+      */
+      function performAnimation(animationEvent, className, element, parentElement, afterElement, domOperation, doneCallback) {
+        var currentClassName, classes, node = extractElementNode(element);
+        if(node) {
+          currentClassName = node.className;
+          classes = currentClassName + ' ' + className;
+        }
+
+        //transcluded directives may sometimes fire an animation using only comment nodes
+        //best to catch this early on to prevent any animation operations from occurring
+        if(!node || !isAnimatableClassName(classes)) {
+          fireDOMOperation();
+          fireBeforeCallbackAsync();
+          fireAfterCallbackAsync();
+          closeAnimation();
+          return;
+        }
+
+        var animationLookup = (' ' + classes).replace(/\s+/g,'.');
+        if (!parentElement) {
+          parentElement = afterElement ? afterElement.parent() : element.parent();
+        }
+
+        var matches = lookup(animationLookup);
+        var isClassBased = animationEvent == 'addClass' || animationEvent == 'removeClass';
+        var ngAnimateState = element.data(NG_ANIMATE_STATE) || {};
+
+        //skip the animation if animations are disabled, a parent is already being animated,
+        //the element is not currently attached to the document body or then completely close
+        //the animation if any matching animations are not found at all.
+        //NOTE: IE8 + IE9 should close properly (run closeAnimation()) in case a NO animation is not found.
+        if (animationsDisabled(element, parentElement) || matches.length === 0) {
+          fireDOMOperation();
+          fireBeforeCallbackAsync();
+          fireAfterCallbackAsync();
+          closeAnimation();
+          return;
+        }
+
+        var animations = [];
+
+        //only add animations if the currently running animation is not structural
+        //or if there is no animation running at all
+        var allowAnimations = isClassBased ?
+          !ngAnimateState.disabled && (!ngAnimateState.running || !ngAnimateState.structural) :
+          true;
+
+        if(allowAnimations) {
+          forEach(matches, function(animation) {
+            //add the animation to the queue to if it is allowed to be cancelled
+            if(!animation.allowCancel || animation.allowCancel(element, animationEvent, className)) {
+              var beforeFn, afterFn = animation[animationEvent];
+
+              //Special case for a leave animation since there is no point in performing an
+              //animation on a element node that has already been removed from the DOM
+              if(animationEvent == 'leave') {
+                beforeFn = afterFn;
+                afterFn = null; //this must be falsy so that the animation is skipped for leave
+              } else {
+                beforeFn = animation['before' + animationEvent.charAt(0).toUpperCase() + animationEvent.substr(1)];
+              }
+              animations.push({
+                before : beforeFn,
+                after : afterFn
+              });
+            }
+          });
+        }
+
+        //this would mean that an animation was not allowed so let the existing
+        //animation do it's thing and close this one early
+        if(animations.length === 0) {
+          fireDOMOperation();
+          fireBeforeCallbackAsync();
+          fireAfterCallbackAsync();
+          fireDoneCallbackAsync();
+          return;
+        }
+
+        var ONE_SPACE = ' ';
+        //this value will be searched for class-based CSS className lookup. Therefore,
+        //we prefix and suffix the current className value with spaces to avoid substring
+        //lookups of className tokens
+        var futureClassName = ONE_SPACE + currentClassName + ONE_SPACE;
+        if(ngAnimateState.running) {
+          //if an animation is currently running on the element then lets take the steps
+          //to cancel that animation and fire any required callbacks
+          $timeout.cancel(ngAnimateState.closeAnimationTimeout);
+          cleanup(element);
+          cancelAnimations(ngAnimateState.animations);
+
+          //in the event that the CSS is class is quickly added and removed back
+          //then we don't want to wait until after the reflow to add/remove the CSS
+          //class since both class animations may run into a race condition.
+          //The code below will check to see if that is occurring and will
+          //immediately remove the former class before the reflow so that the
+          //animation can snap back to the original animation smoothly
+          var isFullyClassBasedAnimation = isClassBased && !ngAnimateState.structural;
+          var isRevertingClassAnimation = isFullyClassBasedAnimation &&
+                                          ngAnimateState.className == className &&
+                                          animationEvent != ngAnimateState.event;
+
+          //if the class is removed during the reflow then it will revert the styles temporarily
+          //back to the base class CSS styling causing a jump-like effect to occur. This check
+          //here ensures that the domOperation is only performed after the reflow has commenced
+          if(ngAnimateState.beforeComplete || isRevertingClassAnimation) {
+            (ngAnimateState.done || noop)(true);
+          } else if(isFullyClassBasedAnimation) {
+            //class-based animations will compare element className values after cancelling the
+            //previous animation to see if the element properties already contain the final CSS
+            //class and if so then the animation will be skipped. Since the domOperation will
+            //be performed only after the reflow is complete then our element's className value
+            //will be invalid. Therefore the same string manipulation that would occur within the
+            //DOM operation will be performed below so that the class comparison is valid...
+            futureClassName = ngAnimateState.event == 'removeClass' ?
+              futureClassName.replace(ONE_SPACE + ngAnimateState.className + ONE_SPACE, ONE_SPACE) :
+              futureClassName + ngAnimateState.className + ONE_SPACE;
+          }
+        }
+
+        //There is no point in perform a class-based animation if the element already contains
+        //(on addClass) or doesn't contain (on removeClass) the className being animated.
+        //The reason why this is being called after the previous animations are cancelled
+        //is so that the CSS classes present on the element can be properly examined.
+        var classNameToken = ONE_SPACE + className + ONE_SPACE;
+        if((animationEvent == 'addClass'    && futureClassName.indexOf(classNameToken) >= 0) ||
+           (animationEvent == 'removeClass' && futureClassName.indexOf(classNameToken) == -1)) {
+          fireDOMOperation();
+          fireBeforeCallbackAsync();
+          fireAfterCallbackAsync();
+          fireDoneCallbackAsync();
+          return;
+        }
+
+        //the ng-animate class does nothing, but it's here to allow for
+        //parent animations to find and cancel child animations when needed
+        element.addClass(NG_ANIMATE_CLASS_NAME);
+
+        element.data(NG_ANIMATE_STATE, {
+          running:true,
+          event:animationEvent,
+          className:className,
+          structural:!isClassBased,
+          animations:animations,
+          done:onBeforeAnimationsComplete
+        });
+
+        //first we run the before animations and when all of those are complete
+        //then we perform the DOM operation and run the next set of animations
+        invokeRegisteredAnimationFns(animations, 'before', onBeforeAnimationsComplete);
+
+        function onBeforeAnimationsComplete(cancelled) {
+          fireDOMOperation();
+          if(cancelled === true) {
+            closeAnimation();
+            return;
+          }
+
+          //set the done function to the final done function
+          //so that the DOM event won't be executed twice by accident
+          //if the after animation is cancelled as well
+          var data = element.data(NG_ANIMATE_STATE);
+          if(data) {
+            data.done = closeAnimation;
+            element.data(NG_ANIMATE_STATE, data);
+          }
+          invokeRegisteredAnimationFns(animations, 'after', closeAnimation);
+        }
+
+        function invokeRegisteredAnimationFns(animations, phase, allAnimationFnsComplete) {
+          phase == 'after' ?
+            fireAfterCallbackAsync() :
+            fireBeforeCallbackAsync();
+
+          var endFnName = phase + 'End';
+          forEach(animations, function(animation, index) {
+            var animationPhaseCompleted = function() {
+              progress(index, phase);
+            };
+
+            //there are no before functions for enter + move since the DOM
+            //operations happen before the performAnimation method fires
+            if(phase == 'before' && (animationEvent == 'enter' || animationEvent == 'move')) {
+              animationPhaseCompleted();
+              return;
+            }
+
+            if(animation[phase]) {
+              animation[endFnName] = isClassBased ?
+                animation[phase](element, className, animationPhaseCompleted) :
+                animation[phase](element, animationPhaseCompleted);
+            } else {
+              animationPhaseCompleted();
+            }
+          });
+
+          function progress(index, phase) {
+            var phaseCompletionFlag = phase + 'Complete';
+            var currentAnimation = animations[index];
+            currentAnimation[phaseCompletionFlag] = true;
+            (currentAnimation[endFnName] || noop)();
+
+            for(var i=0;i<animations.length;i++) {
+              if(!animations[i][phaseCompletionFlag]) return;
+            }
+
+            allAnimationFnsComplete();
+          }
+        }
+
+        function fireDOMCallback(animationPhase) {
+          element.triggerHandler('$animate:' + animationPhase, {
+            event : animationEvent,
+            className : className
+          });
+        }
+
+        function fireBeforeCallbackAsync() {
+          async(function() {
+            fireDOMCallback('before');
+          });
+        }
+
+        function fireAfterCallbackAsync() {
+          async(function() {
+            fireDOMCallback('after');
+          });
+        }
+
+        function fireDoneCallbackAsync() {
+          async(function() {
+            fireDOMCallback('close');
+            doneCallback && doneCallback();
+          });
+        }
+
+        //it is less complicated to use a flag than managing and cancelling
+        //timeouts containing multiple callbacks.
+        function fireDOMOperation() {
+          if(!fireDOMOperation.hasBeenRun) {
+            fireDOMOperation.hasBeenRun = true;
+            domOperation();
+          }
+        }
+
+        function closeAnimation() {
+          if(!closeAnimation.hasBeenRun) {
+            closeAnimation.hasBeenRun = true;
+            var data = element.data(NG_ANIMATE_STATE);
+            if(data) {
+              /* only structural animations wait for reflow before removing an
+                 animation, but class-based animations don't. An example of this
+                 failing would be when a parent HTML tag has a ng-class attribute
+                 causing ALL directives below to skip animations during the digest */
+              if(isClassBased) {
+                cleanup(element);
+              } else {
+                data.closeAnimationTimeout = async(function() {
+                  cleanup(element);
+                });
+                element.data(NG_ANIMATE_STATE, data);
+              }
+            }
+            fireDoneCallbackAsync();
+          }
+        }
+      }
+
+      function cancelChildAnimations(element) {
+        var node = extractElementNode(element);
+        forEach(node.querySelectorAll('.' + NG_ANIMATE_CLASS_NAME), function(element) {
+          element = angular.element(element);
+          var data = element.data(NG_ANIMATE_STATE);
+          if(data) {
+            cancelAnimations(data.animations);
+            cleanup(element);
+          }
+        });
+      }
+
+      function cancelAnimations(animations) {
+        var isCancelledFlag = true;
+        forEach(animations, function(animation) {
+          if(!animation.beforeComplete) {
+            (animation.beforeEnd || noop)(isCancelledFlag);
+          }
+          if(!animation.afterComplete) {
+            (animation.afterEnd || noop)(isCancelledFlag);
+          }
+        });
+      }
+
+      function cleanup(element) {
+        if(isMatchingElement(element, $rootElement)) {
+          if(!rootAnimateState.disabled) {
+            rootAnimateState.running = false;
+            rootAnimateState.structural = false;
+          }
+        } else {
+          element.removeClass(NG_ANIMATE_CLASS_NAME);
+          element.removeData(NG_ANIMATE_STATE);
+        }
+      }
+
+      function animationsDisabled(element, parentElement) {
+        if (rootAnimateState.disabled) return true;
+
+        if(isMatchingElement(element, $rootElement)) {
+          return rootAnimateState.disabled || rootAnimateState.running;
+        }
+
+        do {
+          //the element did not reach the root element which means that it
+          //is not apart of the DOM. Therefore there is no reason to do
+          //any animations on it
+          if(parentElement.length === 0) break;
+
+          var isRoot = isMatchingElement(parentElement, $rootElement);
+          var state = isRoot ? rootAnimateState : parentElement.data(NG_ANIMATE_STATE);
+          var result = state && (!!state.disabled || !!state.running);
+          if(isRoot || result) {
+            return result;
+          }
+
+          if(isRoot) return true;
+        }
+        while(parentElement = parentElement.parent());
+
+        return true;
+      }
+    }]);
+
+    $animateProvider.register('', ['$window', '$sniffer', '$timeout', '$$animateReflow',
+                           function($window,   $sniffer,   $timeout,   $$animateReflow) {
+      // Detect proper transitionend/animationend event names.
+      var CSS_PREFIX = '', TRANSITION_PROP, TRANSITIONEND_EVENT, ANIMATION_PROP, ANIMATIONEND_EVENT;
+
+      // If unprefixed events are not supported but webkit-prefixed are, use the latter.
+      // Otherwise, just use W3C names, browsers not supporting them at all will just ignore them.
+      // Note: Chrome implements `window.onwebkitanimationend` and doesn't implement `window.onanimationend`
+      // but at the same time dispatches the `animationend` event and not `webkitAnimationEnd`.
+      // Register both events in case `window.onanimationend` is not supported because of that,
+      // do the same for `transitionend` as Safari is likely to exhibit similar behavior.
+      // Also, the only modern browser that uses vendor prefixes for transitions/keyframes is webkit
+      // therefore there is no reason to test anymore for other vendor prefixes: http://caniuse.com/#search=transition
+      if (window.ontransitionend === undefined && window.onwebkittransitionend !== undefined) {
+        CSS_PREFIX = '-webkit-';
+        TRANSITION_PROP = 'WebkitTransition';
+        TRANSITIONEND_EVENT = 'webkitTransitionEnd transitionend';
+      } else {
+        TRANSITION_PROP = 'transition';
+        TRANSITIONEND_EVENT = 'transitionend';
+      }
+
+      if (window.onanimationend === undefined && window.onwebkitanimationend !== undefined) {
+        CSS_PREFIX = '-webkit-';
+        ANIMATION_PROP = 'WebkitAnimation';
+        ANIMATIONEND_EVENT = 'webkitAnimationEnd animationend';
+      } else {
+        ANIMATION_PROP = 'animation';
+        ANIMATIONEND_EVENT = 'animationend';
+      }
+
+      var DURATION_KEY = 'Duration';
+      var PROPERTY_KEY = 'Property';
+      var DELAY_KEY = 'Delay';
+      var ANIMATION_ITERATION_COUNT_KEY = 'IterationCount';
+      var NG_ANIMATE_PARENT_KEY = '$$ngAnimateKey';
+      var NG_ANIMATE_CSS_DATA_KEY = '$$ngAnimateCSS3Data';
+      var ELAPSED_TIME_MAX_DECIMAL_PLACES = 3;
+      var CLOSING_TIME_BUFFER = 1.5;
+      var ONE_SECOND = 1000;
+
+      var animationCounter = 0;
+      var lookupCache = {};
+      var parentCounter = 0;
+      var animationReflowQueue = [];
+      var animationElementQueue = [];
+      var cancelAnimationReflow;
+      var closingAnimationTime = 0;
+      var timeOut = false;
+      function afterReflow(element, callback) {
+        if(cancelAnimationReflow) {
+          cancelAnimationReflow();
+        }
+
+        animationReflowQueue.push(callback);
+
+        var node = extractElementNode(element);
+        element = angular.element(node);
+        animationElementQueue.push(element);
+
+        var elementData = element.data(NG_ANIMATE_CSS_DATA_KEY);
+
+        var stagger = elementData.stagger;
+        var staggerTime = elementData.itemIndex * (Math.max(stagger.animationDelay, stagger.transitionDelay) || 0);
+
+        var animationTime = (elementData.maxDelay + elementData.maxDuration) * CLOSING_TIME_BUFFER;
+        closingAnimationTime = Math.max(closingAnimationTime, (staggerTime + animationTime) * ONE_SECOND);
+
+        //by placing a counter we can avoid an accidental
+        //race condition which may close an animation when
+        //a follow-up animation is midway in its animation
+        elementData.animationCount = animationCounter;
+
+        cancelAnimationReflow = $$animateReflow(function() {
+          forEach(animationReflowQueue, function(fn) {
+            fn();
+          });
+
+          //copy the list of elements so that successive
+          //animations won't conflict if they're added before
+          //the closing animation timeout has run
+          var elementQueueSnapshot = [];
+          var animationCounterSnapshot = animationCounter;
+          forEach(animationElementQueue, function(elm) {
+            elementQueueSnapshot.push(elm);
+          });
+
+          $timeout(function() {
+            closeAllAnimations(elementQueueSnapshot, animationCounterSnapshot);
+            elementQueueSnapshot = null;
+          }, closingAnimationTime, false);
+
+          animationReflowQueue = [];
+          animationElementQueue = [];
+          cancelAnimationReflow = null;
+          lookupCache = {};
+          closingAnimationTime = 0;
+          animationCounter++;
+        });
+      }
+
+      function closeAllAnimations(elements, count) {
+        forEach(elements, function(element) {
+          var elementData = element.data(NG_ANIMATE_CSS_DATA_KEY);
+          if(elementData && elementData.animationCount == count) {
+            (elementData.closeAnimationFn || noop)();
+          }
+        });
+      }
+
+      function getElementAnimationDetails(element, cacheKey) {
+        var data = cacheKey ? lookupCache[cacheKey] : null;
+        if(!data) {
+          var transitionDuration = 0;
+          var transitionDelay = 0;
+          var animationDuration = 0;
+          var animationDelay = 0;
+          var transitionDelayStyle;
+          var animationDelayStyle;
+          var transitionDurationStyle;
+          var transitionPropertyStyle;
+
+          //we want all the styles defined before and after
+          forEach(element, function(element) {
+            if (element.nodeType == ELEMENT_NODE) {
+              var elementStyles = $window.getComputedStyle(element) || {};
+
+              transitionDurationStyle = elementStyles[TRANSITION_PROP + DURATION_KEY];
+
+              transitionDuration = Math.max(parseMaxTime(transitionDurationStyle), transitionDuration);
+
+              transitionPropertyStyle = elementStyles[TRANSITION_PROP + PROPERTY_KEY];
+
+              transitionDelayStyle = elementStyles[TRANSITION_PROP + DELAY_KEY];
+
+              transitionDelay  = Math.max(parseMaxTime(transitionDelayStyle), transitionDelay);
+
+              animationDelayStyle = elementStyles[ANIMATION_PROP + DELAY_KEY];
+
+              animationDelay   = Math.max(parseMaxTime(animationDelayStyle), animationDelay);
+
+              var aDuration  = parseMaxTime(elementStyles[ANIMATION_PROP + DURATION_KEY]);
+
+              if(aDuration > 0) {
+                aDuration *= parseInt(elementStyles[ANIMATION_PROP + ANIMATION_ITERATION_COUNT_KEY], 10) || 1;
+              }
+
+              animationDuration = Math.max(aDuration, animationDuration);
+            }
+          });
+          data = {
+            total : 0,
+            transitionPropertyStyle: transitionPropertyStyle,
+            transitionDurationStyle: transitionDurationStyle,
+            transitionDelayStyle: transitionDelayStyle,
+            transitionDelay: transitionDelay,
+            transitionDuration: transitionDuration,
+            animationDelayStyle: animationDelayStyle,
+            animationDelay: animationDelay,
+            animationDuration: animationDuration
+          };
+          if(cacheKey) {
+            lookupCache[cacheKey] = data;
+          }
+        }
+        return data;
+      }
+
+      function parseMaxTime(str) {
+        var maxValue = 0;
+        var values = angular.isString(str) ?
+          str.split(/\s*,\s*/) :
+          [];
+        forEach(values, function(value) {
+          maxValue = Math.max(parseFloat(value) || 0, maxValue);
+        });
+        return maxValue;
+      }
+
+      function getCacheKey(element) {
+        var parentElement = element.parent();
+        var parentID = parentElement.data(NG_ANIMATE_PARENT_KEY);
+        if(!parentID) {
+          parentElement.data(NG_ANIMATE_PARENT_KEY, ++parentCounter);
+          parentID = parentCounter;
+        }
+        return parentID + '-' + extractElementNode(element).className;
+      }
+
+      function animateSetup(element, className, calculationDecorator) {
+        var cacheKey = getCacheKey(element);
+        var eventCacheKey = cacheKey + ' ' + className;
+        var stagger = {};
+        var itemIndex = lookupCache[eventCacheKey] ? ++lookupCache[eventCacheKey].total : 0;
+
+        if(itemIndex > 0) {
+          var staggerClassName = className + '-stagger';
+          var staggerCacheKey = cacheKey + ' ' + staggerClassName;
+          var applyClasses = !lookupCache[staggerCacheKey];
+
+          applyClasses && element.addClass(staggerClassName);
+
+          stagger = getElementAnimationDetails(element, staggerCacheKey);
+
+          applyClasses && element.removeClass(staggerClassName);
+        }
+
+        /* the animation itself may need to add/remove special CSS classes
+         * before calculating the anmation styles */
+        calculationDecorator = calculationDecorator ||
+                               function(fn) { return fn(); };
+
+        element.addClass(className);
+
+        var timings = calculationDecorator(function() {
+          return getElementAnimationDetails(element, eventCacheKey);
+        });
+
+        /* there is no point in performing a reflow if the animation
+           timeout is empty (this would cause a flicker bug normally
+           in the page. There is also no point in performing an animation
+           that only has a delay and no duration */
+        var maxDelay = Math.max(timings.transitionDelay, timings.animationDelay);
+        var maxDuration = Math.max(timings.transitionDuration, timings.animationDuration);
+        if(maxDuration === 0) {
+          element.removeClass(className);
+          return false;
+        }
+
+        //temporarily disable the transition so that the enter styles
+        //don't animate twice (this is here to avoid a bug in Chrome/FF).
+        var activeClassName = '';
+        timings.transitionDuration > 0 ?
+          blockTransitions(element) :
+          blockKeyframeAnimations(element);
+
+        forEach(className.split(' '), function(klass, i) {
+          activeClassName += (i > 0 ? ' ' : '') + klass + '-active';
+        });
+
+        element.data(NG_ANIMATE_CSS_DATA_KEY, {
+          className : className,
+          activeClassName : activeClassName,
+          maxDuration : maxDuration,
+          maxDelay : maxDelay,
+          classes : className + ' ' + activeClassName,
+          timings : timings,
+          stagger : stagger,
+          itemIndex : itemIndex
+        });
+
+        return true;
+      }
+
+      function blockTransitions(element) {
+        extractElementNode(element).style[TRANSITION_PROP + PROPERTY_KEY] = 'none';
+      }
+
+      function blockKeyframeAnimations(element) {
+        extractElementNode(element).style[ANIMATION_PROP] = 'none 0s';
+      }
+
+      function unblockTransitions(element) {
+        var prop = TRANSITION_PROP + PROPERTY_KEY;
+        var node = extractElementNode(element);
+        if(node.style[prop] && node.style[prop].length > 0) {
+          node.style[prop] = '';
+        }
+      }
+
+      function unblockKeyframeAnimations(element) {
+        var prop = ANIMATION_PROP;
+        var node = extractElementNode(element);
+        if(node.style[prop] && node.style[prop].length > 0) {
+          node.style[prop] = '';
+        }
+      }
+
+      function animateRun(element, className, activeAnimationComplete) {
+        var elementData = element.data(NG_ANIMATE_CSS_DATA_KEY);
+        var node = extractElementNode(element);
+        if(node.className.indexOf(className) == -1 || !elementData) {
+          activeAnimationComplete();
+          return;
+        }
+
+        var timings = elementData.timings;
+        var stagger = elementData.stagger;
+        var maxDuration = elementData.maxDuration;
+        var activeClassName = elementData.activeClassName;
+        var maxDelayTime = Math.max(timings.transitionDelay, timings.animationDelay) * ONE_SECOND;
+        var startTime = Date.now();
+        var css3AnimationEvents = ANIMATIONEND_EVENT + ' ' + TRANSITIONEND_EVENT;
+        var itemIndex = elementData.itemIndex;
+
+        var style = '', appliedStyles = [];
+        if(timings.transitionDuration > 0) {
+          var propertyStyle = timings.transitionPropertyStyle;
+          if(propertyStyle.indexOf('all') == -1) {
+            style += CSS_PREFIX + 'transition-property: ' + propertyStyle + ';';
+            style += CSS_PREFIX + 'transition-duration: ' + timings.transitionDurationStyle + ';';
+            appliedStyles.push(CSS_PREFIX + 'transition-property');
+            appliedStyles.push(CSS_PREFIX + 'transition-duration');
+          }
+        }
+
+        if(itemIndex > 0) {
+          if(stagger.transitionDelay > 0 && stagger.transitionDuration === 0) {
+            var delayStyle = timings.transitionDelayStyle;
+            style += CSS_PREFIX + 'transition-delay: ' +
+                     prepareStaggerDelay(delayStyle, stagger.transitionDelay, itemIndex) + '; ';
+            appliedStyles.push(CSS_PREFIX + 'transition-delay');
+          }
+
+          if(stagger.animationDelay > 0 && stagger.animationDuration === 0) {
+            style += CSS_PREFIX + 'animation-delay: ' +
+                     prepareStaggerDelay(timings.animationDelayStyle, stagger.animationDelay, itemIndex) + '; ';
+            appliedStyles.push(CSS_PREFIX + 'animation-delay');
+          }
+        }
+
+        if(appliedStyles.length > 0) {
+          //the element being animated may sometimes contain comment nodes in
+          //the jqLite object, so we're safe to use a single variable to house
+          //the styles since there is always only one element being animated
+          var oldStyle = node.getAttribute('style') || '';
+          node.setAttribute('style', oldStyle + ' ' + style);
+        }
+
+        element.on(css3AnimationEvents, onAnimationProgress);
+        element.addClass(activeClassName);
+        elementData.closeAnimationFn = function() {
+          onEnd();
+          activeAnimationComplete();
+        };
+        return onEnd;
+
+        // This will automatically be called by $animate so
+        // there is no need to attach this internally to the
+        // timeout done method.
+        function onEnd(cancelled) {
+          element.off(css3AnimationEvents, onAnimationProgress);
+          element.removeClass(activeClassName);
+          animateClose(element, className);
+          var node = extractElementNode(element);
+          for (var i in appliedStyles) {
+            node.style.removeProperty(appliedStyles[i]);
+          }
+        }
+
+        function onAnimationProgress(event) {
+          event.stopPropagation();
+          var ev = event.originalEvent || event;
+          var timeStamp = ev.$manualTimeStamp || ev.timeStamp || Date.now();
+          
+          /* Firefox (or possibly just Gecko) likes to not round values up
+           * when a ms measurement is used for the animation */
+          var elapsedTime = parseFloat(ev.elapsedTime.toFixed(ELAPSED_TIME_MAX_DECIMAL_PLACES));
+
+          /* $manualTimeStamp is a mocked timeStamp value which is set
+           * within browserTrigger(). This is only here so that tests can
+           * mock animations properly. Real events fallback to event.timeStamp,
+           * or, if they don't, then a timeStamp is automatically created for them.
+           * We're checking to see if the timeStamp surpasses the expected delay,
+           * but we're using elapsedTime instead of the timeStamp on the 2nd
+           * pre-condition since animations sometimes close off early */
+          if(Math.max(timeStamp - startTime, 0) >= maxDelayTime && elapsedTime >= maxDuration) {
+            activeAnimationComplete();
+          }
+        }
+      }
+
+      function prepareStaggerDelay(delayStyle, staggerDelay, index) {
+        var style = '';
+        forEach(delayStyle.split(','), function(val, i) {
+          style += (i > 0 ? ',' : '') +
+                   (index * staggerDelay + parseInt(val, 10)) + 's';
+        });
+        return style;
+      }
+
+      function animateBefore(element, className, calculationDecorator) {
+        if(animateSetup(element, className, calculationDecorator)) {
+          return function(cancelled) {
+            cancelled && animateClose(element, className);
+          };
+        }
+      }
+
+      function animateAfter(element, className, afterAnimationComplete) {
+        if(element.data(NG_ANIMATE_CSS_DATA_KEY)) {
+          return animateRun(element, className, afterAnimationComplete);
+        } else {
+          animateClose(element, className);
+          afterAnimationComplete();
+        }
+      }
+
+      function animate(element, className, animationComplete) {
+        //If the animateSetup function doesn't bother returning a
+        //cancellation function then it means that there is no animation
+        //to perform at all
+        var preReflowCancellation = animateBefore(element, className);
+        if(!preReflowCancellation) {
+          animationComplete();
+          return;
+        }
+
+        //There are two cancellation functions: one is before the first
+        //reflow animation and the second is during the active state
+        //animation. The first function will take care of removing the
+        //data from the element which will not make the 2nd animation
+        //happen in the first place
+        var cancel = preReflowCancellation;
+        afterReflow(element, function() {
+          unblockTransitions(element);
+          unblockKeyframeAnimations(element);
+          //once the reflow is complete then we point cancel to
+          //the new cancellation function which will remove all of the
+          //animation properties from the active animation
+          cancel = animateAfter(element, className, animationComplete);
+        });
+
+        return function(cancelled) {
+          (cancel || noop)(cancelled);
+        };
+      }
+
+      function animateClose(element, className) {
+        element.removeClass(className);
+        element.removeData(NG_ANIMATE_CSS_DATA_KEY);
+      }
+
+      return {
+        allowCancel : function(element, animationEvent, className) {
+          //always cancel the current animation if it is a
+          //structural animation
+          var oldClasses = (element.data(NG_ANIMATE_CSS_DATA_KEY) || {}).classes;
+          if(!oldClasses || ['enter','leave','move'].indexOf(animationEvent) >= 0) {
+            return true;
+          }
+
+          var parentElement = element.parent();
+          var clone = angular.element(extractElementNode(element).cloneNode());
+
+          //make the element super hidden and override any CSS style values
+          clone.attr('style','position:absolute; top:-9999px; left:-9999px');
+          clone.removeAttr('id');
+          clone.empty();
+
+          forEach(oldClasses.split(' '), function(klass) {
+            clone.removeClass(klass);
+          });
+
+          var suffix = animationEvent == 'addClass' ? '-add' : '-remove';
+          clone.addClass(suffixClasses(className, suffix));
+          parentElement.append(clone);
+
+          var timings = getElementAnimationDetails(clone);
+          clone.remove();
+
+          return Math.max(timings.transitionDuration, timings.animationDuration) > 0;
+        },
+
+        enter : function(element, animationCompleted) {
+          return animate(element, 'ng-enter', animationCompleted);
+        },
+
+        leave : function(element, animationCompleted) {
+          return animate(element, 'ng-leave', animationCompleted);
+        },
+
+        move : function(element, animationCompleted) {
+          return animate(element, 'ng-move', animationCompleted);
+        },
+
+        beforeAddClass : function(element, className, animationCompleted) {
+          var cancellationMethod = animateBefore(element, suffixClasses(className, '-add'), function(fn) {
+
+            /* when a CSS class is added to an element then the transition style that
+             * is applied is the transition defined on the element when the CSS class
+             * is added at the time of the animation. This is how CSS3 functions
+             * outside of ngAnimate. */
+            element.addClass(className);
+            var timings = fn();
+            element.removeClass(className);
+            return timings;
+          });
+
+          if(cancellationMethod) {
+            afterReflow(element, function() {
+              unblockTransitions(element);
+              unblockKeyframeAnimations(element);
+              animationCompleted();
+            });
+            return cancellationMethod;
+          }
+          animationCompleted();
+        },
+
+        addClass : function(element, className, animationCompleted) {
+          return animateAfter(element, suffixClasses(className, '-add'), animationCompleted);
+        },
+
+        beforeRemoveClass : function(element, className, animationCompleted) {
+          var cancellationMethod = animateBefore(element, suffixClasses(className, '-remove'), function(fn) {
+            /* when classes are removed from an element then the transition style
+             * that is applied is the transition defined on the element without the
+             * CSS class being there. This is how CSS3 functions outside of ngAnimate.
+             * http://plnkr.co/edit/j8OzgTNxHTb4n3zLyjGW?p=preview */
+            var klass = element.attr('class');
+            element.removeClass(className);
+            var timings = fn();
+            element.attr('class', klass);
+            return timings;
+          });
+
+          if(cancellationMethod) {
+            afterReflow(element, function() {
+              unblockTransitions(element);
+              unblockKeyframeAnimations(element);
+              animationCompleted();
+            });
+            return cancellationMethod;
+          }
+          animationCompleted();
+        },
+
+        removeClass : function(element, className, animationCompleted) {
+          return animateAfter(element, suffixClasses(className, '-remove'), animationCompleted);
+        }
+      };
+
+      function suffixClasses(classes, suffix) {
+        var className = '';
+        classes = angular.isArray(classes) ? classes : classes.split(/\s+/);
+        forEach(classes, function(klass, i) {
+          if(klass && klass.length > 0) {
+            className += (i > 0 ? ' ' : '') + klass + suffix;
+          }
+        });
+        return className;
+      }
+    }]);
+  }]);
+
+
+})(window, window.angular);
+
+(function(h,e,A){'use strict';function u(w,q,k){return{restrict:"ECA",terminal:!0,priority:400,transclude:"element",link:function(a,c,b,f,n){function y(){l&&(l.$destroy(),l=null);g&&(k.leave(g),g=null)}function v(){var b=w.current&&w.current.locals;if(e.isDefined(b&&b.$template)){var b=a.$new(),f=w.current;g=n(b,function(d){k.enter(d,null,g||c,function(){!e.isDefined(t)||t&&!a.$eval(t)||q()});y()});l=f.scope=b;l.$emit("$viewContentLoaded");l.$eval(h)}else y()}var l,g,t=b.autoscroll,h=b.onload||"";
+a.$on("$routeChangeSuccess",v);v()}}}function z(e,h,k){return{restrict:"ECA",priority:-400,link:function(a,c){var b=k.current,f=b.locals;c.html(f.$template);var n=e(c.contents());b.controller&&(f.$scope=a,f=h(b.controller,f),b.controllerAs&&(a[b.controllerAs]=f),c.data("$ngControllerController",f),c.children().data("$ngControllerController",f));n(a)}}}h=e.module("ngRoute",["ng"]).provider("$route",function(){function h(a,c){return e.extend(new (e.extend(function(){},{prototype:a})),c)}function q(a,
+e){var b=e.caseInsensitiveMatch,f={originalPath:a,regexp:a},h=f.keys=[];a=a.replace(/([().])/g,"\\$1").replace(/(\/)?:(\w+)([\?\*])?/g,function(a,e,b,c){a="?"===c?c:null;c="*"===c?c:null;h.push({name:b,optional:!!a});e=e||"";return""+(a?"":e)+"(?:"+(a?e:"")+(c&&"(.+?)"||"([^/]+)")+(a||"")+")"+(a||"")}).replace(/([\/$\*])/g,"\\$1");f.regexp=RegExp("^"+a+"$",b?"i":"");return f}var k={};this.when=function(a,c){k[a]=e.extend({reloadOnSearch:!0},c,a&&q(a,c));if(a){var b="/"==a[a.length-1]?a.substr(0,a.length-
+1):a+"/";k[b]=e.extend({redirectTo:a},q(b,c))}return this};this.otherwise=function(a){this.when(null,a);return this};this.$get=["$rootScope","$location","$routeParams","$q","$injector","$http","$templateCache","$sce",function(a,c,b,f,n,q,v,l){function g(){var d=t(),m=r.current;if(d&&m&&d.$$route===m.$$route&&e.equals(d.pathParams,m.pathParams)&&!d.reloadOnSearch&&!x)m.params=d.params,e.copy(m.params,b),a.$broadcast("$routeUpdate",m);else if(d||m)x=!1,a.$broadcast("$routeChangeStart",d,m),(r.current=
+d)&&d.redirectTo&&(e.isString(d.redirectTo)?c.path(u(d.redirectTo,d.params)).search(d.params).replace():c.url(d.redirectTo(d.pathParams,c.path(),c.search())).replace()),f.when(d).then(function(){if(d){var a=e.extend({},d.resolve),c,b;e.forEach(a,function(d,c){a[c]=e.isString(d)?n.get(d):n.invoke(d)});e.isDefined(c=d.template)?e.isFunction(c)&&(c=c(d.params)):e.isDefined(b=d.templateUrl)&&(e.isFunction(b)&&(b=b(d.params)),b=l.getTrustedResourceUrl(b),e.isDefined(b)&&(d.loadedTemplateUrl=b,c=q.get(b,
+{cache:v}).then(function(a){return a.data})));e.isDefined(c)&&(a.$template=c);return f.all(a)}}).then(function(c){d==r.current&&(d&&(d.locals=c,e.copy(d.params,b)),a.$broadcast("$routeChangeSuccess",d,m))},function(c){d==r.current&&a.$broadcast("$routeChangeError",d,m,c)})}function t(){var a,b;e.forEach(k,function(f,k){var p;if(p=!b){var s=c.path();p=f.keys;var l={};if(f.regexp)if(s=f.regexp.exec(s)){for(var g=1,q=s.length;g<q;++g){var n=p[g-1],r="string"==typeof s[g]?decodeURIComponent(s[g]):s[g];
+n&&r&&(l[n.name]=r)}p=l}else p=null;else p=null;p=a=p}p&&(b=h(f,{params:e.extend({},c.search(),a),pathParams:a}),b.$$route=f)});return b||k[null]&&h(k[null],{params:{},pathParams:{}})}function u(a,c){var b=[];e.forEach((a||"").split(":"),function(a,d){if(0===d)b.push(a);else{var e=a.match(/(\w+)(.*)/),f=e[1];b.push(c[f]);b.push(e[2]||"");delete c[f]}});return b.join("")}var x=!1,r={routes:k,reload:function(){x=!0;a.$evalAsync(g)}};a.$on("$locationChangeSuccess",g);return r}]});h.provider("$routeParams",
+function(){this.$get=function(){return{}}});h.directive("ngView",u);h.directive("ngView",z);u.$inject=["$route","$anchorScroll","$animate"];z.$inject=["$compile","$controller","$route"]})(window,window.angular);
+//# sourceMappingURL=angular-route.min.js.map
+
+(function(p,f,n){'use strict';f.module("ngCookies",["ng"]).factory("$cookies",["$rootScope","$browser",function(d,b){var c={},g={},h,k=!1,l=f.copy,m=f.isUndefined;b.addPollFn(function(){var a=b.cookies();h!=a&&(h=a,l(a,g),l(a,c),k&&d.$apply())})();k=!0;d.$watch(function(){var a,e,d;for(a in g)m(c[a])&&b.cookies(a,n);for(a in c)(e=c[a],f.isString(e))?e!==g[a]&&(b.cookies(a,e),d=!0):f.isDefined(g[a])?c[a]=g[a]:delete c[a];if(d)for(a in e=b.cookies(),c)c[a]!==e[a]&&(m(e[a])?delete c[a]:c[a]=e[a])});
+return c}]).factory("$cookieStore",["$cookies",function(d){return{get:function(b){return(b=d[b])?f.fromJson(b):b},put:function(b,c){d[b]=f.toJson(c)},remove:function(b){delete d[b]}}}])})(window,window.angular);
+//# sourceMappingURL=angular-cookies.min.js.map
+
+(function(H,a,A){'use strict';function D(p,g){g=g||{};a.forEach(g,function(a,c){delete g[c]});for(var c in p)p.hasOwnProperty(c)&&("$"!==c.charAt(0)&&"$"!==c.charAt(1))&&(g[c]=p[c]);return g}var v=a.$$minErr("$resource"),C=/^(\.[a-zA-Z_$][0-9a-zA-Z_$]*)+$/;a.module("ngResource",["ng"]).factory("$resource",["$http","$q",function(p,g){function c(a,c){this.template=a;this.defaults=c||{};this.urlParams={}}function t(n,w,l){function r(h,d){var e={};d=x({},w,d);s(d,function(b,d){u(b)&&(b=b());var k;if(b&&
+b.charAt&&"@"==b.charAt(0)){k=h;var a=b.substr(1);if(null==a||""===a||"hasOwnProperty"===a||!C.test("."+a))throw v("badmember",a);for(var a=a.split("."),f=0,c=a.length;f<c&&k!==A;f++){var g=a[f];k=null!==k?k[g]:A}}else k=b;e[d]=k});return e}function e(a){return a.resource}function f(a){D(a||{},this)}var F=new c(n);l=x({},B,l);s(l,function(h,d){var c=/^(POST|PUT|PATCH)$/i.test(h.method);f[d]=function(b,d,k,w){var q={},n,l,y;switch(arguments.length){case 4:y=w,l=k;case 3:case 2:if(u(d)){if(u(b)){l=
+b;y=d;break}l=d;y=k}else{q=b;n=d;l=k;break}case 1:u(b)?l=b:c?n=b:q=b;break;case 0:break;default:throw v("badargs",arguments.length);}var t=this instanceof f,m=t?n:h.isArray?[]:new f(n),z={},B=h.interceptor&&h.interceptor.response||e,C=h.interceptor&&h.interceptor.responseError||A;s(h,function(a,b){"params"!=b&&("isArray"!=b&&"interceptor"!=b)&&(z[b]=G(a))});c&&(z.data=n);F.setUrlParams(z,x({},r(n,h.params||{}),q),h.url);q=p(z).then(function(b){var d=b.data,k=m.$promise;if(d){if(a.isArray(d)!==!!h.isArray)throw v("badcfg",
+h.isArray?"array":"object",a.isArray(d)?"array":"object");h.isArray?(m.length=0,s(d,function(b){m.push(new f(b))})):(D(d,m),m.$promise=k)}m.$resolved=!0;b.resource=m;return b},function(b){m.$resolved=!0;(y||E)(b);return g.reject(b)});q=q.then(function(b){var a=B(b);(l||E)(a,b.headers);return a},C);return t?q:(m.$promise=q,m.$resolved=!1,m)};f.prototype["$"+d]=function(b,a,k){u(b)&&(k=a,a=b,b={});b=f[d].call(this,b,this,a,k);return b.$promise||b}});f.bind=function(a){return t(n,x({},w,a),l)};return f}
+var B={get:{method:"GET"},save:{method:"POST"},query:{method:"GET",isArray:!0},remove:{method:"DELETE"},"delete":{method:"DELETE"}},E=a.noop,s=a.forEach,x=a.extend,G=a.copy,u=a.isFunction;c.prototype={setUrlParams:function(c,g,l){var r=this,e=l||r.template,f,p,h=r.urlParams={};s(e.split(/\W/),function(a){if("hasOwnProperty"===a)throw v("badname");!/^\d+$/.test(a)&&(a&&RegExp("(^|[^\\\\]):"+a+"(\\W|$)").test(e))&&(h[a]=!0)});e=e.replace(/\\:/g,":");g=g||{};s(r.urlParams,function(d,c){f=g.hasOwnProperty(c)?
+g[c]:r.defaults[c];a.isDefined(f)&&null!==f?(p=encodeURIComponent(f).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"%20").replace(/%26/gi,"&").replace(/%3D/gi,"=").replace(/%2B/gi,"+"),e=e.replace(RegExp(":"+c+"(\\W|$)","g"),function(a,c){return p+c})):e=e.replace(RegExp("(/?):"+c+"(\\W|$)","g"),function(a,c,d){return"/"==d.charAt(0)?d:c+d})});e=e.replace(/\/+$/,"")||"/";e=e.replace(/\/\.(?=\w+($|\?))/,".");c.url=e.replace(/\/\\\./,"/.");s(g,function(a,
+e){r.urlParams[e]||(c.params=c.params||{},c.params[e]=a)})}};return t}])})(window,window.angular);
+//# sourceMappingURL=angular-resource.min.js.map
+
+(function(p,h,q){'use strict';function E(a){var e=[];s(e,h.noop).chars(a);return e.join("")}function k(a){var e={};a=a.split(",");var d;for(d=0;d<a.length;d++)e[a[d]]=!0;return e}function F(a,e){function d(a,b,d,g){b=h.lowercase(b);if(t[b])for(;f.last()&&u[f.last()];)c("",f.last());v[b]&&f.last()==b&&c("",b);(g=w[b]||!!g)||f.push(b);var l={};d.replace(G,function(a,b,e,c,d){l[b]=r(e||c||d||"")});e.start&&e.start(b,l,g)}function c(a,b){var c=0,d;if(b=h.lowercase(b))for(c=f.length-1;0<=c&&f[c]!=b;c--);
+if(0<=c){for(d=f.length-1;d>=c;d--)e.end&&e.end(f[d]);f.length=c}}var b,g,f=[],l=a;for(f.last=function(){return f[f.length-1]};a;){g=!0;if(f.last()&&x[f.last()])a=a.replace(RegExp("(.*)<\\s*\\/\\s*"+f.last()+"[^>]*>","i"),function(b,a){a=a.replace(H,"$1").replace(I,"$1");e.chars&&e.chars(r(a));return""}),c("",f.last());else{if(0===a.indexOf("\x3c!--"))b=a.indexOf("--",4),0<=b&&a.lastIndexOf("--\x3e",b)===b&&(e.comment&&e.comment(a.substring(4,b)),a=a.substring(b+3),g=!1);else if(y.test(a)){if(b=a.match(y))a=
+a.replace(b[0],""),g=!1}else if(J.test(a)){if(b=a.match(z))a=a.substring(b[0].length),b[0].replace(z,c),g=!1}else K.test(a)&&(b=a.match(A))&&(a=a.substring(b[0].length),b[0].replace(A,d),g=!1);g&&(b=a.indexOf("<"),g=0>b?a:a.substring(0,b),a=0>b?"":a.substring(b),e.chars&&e.chars(r(g)))}if(a==l)throw L("badparse",a);l=a}c()}function r(a){if(!a)return"";var e=M.exec(a);a=e[1];var d=e[3];if(e=e[2])n.innerHTML=e.replace(/</g,"&lt;"),e="textContent"in n?n.textContent:n.innerText;return a+e+d}function B(a){return a.replace(/&/g,
+"&amp;").replace(N,function(a){return"&#"+a.charCodeAt(0)+";"}).replace(/</g,"&lt;").replace(/>/g,"&gt;")}function s(a,e){var d=!1,c=h.bind(a,a.push);return{start:function(a,g,f){a=h.lowercase(a);!d&&x[a]&&(d=a);d||!0!==C[a]||(c("<"),c(a),h.forEach(g,function(d,f){var g=h.lowercase(f),k="img"===a&&"src"===g||"background"===g;!0!==O[g]||!0===D[g]&&!e(d,k)||(c(" "),c(f),c('="'),c(B(d)),c('"'))}),c(f?"/>":">"))},end:function(a){a=h.lowercase(a);d||!0!==C[a]||(c("</"),c(a),c(">"));a==d&&(d=!1)},chars:function(a){d||
+c(B(a))}}}var L=h.$$minErr("$sanitize"),A=/^<\s*([\w:-]+)((?:\s+[\w:-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)\s*>/,z=/^<\s*\/\s*([\w:-]+)[^>]*>/,G=/([\w:-]+)(?:\s*=\s*(?:(?:"((?:[^"])*)")|(?:'((?:[^'])*)')|([^>\s]+)))?/g,K=/^</,J=/^<\s*\//,H=/\x3c!--(.*?)--\x3e/g,y=/<!DOCTYPE([^>]*?)>/i,I=/<!\[CDATA\[(.*?)]]\x3e/g,N=/([^\#-~| |!])/g,w=k("area,br,col,hr,img,wbr");p=k("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr");q=k("rp,rt");var v=h.extend({},q,p),t=h.extend({},p,k("address,article,aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5,h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,script,section,table,ul")),
+u=h.extend({},q,k("a,abbr,acronym,b,bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s,samp,small,span,strike,strong,sub,sup,time,tt,u,var")),x=k("script,style"),C=h.extend({},w,t,u,v),D=k("background,cite,href,longdesc,src,usemap"),O=h.extend({},D,k("abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,scope,scrolling,shape,size,span,start,summary,target,title,type,valign,value,vspace,width")),
+n=document.createElement("pre"),M=/^(\s*)([\s\S]*?)(\s*)$/;h.module("ngSanitize",[]).provider("$sanitize",function(){this.$get=["$$sanitizeUri",function(a){return function(e){var d=[];F(e,s(d,function(c,b){return!/^unsafe/.test(a(c,b))}));return d.join("")}}]});h.module("ngSanitize").filter("linky",["$sanitize",function(a){var e=/((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>]/,d=/^mailto:/;return function(c,b){function g(a){a&&m.push(E(a))}function f(a,c){m.push("<a ");h.isDefined(b)&&
+(m.push('target="'),m.push(b),m.push('" '));m.push('href="');m.push(a);m.push('">');g(c);m.push("</a>")}if(!c)return c;for(var l,k=c,m=[],n,p;l=k.match(e);)n=l[0],l[2]==l[3]&&(n="mailto:"+n),p=l.index,g(k.substr(0,p)),f(n,l[0].replace(d,"")),k=k.substring(p+l[0].length);g(k);return a(m.join(""))}}])})(window,window.angular);
+//# sourceMappingURL=angular-sanitize.min.js.map
+
 "use strict";angular.module("mgcrea.jquery",[]).provider("dimensions",function(){this.$get=function(){return this},this.offset=function(){if(this){var a=this.getBoundingClientRect(),b=this.ownerDocument.documentElement;return{top:a.top+window.pageYOffset-b.clientTop,left:a.left+window.pageXOffset-b.clientLeft}}},this.height=function(a){var b=window.getComputedStyle(this),c=this.offsetHeight;return a?c+=parseFloat(b.marginTop)+parseFloat(b.marginBottom):c-=parseFloat(b.paddingTop)+parseFloat(b.paddingBottom)+parseFloat(b.borderTopWidth)+parseFloat(b.borderBottomWidth),c},this.width=function(a){var b=window.getComputedStyle(this),c=this.offsetWidth;return a?c+=parseFloat(b.marginLeft)+parseFloat(b.marginRight):c-=parseFloat(b.paddingLeft)+parseFloat(b.paddingRight)+parseFloat(b.borderLeftWidth)+parseFloat(b.borderRightWidth),c}}).constant("debounce",function(a,b){var c,d;return function(){var e=this,f=arguments,g=function(){c=null,d=a.apply(e,f)};return clearTimeout(c),c=setTimeout(g,b),d}}).provider("jQuery",["dimensionsProvider",function(a){var b=this,c=angular.element;this.fn=angular.extend({},a),this.$get=function(){return delete b.fn.$get,function(a){var d=a instanceof HTMLElement?a:document.querySelectorAll(a);return d=c(d),angular.forEach(b.fn,function(a,b){d[b]=a.bind(d[0])}),d}}}]);
 $(document).ready(function() {
 	
@@ -3725,38 +5240,152 @@ $(document).ready(function() {
  */
 (function(t,e){function n(e){t.extend(!0,Ce,e)}function r(n,r,c){function u(t){ae?p()&&(S(),M(t)):f()}function f(){oe=r.theme?"ui":"fc",n.addClass("fc"),r.isRTL?n.addClass("fc-rtl"):n.addClass("fc-ltr"),r.theme&&n.addClass("ui-widget"),ae=t("<div class='fc-content' style='position:relative'/>").prependTo(n),ne=new a(ee,r),re=ne.render(),re&&n.prepend(re),y(r.defaultView),r.handleWindowResize&&t(window).resize(x),m()||v()}function v(){setTimeout(function(){!ie.start&&m()&&C()},0)}function h(){ie&&(te("viewDestroy",ie,ie,ie.element),ie.triggerEventDestroy()),t(window).unbind("resize",x),ne.destroy(),ae.remove(),n.removeClass("fc fc-rtl ui-widget")}function p(){return n.is(":visible")}function m(){return t("body").is(":visible")}function y(t){ie&&t==ie.name||D(t)}function D(e){he++,ie&&(te("viewDestroy",ie,ie,ie.element),Y(),ie.triggerEventDestroy(),G(),ie.element.remove(),ne.deactivateButton(ie.name)),ne.activateButton(e),ie=new Se[e](t("<div class='fc-view fc-view-"+e+"' style='position:relative'/>").appendTo(ae),ee),C(),$(),he--}function C(t){(!ie.start||t||ie.start>ge||ge>=ie.end)&&p()&&M(t)}function M(t){he++,ie.start&&(te("viewDestroy",ie,ie,ie.element),Y(),N()),G(),ie.render(ge,t||0),T(),$(),(ie.afterRender||A)(),_(),P(),te("viewRender",ie,ie,ie.element),ie.trigger("viewDisplay",de),he--,z()}function E(){p()&&(Y(),N(),S(),T(),F())}function S(){le=r.contentHeight?r.contentHeight:r.height?r.height-(re?re.height():0)-R(ae):Math.round(ae.width()/Math.max(r.aspectRatio,.5))}function T(){le===e&&S(),he++,ie.setHeight(le),ie.setWidth(ae.width()),he--,se=n.outerWidth()}function x(){if(!he)if(ie.start){var t=++ve;setTimeout(function(){t==ve&&!he&&p()&&se!=(se=n.outerWidth())&&(he++,E(),ie.trigger("windowResize",de),he--)},200)}else v()}function k(){N(),W()}function H(t){N(),F(t)}function F(t){p()&&(ie.setEventData(pe),ie.renderEvents(pe,t),ie.trigger("eventAfterAllRender"))}function N(){ie.triggerEventDestroy(),ie.clearEvents(),ie.clearEventData()}function z(){!r.lazyFetching||ue(ie.visStart,ie.visEnd)?W():F()}function W(){fe(ie.visStart,ie.visEnd)}function O(t){pe=t,F()}function L(t){H(t)}function _(){ne.updateTitle(ie.title)}function P(){var t=new Date;t>=ie.start&&ie.end>t?ne.disableButton("today"):ne.enableButton("today")}function q(t,n,r){ie.select(t,n,r===e?!0:r)}function Y(){ie&&ie.unselect()}function B(){C(-1)}function j(){C(1)}function I(){i(ge,-1),C()}function X(){i(ge,1),C()}function J(){ge=new Date,C()}function V(t,e,n){t instanceof Date?ge=d(t):g(ge,t,e,n),C()}function U(t,n,r){t!==e&&i(ge,t),n!==e&&s(ge,n),r!==e&&l(ge,r),C()}function Z(){return d(ge)}function G(){ae.css({width:"100%",height:ae.height(),overflow:"hidden"})}function $(){ae.css({width:"",height:"",overflow:""})}function Q(){return ie}function K(t,n){return n===e?r[t]:(("height"==t||"contentHeight"==t||"aspectRatio"==t)&&(r[t]=n,E()),e)}function te(t,n){return r[t]?r[t].apply(n||de,Array.prototype.slice.call(arguments,2)):e}var ee=this;ee.options=r,ee.render=u,ee.destroy=h,ee.refetchEvents=k,ee.reportEvents=O,ee.reportEventChange=L,ee.rerenderEvents=H,ee.changeView=y,ee.select=q,ee.unselect=Y,ee.prev=B,ee.next=j,ee.prevYear=I,ee.nextYear=X,ee.today=J,ee.gotoDate=V,ee.incrementDate=U,ee.formatDate=function(t,e){return w(t,e,r)},ee.formatDates=function(t,e,n){return b(t,e,n,r)},ee.getDate=Z,ee.getView=Q,ee.option=K,ee.trigger=te,o.call(ee,r,c);var ne,re,ae,oe,ie,se,le,ce,ue=ee.isFetchNeeded,fe=ee.fetchEvents,de=n[0],ve=0,he=0,ge=new Date,pe=[];g(ge,r.year,r.month,r.date),r.droppable&&t(document).bind("dragstart",function(e,n){var a=e.target,o=t(a);if(!o.parents(".fc").length){var i=r.dropAccept;(t.isFunction(i)?i.call(a,o):o.is(i))&&(ce=a,ie.dragStart(ce,e,n))}}).bind("dragstop",function(t,e){ce&&(ie.dragStop(ce,t,e),ce=null)})}function a(n,r){function a(){v=r.theme?"ui":"fc";var n=r.header;return n?h=t("<table class='fc-header' style='width:100%'/>").append(t("<tr/>").append(i("left")).append(i("center")).append(i("right"))):e}function o(){h.remove()}function i(e){var a=t("<td class='fc-header-"+e+"'/>"),o=r.header[e];return o&&t.each(o.split(" "),function(e){e>0&&a.append("<span class='fc-header-space'/>");var o;t.each(this.split(","),function(e,i){if("title"==i)a.append("<span class='fc-header-title'><h2>&nbsp;</h2></span>"),o&&o.addClass(v+"-corner-right"),o=null;else{var s;if(n[i]?s=n[i]:Se[i]&&(s=function(){u.removeClass(v+"-state-hover"),n.changeView(i)}),s){var l=r.theme?P(r.buttonIcons,i):null,c=P(r.buttonText,i),u=t("<span class='fc-button fc-button-"+i+" "+v+"-state-default'>"+(l?"<span class='fc-icon-wrap'><span class='ui-icon ui-icon-"+l+"'/>"+"</span>":c)+"</span>").click(function(){u.hasClass(v+"-state-disabled")||s()}).mousedown(function(){u.not("."+v+"-state-active").not("."+v+"-state-disabled").addClass(v+"-state-down")}).mouseup(function(){u.removeClass(v+"-state-down")}).hover(function(){u.not("."+v+"-state-active").not("."+v+"-state-disabled").addClass(v+"-state-hover")},function(){u.removeClass(v+"-state-hover").removeClass(v+"-state-down")}).appendTo(a);Y(u),o||u.addClass(v+"-corner-left"),o=u}}}),o&&o.addClass(v+"-corner-right")}),a}function s(t){h.find("h2").html(t)}function l(t){h.find("span.fc-button-"+t).addClass(v+"-state-active")}function c(t){h.find("span.fc-button-"+t).removeClass(v+"-state-active")}function u(t){h.find("span.fc-button-"+t).addClass(v+"-state-disabled")}function f(t){h.find("span.fc-button-"+t).removeClass(v+"-state-disabled")}var d=this;d.render=a,d.destroy=o,d.updateTitle=s,d.activateButton=l,d.deactivateButton=c,d.disableButton=u,d.enableButton=f;var v,h=t([])}function o(n,r){function a(t,e){return!E||E>t||e>S}function o(t,e){E=t,S=e,W=[];var n=++R,r=F.length;N=r;for(var a=0;r>a;a++)i(F[a],n)}function i(e,r){s(e,function(a){if(r==R){if(a){n.eventDataTransform&&(a=t.map(a,n.eventDataTransform)),e.eventDataTransform&&(a=t.map(a,e.eventDataTransform));for(var o=0;a.length>o;o++)a[o].source=e,w(a[o]);W=W.concat(a)}N--,N||k(W)}})}function s(r,a){var o,i,l=Ee.sourceFetchers;for(o=0;l.length>o;o++){if(i=l[o](r,E,S,a),i===!0)return;if("object"==typeof i)return s(i,a),e}var c=r.events;if(c)t.isFunction(c)?(m(),c(d(E),d(S),function(t){a(t),y()})):t.isArray(c)?a(c):a();else{var u=r.url;if(u){var f,v=r.success,h=r.error,g=r.complete;f=t.isFunction(r.data)?r.data():r.data;var p=t.extend({},f||{}),w=X(r.startParam,n.startParam),b=X(r.endParam,n.endParam);w&&(p[w]=Math.round(+E/1e3)),b&&(p[b]=Math.round(+S/1e3)),m(),t.ajax(t.extend({},Te,r,{data:p,success:function(e){e=e||[];var n=I(v,this,arguments);t.isArray(n)&&(e=n),a(e)},error:function(){I(h,this,arguments),a()},complete:function(){I(g,this,arguments),y()}}))}else a()}}function l(t){t=c(t),t&&(N++,i(t,R))}function c(n){return t.isFunction(n)||t.isArray(n)?n={events:n}:"string"==typeof n&&(n={url:n}),"object"==typeof n?(b(n),F.push(n),n):e}function u(e){F=t.grep(F,function(t){return!D(t,e)}),W=t.grep(W,function(t){return!D(t.source,e)}),k(W)}function f(t){var e,n,r=W.length,a=x().defaultEventEnd,o=t.start-t._start,i=t.end?t.end-(t._end||a(t)):0;for(e=0;r>e;e++)n=W[e],n._id==t._id&&n!=t&&(n.start=new Date(+n.start+o),n.end=t.end?n.end?new Date(+n.end+i):new Date(+a(n)+i):null,n.title=t.title,n.url=t.url,n.allDay=t.allDay,n.className=t.className,n.editable=t.editable,n.color=t.color,n.backgroundColor=t.backgroundColor,n.borderColor=t.borderColor,n.textColor=t.textColor,w(n));w(t),k(W)}function v(t,e){w(t),t.source||(e&&(H.events.push(t),t.source=H),W.push(t)),k(W)}function h(e){if(e){if(!t.isFunction(e)){var n=e+"";e=function(t){return t._id==n}}W=t.grep(W,e,!0);for(var r=0;F.length>r;r++)t.isArray(F[r].events)&&(F[r].events=t.grep(F[r].events,e,!0))}else{W=[];for(var r=0;F.length>r;r++)t.isArray(F[r].events)&&(F[r].events=[])}k(W)}function g(e){return t.isFunction(e)?t.grep(W,e):e?(e+="",t.grep(W,function(t){return t._id==e})):W}function m(){z++||T("loading",null,!0,x())}function y(){--z||T("loading",null,!1,x())}function w(t){var r=t.source||{},a=X(r.ignoreTimezone,n.ignoreTimezone);t._id=t._id||(t.id===e?"_fc"+xe++:t.id+""),t.date&&(t.start||(t.start=t.date),delete t.date),t._start=d(t.start=p(t.start,a)),t.end=p(t.end,a),t.end&&t.end<=t.start&&(t.end=null),t._end=t.end?d(t.end):null,t.allDay===e&&(t.allDay=X(r.allDayDefault,n.allDayDefault)),t.className?"string"==typeof t.className&&(t.className=t.className.split(/\s+/)):t.className=[]}function b(t){t.className?"string"==typeof t.className&&(t.className=t.className.split(/\s+/)):t.className=[];for(var e=Ee.sourceNormalizers,n=0;e.length>n;n++)e[n](t)}function D(t,e){return t&&e&&C(t)==C(e)}function C(t){return("object"==typeof t?t.events||t.url:"")||t}var M=this;M.isFetchNeeded=a,M.fetchEvents=o,M.addEventSource=l,M.removeEventSource=u,M.updateEvent=f,M.renderEvent=v,M.removeEvents=h,M.clientEvents=g,M.normalizeEvent=w;for(var E,S,T=M.trigger,x=M.getView,k=M.reportEvents,H={events:[]},F=[H],R=0,N=0,z=0,W=[],A=0;r.length>A;A++)c(r[A])}function i(t,e,n){return t.setFullYear(t.getFullYear()+e),n||f(t),t}function s(t,e,n){if(+t){var r=t.getMonth()+e,a=d(t);for(a.setDate(1),a.setMonth(r),t.setMonth(r),n||f(t);t.getMonth()!=a.getMonth();)t.setDate(t.getDate()+(a>t?1:-1))}return t}function l(t,e,n){if(+t){var r=t.getDate()+e,a=d(t);a.setHours(9),a.setDate(r),t.setDate(r),n||f(t),c(t,a)}return t}function c(t,e){if(+t)for(;t.getDate()!=e.getDate();)t.setTime(+t+(e>t?1:-1)*Fe)}function u(t,e){return t.setMinutes(t.getMinutes()+e),t}function f(t){return t.setHours(0),t.setMinutes(0),t.setSeconds(0),t.setMilliseconds(0),t}function d(t,e){return e?f(new Date(+t)):new Date(+t)}function v(){var t,e=0;do t=new Date(1970,e++,1);while(t.getHours());return t}function h(t,e){return Math.round((d(t,!0)-d(e,!0))/He)}function g(t,n,r,a){n!==e&&n!=t.getFullYear()&&(t.setDate(1),t.setMonth(0),t.setFullYear(n)),r!==e&&r!=t.getMonth()&&(t.setDate(1),t.setMonth(r)),a!==e&&t.setDate(a)}function p(t,n){return"object"==typeof t?t:"number"==typeof t?new Date(1e3*t):"string"==typeof t?t.match(/^\d+(\.\d+)?$/)?new Date(1e3*parseFloat(t)):(n===e&&(n=!0),m(t,n)||(t?new Date(t):null)):null}function m(t,e){var n=t.match(/^([0-9]{4})(-([0-9]{2})(-([0-9]{2})([T ]([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?(Z|(([-+])([0-9]{2})(:?([0-9]{2}))?))?)?)?)?$/);if(!n)return null;var r=new Date(n[1],0,1);if(e||!n[13]){var a=new Date(n[1],0,1,9,0);n[3]&&(r.setMonth(n[3]-1),a.setMonth(n[3]-1)),n[5]&&(r.setDate(n[5]),a.setDate(n[5])),c(r,a),n[7]&&r.setHours(n[7]),n[8]&&r.setMinutes(n[8]),n[10]&&r.setSeconds(n[10]),n[12]&&r.setMilliseconds(1e3*Number("0."+n[12])),c(r,a)}else if(r.setUTCFullYear(n[1],n[3]?n[3]-1:0,n[5]||1),r.setUTCHours(n[7]||0,n[8]||0,n[10]||0,n[12]?1e3*Number("0."+n[12]):0),n[14]){var o=60*Number(n[16])+(n[18]?Number(n[18]):0);o*="-"==n[15]?1:-1,r=new Date(+r+1e3*60*o)}return r}function y(t){if("number"==typeof t)return 60*t;if("object"==typeof t)return 60*t.getHours()+t.getMinutes();var e=t.match(/(\d+)(?::(\d+))?\s*(\w+)?/);if(e){var n=parseInt(e[1],10);return e[3]&&(n%=12,"p"==e[3].toLowerCase().charAt(0)&&(n+=12)),60*n+(e[2]?parseInt(e[2],10):0)}}function w(t,e,n){return b(t,null,e,n)}function b(t,e,n,r){r=r||Ce;var a,o,i,s,l=t,c=e,u=n.length,f="";for(a=0;u>a;a++)if(o=n.charAt(a),"'"==o){for(i=a+1;u>i;i++)if("'"==n.charAt(i)){l&&(f+=i==a+1?"'":n.substring(a+1,i),a=i);break}}else if("("==o){for(i=a+1;u>i;i++)if(")"==n.charAt(i)){var d=w(l,n.substring(a+1,i),r);parseInt(d.replace(/\D/,""),10)&&(f+=d),a=i;break}}else if("["==o){for(i=a+1;u>i;i++)if("]"==n.charAt(i)){var v=n.substring(a+1,i),d=w(l,v,r);d!=w(c,v,r)&&(f+=d),a=i;break}}else if("{"==o)l=e,c=t;else if("}"==o)l=t,c=e;else{for(i=u;i>a;i--)if(s=Ne[n.substring(a,i)]){l&&(f+=s(l,r)),a=i-1;break}i==a&&l&&(f+=o)}return f}function D(t){var e,n=new Date(t.getTime());return n.setDate(n.getDate()+4-(n.getDay()||7)),e=n.getTime(),n.setMonth(0),n.setDate(1),Math.floor(Math.round((e-n)/864e5)/7)+1}function C(t){return t.end?M(t.end,t.allDay):l(d(t.start),1)}function M(t,e){return t=d(t),e||t.getHours()||t.getMinutes()?l(t,1):f(t)}function E(n,r,a){n.unbind("mouseover").mouseover(function(n){for(var o,i,s,l=n.target;l!=this;)o=l,l=l.parentNode;(i=o._fci)!==e&&(o._fci=e,s=r[i],a(s.event,s.element,s),t(n.target).trigger(n)),n.stopPropagation()})}function S(e,n,r){for(var a,o=0;e.length>o;o++)a=t(e[o]),a.width(Math.max(0,n-x(a,r)))}function T(e,n,r){for(var a,o=0;e.length>o;o++)a=t(e[o]),a.height(Math.max(0,n-R(a,r)))}function x(t,e){return k(t)+F(t)+(e?H(t):0)}function k(e){return(parseFloat(t.css(e[0],"paddingLeft",!0))||0)+(parseFloat(t.css(e[0],"paddingRight",!0))||0)}function H(e){return(parseFloat(t.css(e[0],"marginLeft",!0))||0)+(parseFloat(t.css(e[0],"marginRight",!0))||0)}function F(e){return(parseFloat(t.css(e[0],"borderLeftWidth",!0))||0)+(parseFloat(t.css(e[0],"borderRightWidth",!0))||0)}function R(t,e){return N(t)+W(t)+(e?z(t):0)}function N(e){return(parseFloat(t.css(e[0],"paddingTop",!0))||0)+(parseFloat(t.css(e[0],"paddingBottom",!0))||0)}function z(e){return(parseFloat(t.css(e[0],"marginTop",!0))||0)+(parseFloat(t.css(e[0],"marginBottom",!0))||0)}function W(e){return(parseFloat(t.css(e[0],"borderTopWidth",!0))||0)+(parseFloat(t.css(e[0],"borderBottomWidth",!0))||0)}function A(){}function O(t,e){return t-e}function L(t){return Math.max.apply(Math,t)}function _(t){return(10>t?"0":"")+t}function P(t,n){if(t[n]!==e)return t[n];for(var r,a=n.split(/(?=[A-Z])/),o=a.length-1;o>=0;o--)if(r=t[a[o].toLowerCase()],r!==e)return r;return t[""]}function q(t){return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#039;").replace(/"/g,"&quot;").replace(/\n/g,"<br />")}function Y(t){t.attr("unselectable","on").css("MozUserSelect","none").bind("selectstart.ui",function(){return!1})}function B(t){t.children().removeClass("fc-first fc-last").filter(":first-child").addClass("fc-first").end().filter(":last-child").addClass("fc-last")}function j(t,e){var n=t.source||{},r=t.color,a=n.color,o=e("eventColor"),i=t.backgroundColor||r||n.backgroundColor||a||e("eventBackgroundColor")||o,s=t.borderColor||r||n.borderColor||a||e("eventBorderColor")||o,l=t.textColor||n.textColor||e("eventTextColor"),c=[];return i&&c.push("background-color:"+i),s&&c.push("border-color:"+s),l&&c.push("color:"+l),c.join(";")}function I(e,n,r){if(t.isFunction(e)&&(e=[e]),e){var a,o;for(a=0;e.length>a;a++)o=e[a].apply(n,r)||o;return o}}function X(){for(var t=0;arguments.length>t;t++)if(arguments[t]!==e)return arguments[t]}function J(t,e){function n(t,e){e&&(s(t,e),t.setDate(1));var n=a("firstDay"),f=d(t,!0);f.setDate(1);var v=s(d(f),1),g=d(f);l(g,-((g.getDay()-n+7)%7)),i(g);var p=d(v);l(p,(7-p.getDay()+n)%7),i(p,-1,!0);var m=c(),y=Math.round(h(p,g)/7);"fixed"==a("weekMode")&&(l(p,7*(6-y)),y=6),r.title=u(f,a("titleFormat")),r.start=f,r.end=v,r.visStart=g,r.visEnd=p,o(y,m,!0)}var r=this;r.render=n,Z.call(r,t,e,"month");var a=r.opt,o=r.renderBasic,i=r.skipHiddenDays,c=r.getCellsPerWeek,u=e.formatDate}function V(t,e){function n(t,e){e&&l(t,7*e);var n=l(d(t),-((t.getDay()-a("firstDay")+7)%7)),u=l(d(n),7),f=d(n);i(f);var v=d(u);i(v,-1,!0);var h=s();r.start=n,r.end=u,r.visStart=f,r.visEnd=v,r.title=c(f,l(d(v),-1),a("titleFormat")),o(1,h,!1)}var r=this;r.render=n,Z.call(r,t,e,"basicWeek");var a=r.opt,o=r.renderBasic,i=r.skipHiddenDays,s=r.getCellsPerWeek,c=e.formatDates}function U(t,e){function n(t,e){e&&l(t,e),i(t,0>e?-1:1);var n=d(t,!0),c=l(d(n),1);r.title=s(t,a("titleFormat")),r.start=r.visStart=n,r.end=r.visEnd=c,o(1,1,!1)}var r=this;r.render=n,Z.call(r,t,e,"basicDay");var a=r.opt,o=r.renderBasic,i=r.skipHiddenDays,s=e.formatDate}function Z(e,n,r){function a(t,e,n){ee=t,ne=e,re=n,o(),j||i(),s()}function o(){le=he("theme")?"ui":"fc",ce=he("columnFormat"),ue=he("weekNumbers"),de=he("weekNumberTitle"),ve="iso"!=he("weekNumberCalculation")?"w":"W"}function i(){Z=t("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>").appendTo(e)}function s(){var n=c();L&&L.remove(),L=t(n).appendTo(e),_=L.find("thead"),P=_.find(".fc-day-header"),j=L.find("tbody"),I=j.find("tr"),X=j.find(".fc-day"),J=I.find("td:first-child"),V=I.eq(0).find(".fc-day > div"),U=I.eq(0).find(".fc-day-content > div"),B(_.add(_.find("tr"))),B(I),I.eq(0).addClass("fc-first"),I.filter(":last").addClass("fc-last"),X.each(function(e,n){var r=Ee(Math.floor(e/ne),e%ne);ge("dayRender",O,r,t(n))}),y(X)}function c(){var t="<table class='fc-border-separate' style='width:100%' cellspacing='0'>"+u()+v()+"</table>";return t}function u(){var t,e,n=le+"-widget-header",r="";for(r+="<thead><tr>",ue&&(r+="<th class='fc-week-number "+n+"'>"+q(de)+"</th>"),t=0;ne>t;t++)e=Ee(0,t),r+="<th class='fc-day-header fc-"+ke[e.getDay()]+" "+n+"'>"+q(xe(e,ce))+"</th>";return r+="</tr></thead>"}function v(){var t,e,n,r=le+"-widget-content",a="";for(a+="<tbody>",t=0;ee>t;t++){for(a+="<tr class='fc-week'>",ue&&(n=Ee(t,0),a+="<td class='fc-week-number "+r+"'>"+"<div>"+q(xe(n,ve))+"</div>"+"</td>"),e=0;ne>e;e++)n=Ee(t,e),a+=h(n);a+="</tr>"}return a+="</tbody>"}function h(t){var e=le+"-widget-content",n=O.start.getMonth(),r=f(new Date),a="",o=["fc-day","fc-"+ke[t.getDay()],e];return t.getMonth()!=n&&o.push("fc-other-month"),+t==+r?o.push("fc-today",le+"-state-highlight"):r>t?o.push("fc-past"):o.push("fc-future"),a+="<td class='"+o.join(" ")+"'"+" data-date='"+xe(t,"yyyy-MM-dd")+"'"+">"+"<div>",re&&(a+="<div class='fc-day-number'>"+t.getDate()+"</div>"),a+="<div class='fc-day-content'><div style='position:relative'>&nbsp;</div></div></div></td>"}function g(e){Q=e;var n,r,a,o=Q-_.height();"variable"==he("weekMode")?n=r=Math.floor(o/(1==ee?2:6)):(n=Math.floor(o/ee),r=o-n*(ee-1)),J.each(function(e,o){ee>e&&(a=t(o),a.find("> div").css("min-height",(e==ee-1?r:n)-R(a)))})}function p(t){$=t,ie.clear(),se.clear(),te=0,ue&&(te=_.find("th.fc-week-number").outerWidth()),K=Math.floor(($-te)/ne),S(P.slice(0,-1),K)}function y(t){t.click(w).mousedown(Me)}function w(e){if(!he("selectable")){var n=m(t(this).data("date"));ge("dayClick",this,n,!0,e)}}function b(t,e,n){n&&ae.build();for(var r=Te(t,e),a=0;r.length>a;a++){var o=r[a];y(D(o.row,o.leftCol,o.row,o.rightCol))}}function D(t,n,r,a){var o=ae.rect(t,n,r,a,e);return be(o,e)}function C(t){return d(t)}function M(t,e){b(t,l(d(e),1),!0)}function E(){Ce()}function T(t,e,n){var r=Se(t),a=X[r.row*ne+r.col];ge("dayClick",a,t,e,n)}function x(t,e){oe.start(function(t){Ce(),t&&D(t.row,t.col,t.row,t.col)},e)}function k(t,e,n){var r=oe.stop();if(Ce(),r){var a=Ee(r);ge("drop",t,a,!0,e,n)}}function H(t){return d(t.start)}function F(t){return ie.left(t)}function N(t){return ie.right(t)}function z(t){return se.left(t)}function W(t){return se.right(t)}function A(t){return I.eq(t)}var O=this;O.renderBasic=a,O.setHeight=g,O.setWidth=p,O.renderDayOverlay=b,O.defaultSelectionEnd=C,O.renderSelection=M,O.clearSelection=E,O.reportDayClick=T,O.dragStart=x,O.dragStop=k,O.defaultEventEnd=H,O.getHoverListener=function(){return oe},O.colLeft=F,O.colRight=N,O.colContentLeft=z,O.colContentRight=W,O.getIsCellAllDay=function(){return!0},O.allDayRow=A,O.getRowCnt=function(){return ee},O.getColCnt=function(){return ne},O.getColWidth=function(){return K},O.getDaySegmentContainer=function(){return Z},fe.call(O,e,n,r),me.call(O),pe.call(O),G.call(O);var L,_,P,j,I,X,J,V,U,Z,$,Q,K,te,ee,ne,re,ae,oe,ie,se,le,ce,ue,de,ve,he=O.opt,ge=O.trigger,be=O.renderOverlay,Ce=O.clearOverlays,Me=O.daySelectionMousedown,Ee=O.cellToDate,Se=O.dateToCell,Te=O.rangeToSegments,xe=n.formatDate;Y(e.addClass("fc-grid")),ae=new ye(function(e,n){var r,a,o;P.each(function(e,i){r=t(i),a=r.offset().left,e&&(o[1]=a),o=[a],n[e]=o}),o[1]=a+r.outerWidth(),I.each(function(n,i){ee>n&&(r=t(i),a=r.offset().top,n&&(o[1]=a),o=[a],e[n]=o)}),o[1]=a+r.outerHeight()}),oe=new we(ae),ie=new De(function(t){return V.eq(t)}),se=new De(function(t){return U.eq(t)})}function G(){function t(t,e){n.renderDayEvents(t,e)}function e(){n.getDaySegmentContainer().empty()}var n=this;n.renderEvents=t,n.clearEvents=e,de.call(n)}function $(t,e){function n(t,e){e&&l(t,7*e);var n=l(d(t),-((t.getDay()-a("firstDay")+7)%7)),u=l(d(n),7),f=d(n);i(f);var v=d(u);i(v,-1,!0);var h=s();r.title=c(f,l(d(v),-1),a("titleFormat")),r.start=n,r.end=u,r.visStart=f,r.visEnd=v,o(h)}var r=this;r.render=n,K.call(r,t,e,"agendaWeek");var a=r.opt,o=r.renderAgenda,i=r.skipHiddenDays,s=r.getCellsPerWeek,c=e.formatDates}function Q(t,e){function n(t,e){e&&l(t,e),i(t,0>e?-1:1);var n=d(t,!0),c=l(d(n),1);r.title=s(t,a("titleFormat")),r.start=r.visStart=n,r.end=r.visEnd=c,o(1)}var r=this;r.render=n,K.call(r,t,e,"agendaDay");var a=r.opt,o=r.renderAgenda,i=r.skipHiddenDays,s=e.formatDate}function K(n,r,a){function o(t){We=t,i(),K?c():s()}function i(){qe=Ue("theme")?"ui":"fc",Ye=Ue("isRTL"),Be=y(Ue("minTime")),je=y(Ue("maxTime")),Ie=Ue("columnFormat"),Xe=Ue("weekNumbers"),Je=Ue("weekNumberTitle"),Ve="iso"!=Ue("weekNumberCalculation")?"w":"W",Re=Ue("snapMinutes")||Ue("slotMinutes")}function s(){var e,r,a,o,i,s=qe+"-widget-header",l=qe+"-widget-content",f=0==Ue("slotMinutes")%15;for(c(),ce=t("<div style='position:absolute;z-index:2;left:0;width:100%'/>").appendTo(n),Ue("allDaySlot")?(ue=t("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>").appendTo(ce),e="<table style='width:100%' class='fc-agenda-allday' cellspacing='0'><tr><th class='"+s+" fc-agenda-axis'>"+Ue("allDayText")+"</th>"+"<td>"+"<div class='fc-day-content'><div style='position:relative'/></div>"+"</td>"+"<th class='"+s+" fc-agenda-gutter'>&nbsp;</th>"+"</tr>"+"</table>",de=t(e).appendTo(ce),ve=de.find("tr"),C(ve.find("td")),ce.append("<div class='fc-agenda-divider "+s+"'>"+"<div class='fc-agenda-divider-inner'/>"+"</div>")):ue=t([]),he=t("<div style='position:absolute;width:100%;overflow-x:hidden;overflow-y:auto'/>").appendTo(ce),ge=t("<div style='position:relative;width:100%;overflow:hidden'/>").appendTo(he),be=t("<div class='fc-event-container' style='position:absolute;z-index:8;top:0;left:0'/>").appendTo(ge),e="<table class='fc-agenda-slots' style='width:100%' cellspacing='0'><tbody>",r=v(),o=u(d(r),je),u(r,Be),Ae=0,a=0;o>r;a++)i=r.getMinutes(),e+="<tr class='fc-slot"+a+" "+(i?"fc-minor":"")+"'>"+"<th class='fc-agenda-axis "+s+"'>"+(f&&i?"&nbsp;":on(r,Ue("axisFormat")))+"</th>"+"<td class='"+l+"'>"+"<div style='position:relative'>&nbsp;</div>"+"</td>"+"</tr>",u(r,Ue("slotMinutes")),Ae++;e+="</tbody></table>",Ce=t(e).appendTo(ge),M(Ce.find("td"))}function c(){var e=h();K&&K.remove(),K=t(e).appendTo(n),ee=K.find("thead"),ne=ee.find("th").slice(1,-1),re=K.find("tbody"),ae=re.find("td").slice(0,-1),oe=ae.find("> div"),ie=ae.find(".fc-day-content > div"),se=ae.eq(0),le=oe.eq(0),B(ee.add(ee.find("tr"))),B(re.add(re.find("tr")))}function h(){var t="<table style='width:100%' class='fc-agenda-days fc-border-separate' cellspacing='0'>"+g()+p()+"</table>";return t}function g(){var t,e,n,r=qe+"-widget-header",a="";for(a+="<thead><tr>",Xe?(t=nn(0,0),e=on(t,Ve),Ye?e+=Je:e=Je+e,a+="<th class='fc-agenda-axis fc-week-number "+r+"'>"+q(e)+"</th>"):a+="<th class='fc-agenda-axis "+r+"'>&nbsp;</th>",n=0;We>n;n++)t=nn(0,n),a+="<th class='fc-"+ke[t.getDay()]+" fc-col"+n+" "+r+"'>"+q(on(t,Ie))+"</th>";return a+="<th class='fc-agenda-gutter "+r+"'>&nbsp;</th>"+"</tr>"+"</thead>"}function p(){var t,e,n,r,a,o=qe+"-widget-header",i=qe+"-widget-content",s=f(new Date),l="";for(l+="<tbody><tr><th class='fc-agenda-axis "+o+"'>&nbsp;</th>",n="",e=0;We>e;e++)t=nn(0,e),a=["fc-col"+e,"fc-"+ke[t.getDay()],i],+t==+s?a.push(qe+"-state-highlight","fc-today"):s>t?a.push("fc-past"):a.push("fc-future"),r="<td class='"+a.join(" ")+"'>"+"<div>"+"<div class='fc-day-content'>"+"<div style='position:relative'>&nbsp;</div>"+"</div>"+"</div>"+"</td>",n+=r;return l+=n,l+="<td class='fc-agenda-gutter "+i+"'>&nbsp;</td>"+"</tr>"+"</tbody>"}function m(t){t===e&&(t=Se),Se=t,sn={};var n=re.position().top,r=he.position().top,a=Math.min(t-n,Ce.height()+r+1);le.height(a-R(se)),ce.css("top",n),he.height(a-r-1),Fe=Ce.find("tr:first").height()+1,Ne=Ue("slotMinutes")/Re,ze=Fe/Ne}function w(e){Ee=e,_e.clear(),Pe.clear();var n=ee.find("th:first");de&&(n=n.add(de.find("th:first"))),n=n.add(Ce.find("th:first")),Te=0,S(n.width("").each(function(e,n){Te=Math.max(Te,t(n).outerWidth())}),Te);var r=K.find(".fc-agenda-gutter");de&&(r=r.add(de.find("th.fc-agenda-gutter")));var a=he[0].clientWidth;He=he.width()-a,He?(S(r,He),r.show().prev().removeClass("fc-last")):r.hide().prev().addClass("fc-last"),xe=Math.floor((a-Te)/We),S(ne.slice(0,-1),xe)}function b(){function t(){he.scrollTop(r)}var e=v(),n=d(e);n.setHours(Ue("firstHour"));var r=_(e,n)+1;t(),setTimeout(t,0)}function D(){b()}function C(t){t.click(E).mousedown(tn)}function M(t){t.click(E).mousedown(U)}function E(t){if(!Ue("selectable")){var e=Math.min(We-1,Math.floor((t.pageX-K.offset().left-Te)/xe)),n=nn(0,e),r=this.parentNode.className.match(/fc-slot(\d+)/);if(r){var a=parseInt(r[1])*Ue("slotMinutes"),o=Math.floor(a/60);n.setHours(o),n.setMinutes(a%60+Be),Ze("dayClick",ae[e],n,!1,t)}else Ze("dayClick",ae[e],n,!0,t)}}function x(t,e,n){n&&Oe.build();for(var r=an(t,e),a=0;r.length>a;a++){var o=r[a];C(k(o.row,o.leftCol,o.row,o.rightCol))}}function k(t,e,n,r){var a=Oe.rect(t,e,n,r,ce);return Ge(a,ce)}function H(t,e){for(var n=0;We>n;n++){var r=nn(0,n),a=l(d(r),1),o=new Date(Math.max(r,t)),i=new Date(Math.min(a,e));if(i>o){var s=Oe.rect(0,n,0,n,ge),c=_(r,o),u=_(r,i);s.top=c,s.height=u-c,M(Ge(s,ge))}}}function F(t){return _e.left(t)}function N(t){return Pe.left(t)}function z(t){return _e.right(t)}function W(t){return Pe.right(t)}function A(t){return Ue("allDaySlot")&&!t.row}function L(t){var e=nn(0,t.col),n=t.row;return Ue("allDaySlot")&&n--,n>=0&&u(e,Be+n*Re),e}function _(t,n){if(t=d(t,!0),u(d(t),Be)>n)return 0;if(n>=u(d(t),je))return Ce.height();var r=Ue("slotMinutes"),a=60*n.getHours()+n.getMinutes()-Be,o=Math.floor(a/r),i=sn[o];return i===e&&(i=sn[o]=Ce.find("tr").eq(o).find("td div")[0].offsetTop),Math.max(0,Math.round(i-1+Fe*(a%r/r)))}function P(){return ve}function j(t){var e=d(t.start);return t.allDay?e:u(e,Ue("defaultEventMinutes"))}function I(t,e){return e?d(t):u(d(t),Ue("slotMinutes"))}function X(t,e,n){n?Ue("allDaySlot")&&x(t,l(d(e),1),!0):J(t,e)}function J(e,n){var r=Ue("selectHelper");if(Oe.build(),r){var a=rn(e).col;if(a>=0&&We>a){var o=Oe.rect(0,a,0,a,ge),i=_(e,e),s=_(e,n);if(s>i){if(o.top=i,o.height=s-i,o.left+=2,o.width-=5,t.isFunction(r)){var l=r(e,n);l&&(o.position="absolute",Me=t(l).css(o).appendTo(ge))}else o.isStart=!0,o.isEnd=!0,Me=t(en({title:"",start:e,end:n,className:["fc-select-helper"],editable:!1},o)),Me.css("opacity",Ue("dragOpacity"));Me&&(M(Me),ge.append(Me),S(Me,o.width,!0),T(Me,o.height,!0))}}}else H(e,n)}function V(){$e(),Me&&(Me.remove(),Me=null)}function U(e){if(1==e.which&&Ue("selectable")){Ke(e);var n;Le.start(function(t,e){if(V(),t&&t.col==e.col&&!A(t)){var r=L(e),a=L(t);n=[r,u(d(r),Re),a,u(d(a),Re)].sort(O),J(n[0],n[3])}else n=null},e),t(document).one("mouseup",function(t){Le.stop(),n&&(+n[0]==+n[1]&&Z(n[0],!1,t),Qe(n[0],n[3],!1,t))})}}function Z(t,e,n){Ze("dayClick",ae[rn(t).col],t,e,n)}function G(t,e){Le.start(function(t){if($e(),t)if(A(t))k(t.row,t.col,t.row,t.col);else{var e=L(t),n=u(d(e),Ue("defaultEventMinutes"));H(e,n)}},e)}function $(t,e,n){var r=Le.stop();$e(),r&&Ze("drop",t,L(r),A(r),e,n)}var Q=this;Q.renderAgenda=o,Q.setWidth=w,Q.setHeight=m,Q.afterRender=D,Q.defaultEventEnd=j,Q.timePosition=_,Q.getIsCellAllDay=A,Q.allDayRow=P,Q.getCoordinateGrid=function(){return Oe},Q.getHoverListener=function(){return Le},Q.colLeft=F,Q.colRight=z,Q.colContentLeft=N,Q.colContentRight=W,Q.getDaySegmentContainer=function(){return ue},Q.getSlotSegmentContainer=function(){return be},Q.getMinMinute=function(){return Be},Q.getMaxMinute=function(){return je},Q.getSlotContainer=function(){return ge},Q.getRowCnt=function(){return 1},Q.getColCnt=function(){return We},Q.getColWidth=function(){return xe},Q.getSnapHeight=function(){return ze},Q.getSnapMinutes=function(){return Re},Q.defaultSelectionEnd=I,Q.renderDayOverlay=x,Q.renderSelection=X,Q.clearSelection=V,Q.reportDayClick=Z,Q.dragStart=G,Q.dragStop=$,fe.call(Q,n,r,a),me.call(Q),pe.call(Q),te.call(Q);var K,ee,ne,re,ae,oe,ie,se,le,ce,ue,de,ve,he,ge,be,Ce,Me,Ee,Se,Te,xe,He,Fe,Re,Ne,ze,We,Ae,Oe,Le,_e,Pe,qe,Ye,Be,je,Ie,Xe,Je,Ve,Ue=Q.opt,Ze=Q.trigger,Ge=Q.renderOverlay,$e=Q.clearOverlays,Qe=Q.reportSelection,Ke=Q.unselect,tn=Q.daySelectionMousedown,en=Q.slotSegHtml,nn=Q.cellToDate,rn=Q.dateToCell,an=Q.rangeToSegments,on=r.formatDate,sn={};Y(n.addClass("fc-agenda")),Oe=new ye(function(e,n){function r(t){return Math.max(l,Math.min(c,t))}var a,o,i;ne.each(function(e,r){a=t(r),o=a.offset().left,e&&(i[1]=o),i=[o],n[e]=i}),i[1]=o+a.outerWidth(),Ue("allDaySlot")&&(a=ve,o=a.offset().top,e[0]=[o,o+a.outerHeight()]);for(var s=ge.offset().top,l=he.offset().top,c=l+he.outerHeight(),u=0;Ae*Ne>u;u++)e.push([r(s+ze*u),r(s+ze*(u+1))])}),Le=new we(Oe),_e=new De(function(t){return oe.eq(t)}),Pe=new De(function(t){return ie.eq(t)})}function te(){function n(t,e){var n,r=t.length,o=[],i=[];for(n=0;r>n;n++)t[n].allDay?o.push(t[n]):i.push(t[n]);y("allDaySlot")&&(te(o,e),k()),s(a(i),e)}function r(){H().empty(),F().empty()}function a(e){var n,r,a,s,l,c=Y(),f=W(),v=z(),h=t.map(e,i),g=[];for(r=0;c>r;r++)for(n=P(0,r),u(n,f),l=o(e,h,n,u(d(n),v-f)),l=ee(l),a=0;l.length>a;a++)s=l[a],s.col=r,g.push(s);return g}function o(t,e,n,r){var a,o,i,s,l,c,u,f,v=[],h=t.length;for(a=0;h>a;a++)o=t[a],i=o.start,s=e[a],s>n&&r>i&&(n>i?(l=d(n),u=!1):(l=i,u=!0),s>r?(c=d(r),f=!1):(c=s,f=!0),v.push({event:o,start:l,end:c,isStart:u,isEnd:f}));return v.sort(ue)}function i(t){return t.end?d(t.end):u(d(t.start),y("defaultEventMinutes"))}function s(n,r){var a,o,i,s,l,u,d,v,h,g,p,m,b,D,C,M,S=n.length,T="",k=F(),H=y("isRTL");for(a=0;S>a;a++)o=n[a],i=o.event,s=A(o.start,o.start),l=A(o.start,o.end),u=L(o.col),d=_(o.col),v=d-u,d-=.025*v,v=d-u,h=v*(o.forwardCoord-o.backwardCoord),y("slotEventOverlap")&&(h=Math.max(2*(h-10),h)),H?(p=d-o.backwardCoord*v,g=p-h):(g=u+o.backwardCoord*v,p=g+h),g=Math.max(g,u),p=Math.min(p,d),h=p-g,o.top=s,o.left=g,o.outerWidth=h,o.outerHeight=l-s,T+=c(i,o);for(k[0].innerHTML=T,m=k.children(),a=0;S>a;a++)o=n[a],i=o.event,b=t(m[a]),D=w("eventRender",i,i,b),D===!1?b.remove():(D&&D!==!0&&(b.remove(),b=t(D).css({position:"absolute",top:o.top,left:o.left}).appendTo(k)),o.element=b,i._id===r?f(i,b,o):b[0]._fci=a,V(i,b));for(E(k,n,f),a=0;S>a;a++)o=n[a],(b=o.element)&&(o.vsides=R(b,!0),o.hsides=x(b,!0),C=b.find(".fc-event-title"),C.length&&(o.contentTop=C[0].offsetTop));for(a=0;S>a;a++)o=n[a],(b=o.element)&&(b[0].style.width=Math.max(0,o.outerWidth-o.hsides)+"px",M=Math.max(0,o.outerHeight-o.vsides),b[0].style.height=M+"px",i=o.event,o.contentTop!==e&&10>M-o.contentTop&&(b.find("div.fc-event-time").text(re(i.start,y("timeFormat"))+" - "+i.title),b.find("div.fc-event-title").remove()),w("eventAfterRender",i,i,b))}function c(t,e){var n="<",r=t.url,a=j(t,y),o=["fc-event","fc-event-vert"];return b(t)&&o.push("fc-event-draggable"),e.isStart&&o.push("fc-event-start"),e.isEnd&&o.push("fc-event-end"),o=o.concat(t.className),t.source&&(o=o.concat(t.source.className||[])),n+=r?"a href='"+q(t.url)+"'":"div",n+=" class='"+o.join(" ")+"'"+" style="+"'"+"position:absolute;"+"top:"+e.top+"px;"+"left:"+e.left+"px;"+a+"'"+">"+"<div class='fc-event-inner'>"+"<div class='fc-event-time'>"+q(ae(t.start,t.end,y("timeFormat")))+"</div>"+"<div class='fc-event-title'>"+q(t.title||"")+"</div>"+"</div>"+"<div class='fc-event-bg'></div>",e.isEnd&&D(t)&&(n+="<div class='ui-resizable-handle ui-resizable-s'>=</div>"),n+="</"+(r?"a":"div")+">"}function f(t,e,n){var r=e.find("div.fc-event-time");b(t)&&g(t,e,r),n.isEnd&&D(t)&&p(t,e,r),S(t,e)}function v(t,e,n){function r(){c||(e.width(a).height("").draggable("option","grid",null),c=!0)}var a,o,i,s=n.isStart,c=!0,u=N(),f=B(),v=I(),g=X(),p=W();e.draggable({opacity:y("dragOpacity","month"),revertDuration:y("dragRevertDuration"),start:function(n,p){w("eventDragStart",e,t,n,p),Z(t,e),a=e.width(),u.start(function(n,a){if(K(),n){o=!1;var u=P(0,a.col),p=P(0,n.col);i=h(p,u),n.row?s?c&&(e.width(f-10),T(e,v*Math.round((t.end?(t.end-t.start)/Re:y("defaultEventMinutes"))/g)),e.draggable("option","grid",[f,1]),c=!1):o=!0:(Q(l(d(t.start),i),l(C(t),i)),r()),o=o||c&&!i
 }else r(),o=!0;e.draggable("option","revert",o)},n,"drag")},stop:function(n,a){if(u.stop(),K(),w("eventDragStop",e,t,n,a),o)r(),e.css("filter",""),U(t,e);else{var s=0;c||(s=Math.round((e.offset().top-J().offset().top)/v)*g+p-(60*t.start.getHours()+t.start.getMinutes())),G(this,t,i,s,c,n,a)}}})}function g(t,e,n){function r(){K(),s&&(f?(n.hide(),e.draggable("option","grid",null),Q(l(d(t.start),b),l(C(t),b))):(a(D),n.css("display",""),e.draggable("option","grid",[T,x])))}function a(e){var r,a=u(d(t.start),e);t.end&&(r=u(d(t.end),e)),n.text(ae(a,r,y("timeFormat")))}var o,i,s,c,f,v,g,p,b,D,M,E=m.getCoordinateGrid(),S=Y(),T=B(),x=I(),k=X();e.draggable({scroll:!1,grid:[T,x],axis:1==S?"y":!1,opacity:y("dragOpacity"),revertDuration:y("dragRevertDuration"),start:function(n,r){w("eventDragStart",e,t,n,r),Z(t,e),E.build(),o=e.position(),i=E.cell(n.pageX,n.pageY),s=c=!0,f=v=O(i),g=p=0,b=0,D=M=0},drag:function(t,n){var a=E.cell(t.pageX,t.pageY);if(s=!!a){if(f=O(a),g=Math.round((n.position.left-o.left)/T),g!=p){var l=P(0,i.col),u=i.col+g;u=Math.max(0,u),u=Math.min(S-1,u);var d=P(0,u);b=h(d,l)}f||(D=Math.round((n.position.top-o.top)/x)*k)}(s!=c||f!=v||g!=p||D!=M)&&(r(),c=s,v=f,p=g,M=D),e.draggable("option","revert",!s)},stop:function(n,a){K(),w("eventDragStop",e,t,n,a),s&&(f||b||D)?G(this,t,b,f?0:D,f,n,a):(s=!0,f=!1,g=0,b=0,D=0,r(),e.css("filter",""),e.css(o),U(t,e))}})}function p(t,e,n){var r,a,o=I(),i=X();e.resizable({handles:{s:".ui-resizable-handle"},grid:o,start:function(n,o){r=a=0,Z(t,e),w("eventResizeStart",this,t,n,o)},resize:function(s,l){r=Math.round((Math.max(o,e.height())-l.originalSize.height)/o),r!=a&&(n.text(ae(t.start,r||t.end?u(M(t),i*r):null,y("timeFormat"))),a=r)},stop:function(n,a){w("eventResizeStop",this,t,n,a),r?$(this,t,0,i*r,n,a):U(t,e)}})}var m=this;m.renderEvents=n,m.clearEvents=r,m.slotSegHtml=c,de.call(m);var y=m.opt,w=m.trigger,b=m.isEventDraggable,D=m.isEventResizable,M=m.eventEnd,S=m.eventElementHandlers,k=m.setHeight,H=m.getDaySegmentContainer,F=m.getSlotSegmentContainer,N=m.getHoverListener,z=m.getMaxMinute,W=m.getMinMinute,A=m.timePosition,O=m.getIsCellAllDay,L=m.colContentLeft,_=m.colContentRight,P=m.cellToDate,Y=m.getColCnt,B=m.getColWidth,I=m.getSnapHeight,X=m.getSnapMinutes,J=m.getSlotContainer,V=m.reportEventElement,U=m.showEvents,Z=m.hideEvents,G=m.eventDrop,$=m.eventResize,Q=m.renderDayOverlay,K=m.clearOverlays,te=m.renderDayEvents,ne=m.calendar,re=ne.formatDate,ae=ne.formatDates;m.draggableDayEvent=v}function ee(t){var e,n=ne(t),r=n[0];if(re(n),r){for(e=0;r.length>e;e++)ae(r[e]);for(e=0;r.length>e;e++)oe(r[e],0,0)}return ie(n)}function ne(t){var e,n,r,a=[];for(e=0;t.length>e;e++){for(n=t[e],r=0;a.length>r&&se(n,a[r]).length;r++);(a[r]||(a[r]=[])).push(n)}return a}function re(t){var e,n,r,a,o;for(e=0;t.length>e;e++)for(n=t[e],r=0;n.length>r;r++)for(a=n[r],a.forwardSegs=[],o=e+1;t.length>o;o++)se(a,t[o],a.forwardSegs)}function ae(t){var n,r,a=t.forwardSegs,o=0;if(t.forwardPressure===e){for(n=0;a.length>n;n++)r=a[n],ae(r),o=Math.max(o,1+r.forwardPressure);t.forwardPressure=o}}function oe(t,n,r){var a,o=t.forwardSegs;if(t.forwardCoord===e)for(o.length?(o.sort(ce),oe(o[0],n+1,r),t.forwardCoord=o[0].backwardCoord):t.forwardCoord=1,t.backwardCoord=t.forwardCoord-(t.forwardCoord-r)/(n+1),a=0;o.length>a;a++)oe(o[a],0,t.forwardCoord)}function ie(t){var e,n,r,a=[];for(e=0;t.length>e;e++)for(n=t[e],r=0;n.length>r;r++)a.push(n[r]);return a}function se(t,e,n){n=n||[];for(var r=0;e.length>r;r++)le(t,e[r])&&n.push(e[r]);return n}function le(t,e){return t.end>e.start&&t.start<e.end}function ce(t,e){return e.forwardPressure-t.forwardPressure||(t.backwardCoord||0)-(e.backwardCoord||0)||ue(t,e)}function ue(t,e){return t.start-e.start||e.end-e.start-(t.end-t.start)||(t.event.title||"").localeCompare(e.event.title)}function fe(n,r,a){function o(e,n){var r=V[e];return t.isPlainObject(r)?P(r,n||a):r}function i(t,e){return r.trigger.apply(r,[t,e||_].concat(Array.prototype.slice.call(arguments,2),[_]))}function s(t){var e=t.source||{};return X(t.startEditable,e.startEditable,o("eventStartEditable"),t.editable,e.editable,o("editable"))&&!o("disableDragging")}function c(t){var e=t.source||{};return X(t.durationEditable,e.durationEditable,o("eventDurationEditable"),t.editable,e.editable,o("editable"))&&!o("disableResizing")}function f(t){j={};var e,n,r=t.length;for(e=0;r>e;e++)n=t[e],j[n._id]?j[n._id].push(n):j[n._id]=[n]}function v(){j={},I={},J=[]}function g(t){return t.end?d(t.end):q(t)}function p(t,e){J.push({event:t,element:e}),I[t._id]?I[t._id].push(e):I[t._id]=[e]}function m(){t.each(J,function(t,e){_.trigger("eventDestroy",e.event,e.event,e.element)})}function y(t,n){n.click(function(r){return n.hasClass("ui-draggable-dragging")||n.hasClass("ui-resizable-resizing")?e:i("eventClick",this,t,r)}).hover(function(e){i("eventMouseover",this,t,e)},function(e){i("eventMouseout",this,t,e)})}function w(t,e){D(t,e,"show")}function b(t,e){D(t,e,"hide")}function D(t,e,n){var r,a=I[t._id],o=a.length;for(r=0;o>r;r++)e&&a[r][0]==e[0]||a[r][n]()}function C(t,e,n,r,a,o,s){var l=e.allDay,c=e._id;E(j[c],n,r,a),i("eventDrop",t,e,n,r,a,function(){E(j[c],-n,-r,l),B(c)},o,s),B(c)}function M(t,e,n,r,a,o){var s=e._id;S(j[s],n,r),i("eventResize",t,e,n,r,function(){S(j[s],-n,-r),B(s)},a,o),B(s)}function E(t,n,r,a){r=r||0;for(var o,i=t.length,s=0;i>s;s++)o=t[s],a!==e&&(o.allDay=a),u(l(o.start,n,!0),r),o.end&&(o.end=u(l(o.end,n,!0),r)),Y(o,V)}function S(t,e,n){n=n||0;for(var r,a=t.length,o=0;a>o;o++)r=t[o],r.end=u(l(g(r),e,!0),n),Y(r,V)}function T(t){return"object"==typeof t&&(t=t.getDay()),G[t]}function x(){return U}function k(t,e,n){for(e=e||1;G[(t.getDay()+(n?e:0)+7)%7];)l(t,e)}function H(){var t=F.apply(null,arguments),e=R(t),n=N(e);return n}function F(t,e){var n=_.getColCnt(),r=K?-1:1,a=K?n-1:0;"object"==typeof t&&(e=t.col,t=t.row);var o=t*n+(e*r+a);return o}function R(t){var e=_.visStart.getDay();return t+=$[e],7*Math.floor(t/U)+Q[(t%U+U)%U]-e}function N(t){var e=d(_.visStart);return l(e,t),e}function z(t){var e=W(t),n=A(e),r=O(n);return r}function W(t){return h(t,_.visStart)}function A(t){var e=_.visStart.getDay();return t+=e,Math.floor(t/7)*U+$[(t%7+7)%7]-$[e]}function O(t){var e=_.getColCnt(),n=K?-1:1,r=K?e-1:0,a=Math.floor(t/e),o=(t%e+e)%e*n+r;return{row:a,col:o}}function L(t,e){for(var n=_.getRowCnt(),r=_.getColCnt(),a=[],o=W(t),i=W(e),s=A(o),l=A(i)-1,c=0;n>c;c++){var u=c*r,f=u+r-1,d=Math.max(s,u),v=Math.min(l,f);if(v>=d){var h=O(d),g=O(v),p=[h.col,g.col].sort(),m=R(d)==o,y=R(v)+1==i;a.push({row:c,leftCol:p[0],rightCol:p[1],isStart:m,isEnd:y})}}return a}var _=this;_.element=n,_.calendar=r,_.name=a,_.opt=o,_.trigger=i,_.isEventDraggable=s,_.isEventResizable=c,_.setEventData=f,_.clearEventData=v,_.eventEnd=g,_.reportEventElement=p,_.triggerEventDestroy=m,_.eventElementHandlers=y,_.showEvents=w,_.hideEvents=b,_.eventDrop=C,_.eventResize=M;var q=_.defaultEventEnd,Y=r.normalizeEvent,B=r.reportEventChange,j={},I={},J=[],V=r.options;_.isHiddenDay=T,_.skipHiddenDays=k,_.getCellsPerWeek=x,_.dateToCell=z,_.dateToDayOffset=W,_.dayOffsetToCellOffset=A,_.cellOffsetToCell=O,_.cellToDate=H,_.cellToCellOffset=F,_.cellOffsetToDayOffset=R,_.dayOffsetToDate=N,_.rangeToSegments=L;var U,Z=o("hiddenDays")||[],G=[],$=[],Q=[],K=o("isRTL");(function(){o("weekends")===!1&&Z.push(0,6);for(var e=0,n=0;7>e;e++)$[e]=n,G[e]=-1!=t.inArray(e,Z),G[e]||(Q[n]=e,n++);if(U=n,!U)throw"invalid hiddenDays"})()}function de(){function e(t,e){var n=r(t,!1,!0);he(n,function(t,e){N(t.event,e)}),w(n,e),he(n,function(t,e){k("eventAfterRender",t.event,t.event,e)})}function n(t,e,n){var a=r([t],!0,!1),o=[];return he(a,function(t,r){t.row===e&&r.css("top",n),o.push(r[0])}),o}function r(e,n,r){var o,l,c=Z(),d=n?t("<div/>"):c,v=a(e);return i(v),o=s(v),d[0].innerHTML=o,l=d.children(),n&&c.append(l),u(v,l),he(v,function(t,e){t.hsides=x(e,!0)}),he(v,function(t,e){e.width(Math.max(0,t.outerWidth-t.hsides))}),he(v,function(t,e){t.outerHeight=e.outerHeight(!0)}),f(v,r),v}function a(t){for(var e=[],n=0;t.length>n;n++){var r=o(t[n]);e.push.apply(e,r)}return e}function o(t){for(var e=t.start,n=C(t),r=ee(e,n),a=0;r.length>a;a++)r[a].event=t;return r}function i(t){for(var e=T("isRTL"),n=0;t.length>n;n++){var r=t[n],a=(e?r.isEnd:r.isStart)?V:X,o=(e?r.isStart:r.isEnd)?U:J,i=a(r.leftCol),s=o(r.rightCol);r.left=i,r.outerWidth=s-i}}function s(t){for(var e="",n=0;t.length>n;n++)e+=c(t[n]);return e}function c(t){var e="",n=T("isRTL"),r=t.event,a=r.url,o=["fc-event","fc-event-hori"];H(r)&&o.push("fc-event-draggable"),t.isStart&&o.push("fc-event-start"),t.isEnd&&o.push("fc-event-end"),o=o.concat(r.className),r.source&&(o=o.concat(r.source.className||[]));var i=j(r,T);return e+=a?"<a href='"+q(a)+"'":"<div",e+=" class='"+o.join(" ")+"'"+" style="+"'"+"position:absolute;"+"left:"+t.left+"px;"+i+"'"+">"+"<div class='fc-event-inner'>",!r.allDay&&t.isStart&&(e+="<span class='fc-event-time'>"+q(G(r.start,r.end,T("timeFormat")))+"</span>"),e+="<span class='fc-event-title'>"+q(r.title||"")+"</span>"+"</div>",t.isEnd&&F(r)&&(e+="<div class='ui-resizable-handle ui-resizable-"+(n?"w":"e")+"'>"+"&nbsp;&nbsp;&nbsp;"+"</div>"),e+="</"+(a?"a":"div")+">"}function u(e,n){for(var r=0;e.length>r;r++){var a=e[r],o=a.event,i=n.eq(r),s=k("eventRender",o,o,i);s===!1?i.remove():(s&&s!==!0&&(s=t(s).css({position:"absolute",left:a.left}),i.replaceWith(s),i=s),a.element=i)}}function f(t,e){var n=v(t),r=y(),a=[];if(e)for(var o=0;r.length>o;o++)r[o].height(n[o]);for(var o=0;r.length>o;o++)a.push(r[o].position().top);he(t,function(t,e){e.css("top",a[t.row]+t.top)})}function v(t){for(var e=P(),n=B(),r=[],a=g(t),o=0;e>o;o++){for(var i=a[o],s=[],l=0;n>l;l++)s.push(0);for(var c=0;i.length>c;c++){var u=i[c];u.top=L(s.slice(u.leftCol,u.rightCol+1));for(var l=u.leftCol;u.rightCol>=l;l++)s[l]=u.top+u.outerHeight}r.push(L(s))}return r}function g(t){var e,n,r,a=P(),o=[];for(e=0;t.length>e;e++)n=t[e],r=n.row,n.element&&(o[r]?o[r].push(n):o[r]=[n]);for(r=0;a>r;r++)o[r]=p(o[r]||[]);return o}function p(t){for(var e=[],n=m(t),r=0;n.length>r;r++)e.push.apply(e,n[r]);return e}function m(t){t.sort(ge);for(var e=[],n=0;t.length>n;n++){for(var r=t[n],a=0;e.length>a&&ve(r,e[a]);a++);e[a]?e[a].push(r):e[a]=[r]}return e}function y(){var t,e=P(),n=[];for(t=0;e>t;t++)n[t]=I(t).find("div.fc-day-content > div");return n}function w(t,e){var n=Z();he(t,function(t,n,r){var a=t.event;a._id===e?b(a,n,t):n[0]._fci=r}),E(n,t,b)}function b(t,e,n){H(t)&&S.draggableDayEvent(t,e,n),n.isEnd&&F(t)&&S.resizableDayEvent(t,e,n),z(t,e)}function D(t,e){var n,r=te();e.draggable({delay:50,opacity:T("dragOpacity"),revertDuration:T("dragRevertDuration"),start:function(a,o){k("eventDragStart",e,t,a,o),A(t,e),r.start(function(r,a,o,i){if(e.draggable("option","revert",!r||!o&&!i),Q(),r){var s=ne(a),c=ne(r);n=h(c,s),$(l(d(t.start),n),l(C(t),n))}else n=0},a,"drag")},stop:function(a,o){r.stop(),Q(),k("eventDragStop",e,t,a,o),n?O(this,t,n,0,t.allDay,a,o):(e.css("filter",""),W(t,e))}})}function M(e,r,a){var o=T("isRTL"),i=o?"w":"e",s=r.find(".ui-resizable-"+i),c=!1;Y(r),r.mousedown(function(t){t.preventDefault()}).click(function(t){c&&(t.preventDefault(),t.stopImmediatePropagation())}),s.mousedown(function(o){function s(n){k("eventResizeStop",this,e,n),t("body").css("cursor",""),u.stop(),Q(),f&&_(this,e,f,0,n),setTimeout(function(){c=!1},0)}if(1==o.which){c=!0;var u=te();P(),B();var f,d,v=r.css("top"),h=t.extend({},e),g=ie(oe(e.start));K(),t("body").css("cursor",i+"-resize").one("mouseup",s),k("eventResizeStart",this,e,o),u.start(function(r,o){if(r){var s=re(o),c=re(r);if(c=Math.max(c,g),f=ae(c)-ae(s)){h.end=l(R(e),f,!0);var u=d;d=n(h,a.row,v),d=t(d),d.find("*").css("cursor",i+"-resize"),u&&u.remove(),A(e)}else d&&(W(e),d.remove(),d=null);Q(),$(e.start,l(C(e),f))}},o)}})}var S=this;S.renderDayEvents=e,S.draggableDayEvent=D,S.resizableDayEvent=M;var T=S.opt,k=S.trigger,H=S.isEventDraggable,F=S.isEventResizable,R=S.eventEnd,N=S.reportEventElement,z=S.eventElementHandlers,W=S.showEvents,A=S.hideEvents,O=S.eventDrop,_=S.eventResize,P=S.getRowCnt,B=S.getColCnt;S.getColWidth;var I=S.allDayRow,X=S.colLeft,J=S.colRight,V=S.colContentLeft,U=S.colContentRight;S.dateToCell;var Z=S.getDaySegmentContainer,G=S.calendar.formatDates,$=S.renderDayOverlay,Q=S.clearOverlays,K=S.clearSelection,te=S.getHoverListener,ee=S.rangeToSegments,ne=S.cellToDate,re=S.cellToCellOffset,ae=S.cellOffsetToDayOffset,oe=S.dateToDayOffset,ie=S.dayOffsetToCellOffset}function ve(t,e){for(var n=0;e.length>n;n++){var r=e[n];if(r.leftCol<=t.rightCol&&r.rightCol>=t.leftCol)return!0}return!1}function he(t,e){for(var n=0;t.length>n;n++){var r=t[n],a=r.element;a&&e(r,a,n)}}function ge(t,e){return e.rightCol-e.leftCol-(t.rightCol-t.leftCol)||e.event.allDay-t.event.allDay||t.event.start-e.event.start||(t.event.title||"").localeCompare(e.event.title)}function pe(){function e(t,e,a){n(),e||(e=l(t,a)),c(t,e,a),r(t,e,a)}function n(t){f&&(f=!1,u(),s("unselect",null,t))}function r(t,e,n,r){f=!0,s("select",null,t,e,n,r)}function a(e){var a=o.cellToDate,s=o.getIsCellAllDay,l=o.getHoverListener(),f=o.reportDayClick;if(1==e.which&&i("selectable")){n(e);var d;l.start(function(t,e){u(),t&&s(t)?(d=[a(e),a(t)].sort(O),c(d[0],d[1],!0)):d=null},e),t(document).one("mouseup",function(t){l.stop(),d&&(+d[0]==+d[1]&&f(d[0],!0,t),r(d[0],d[1],!0,t))})}}var o=this;o.select=e,o.unselect=n,o.reportSelection=r,o.daySelectionMousedown=a;var i=o.opt,s=o.trigger,l=o.defaultSelectionEnd,c=o.renderSelection,u=o.clearSelection,f=!1;i("selectable")&&i("unselectAuto")&&t(document).mousedown(function(e){var r=i("unselectCancel");r&&t(e.target).parents(r).length||n(e)})}function me(){function e(e,n){var r=o.shift();return r||(r=t("<div class='fc-cell-overlay' style='position:absolute;z-index:3'/>")),r[0].parentNode!=n[0]&&r.appendTo(n),a.push(r.css(e).show()),r}function n(){for(var t;t=a.shift();)o.push(t.hide().unbind())}var r=this;r.renderOverlay=e,r.clearOverlays=n;var a=[],o=[]}function ye(t){var e,n,r=this;r.build=function(){e=[],n=[],t(e,n)},r.cell=function(t,r){var a,o=e.length,i=n.length,s=-1,l=-1;for(a=0;o>a;a++)if(r>=e[a][0]&&e[a][1]>r){s=a;break}for(a=0;i>a;a++)if(t>=n[a][0]&&n[a][1]>t){l=a;break}return s>=0&&l>=0?{row:s,col:l}:null},r.rect=function(t,r,a,o,i){var s=i.offset();return{top:e[t][0]-s.top,left:n[r][0]-s.left,width:n[o][1]-n[r][0],height:e[a][1]-e[t][0]}}}function we(e){function n(t){be(t);var n=e.cell(t.pageX,t.pageY);(!n!=!i||n&&(n.row!=i.row||n.col!=i.col))&&(n?(o||(o=n),a(n,o,n.row-o.row,n.col-o.col)):a(n,o),i=n)}var r,a,o,i,s=this;s.start=function(s,l,c){a=s,o=i=null,e.build(),n(l),r=c||"mousemove",t(document).bind(r,n)},s.stop=function(){return t(document).unbind(r,n),i}}function be(t){t.pageX===e&&(t.pageX=t.originalEvent.pageX,t.pageY=t.originalEvent.pageY)}function De(t){function n(e){return a[e]=a[e]||t(e)}var r=this,a={},o={},i={};r.left=function(t){return o[t]=o[t]===e?n(t).position().left:o[t]},r.right=function(t){return i[t]=i[t]===e?r.left(t)+n(t).width():i[t]},r.clear=function(){a={},o={},i={}}}var Ce={defaultView:"month",aspectRatio:1.35,header:{left:"title",center:"",right:"today prev,next"},weekends:!0,weekNumbers:!1,weekNumberCalculation:"iso",weekNumberTitle:"W",allDayDefault:!0,ignoreTimezone:!0,lazyFetching:!0,startParam:"start",endParam:"end",titleFormat:{month:"MMMM yyyy",week:"MMM d[ yyyy]{ '&#8212;'[ MMM] d yyyy}",day:"dddd, MMM d, yyyy"},columnFormat:{month:"ddd",week:"ddd M/d",day:"dddd M/d"},timeFormat:{"":"h(:mm)t"},isRTL:!1,firstDay:0,monthNames:["January","February","March","April","May","June","July","August","September","October","November","December"],monthNamesShort:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],dayNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],dayNamesShort:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],buttonText:{prev:"<span class='fc-text-arrow'>&lsaquo;</span>",next:"<span class='fc-text-arrow'>&rsaquo;</span>",prevYear:"<span class='fc-text-arrow'>&laquo;</span>",nextYear:"<span class='fc-text-arrow'>&raquo;</span>",today:"today",month:"month",week:"week",day:"day"},theme:!1,buttonIcons:{prev:"circle-triangle-w",next:"circle-triangle-e"},unselectAuto:!0,dropAccept:"*",handleWindowResize:!0},Me={header:{left:"next,prev today",center:"",right:"title"},buttonText:{prev:"<span class='fc-text-arrow'>&rsaquo;</span>",next:"<span class='fc-text-arrow'>&lsaquo;</span>",prevYear:"<span class='fc-text-arrow'>&raquo;</span>",nextYear:"<span class='fc-text-arrow'>&laquo;</span>"},buttonIcons:{prev:"circle-triangle-e",next:"circle-triangle-w"}},Ee=t.fullCalendar={version:"1.6.4"},Se=Ee.views={};t.fn.fullCalendar=function(n){if("string"==typeof n){var a,o=Array.prototype.slice.call(arguments,1);return this.each(function(){var r=t.data(this,"fullCalendar");if(r&&t.isFunction(r[n])){var i=r[n].apply(r,o);a===e&&(a=i),"destroy"==n&&t.removeData(this,"fullCalendar")}}),a!==e?a:this}n=n||{};var i=n.eventSources||[];return delete n.eventSources,n.events&&(i.push(n.events),delete n.events),n=t.extend(!0,{},Ce,n.isRTL||n.isRTL===e&&Ce.isRTL?Me:{},n),this.each(function(e,a){var o=t(a),s=new r(o,n,i);o.data("fullCalendar",s),s.render()}),this},Ee.sourceNormalizers=[],Ee.sourceFetchers=[];var Te={dataType:"json",cache:!1},xe=1;Ee.addDays=l,Ee.cloneDate=d,Ee.parseDate=p,Ee.parseISO8601=m,Ee.parseTime=y,Ee.formatDate=w,Ee.formatDates=b;var ke=["sun","mon","tue","wed","thu","fri","sat"],He=864e5,Fe=36e5,Re=6e4,Ne={s:function(t){return t.getSeconds()},ss:function(t){return _(t.getSeconds())},m:function(t){return t.getMinutes()},mm:function(t){return _(t.getMinutes())},h:function(t){return t.getHours()%12||12},hh:function(t){return _(t.getHours()%12||12)},H:function(t){return t.getHours()},HH:function(t){return _(t.getHours())},d:function(t){return t.getDate()},dd:function(t){return _(t.getDate())},ddd:function(t,e){return e.dayNamesShort[t.getDay()]},dddd:function(t,e){return e.dayNames[t.getDay()]},M:function(t){return t.getMonth()+1},MM:function(t){return _(t.getMonth()+1)},MMM:function(t,e){return e.monthNamesShort[t.getMonth()]},MMMM:function(t,e){return e.monthNames[t.getMonth()]},yy:function(t){return(t.getFullYear()+"").substring(2)},yyyy:function(t){return t.getFullYear()},t:function(t){return 12>t.getHours()?"a":"p"},tt:function(t){return 12>t.getHours()?"am":"pm"},T:function(t){return 12>t.getHours()?"A":"P"},TT:function(t){return 12>t.getHours()?"AM":"PM"},u:function(t){return w(t,"yyyy-MM-dd'T'HH:mm:ss'Z'")},S:function(t){var e=t.getDate();return e>10&&20>e?"th":["st","nd","rd"][e%10-1]||"th"},w:function(t,e){return e.weekNumberCalculation(t)},W:function(t){return D(t)}};Ee.dateFormatters=Ne,Ee.applyAll=I,Se.month=J,Se.basicWeek=V,Se.basicDay=U,n({weekMode:"fixed"}),Se.agendaWeek=$,Se.agendaDay=Q,n({allDaySlot:!0,allDayText:"all-day",firstHour:6,slotMinutes:30,defaultEventMinutes:120,axisFormat:"h(:mm)tt",timeFormat:{agenda:"h:mm{ - h:mm}"},dragOpacity:{agenda:.5},minTime:0,maxTime:24,slotEventOverlap:!0})})(jQuery);
-(function(h,e,A){'use strict';function u(w,q,k){return{restrict:"ECA",terminal:!0,priority:400,transclude:"element",link:function(a,c,b,f,n){function y(){l&&(l.$destroy(),l=null);g&&(k.leave(g),g=null)}function v(){var b=w.current&&w.current.locals;if(e.isDefined(b&&b.$template)){var b=a.$new(),f=w.current;g=n(b,function(d){k.enter(d,null,g||c,function(){!e.isDefined(t)||t&&!a.$eval(t)||q()});y()});l=f.scope=b;l.$emit("$viewContentLoaded");l.$eval(h)}else y()}var l,g,t=b.autoscroll,h=b.onload||"";
-a.$on("$routeChangeSuccess",v);v()}}}function z(e,h,k){return{restrict:"ECA",priority:-400,link:function(a,c){var b=k.current,f=b.locals;c.html(f.$template);var n=e(c.contents());b.controller&&(f.$scope=a,f=h(b.controller,f),b.controllerAs&&(a[b.controllerAs]=f),c.data("$ngControllerController",f),c.children().data("$ngControllerController",f));n(a)}}}h=e.module("ngRoute",["ng"]).provider("$route",function(){function h(a,c){return e.extend(new (e.extend(function(){},{prototype:a})),c)}function q(a,
-e){var b=e.caseInsensitiveMatch,f={originalPath:a,regexp:a},h=f.keys=[];a=a.replace(/([().])/g,"\\$1").replace(/(\/)?:(\w+)([\?\*])?/g,function(a,e,b,c){a="?"===c?c:null;c="*"===c?c:null;h.push({name:b,optional:!!a});e=e||"";return""+(a?"":e)+"(?:"+(a?e:"")+(c&&"(.+?)"||"([^/]+)")+(a||"")+")"+(a||"")}).replace(/([\/$\*])/g,"\\$1");f.regexp=RegExp("^"+a+"$",b?"i":"");return f}var k={};this.when=function(a,c){k[a]=e.extend({reloadOnSearch:!0},c,a&&q(a,c));if(a){var b="/"==a[a.length-1]?a.substr(0,a.length-
-1):a+"/";k[b]=e.extend({redirectTo:a},q(b,c))}return this};this.otherwise=function(a){this.when(null,a);return this};this.$get=["$rootScope","$location","$routeParams","$q","$injector","$http","$templateCache","$sce",function(a,c,b,f,n,q,v,l){function g(){var d=t(),m=r.current;if(d&&m&&d.$$route===m.$$route&&e.equals(d.pathParams,m.pathParams)&&!d.reloadOnSearch&&!x)m.params=d.params,e.copy(m.params,b),a.$broadcast("$routeUpdate",m);else if(d||m)x=!1,a.$broadcast("$routeChangeStart",d,m),(r.current=
-d)&&d.redirectTo&&(e.isString(d.redirectTo)?c.path(u(d.redirectTo,d.params)).search(d.params).replace():c.url(d.redirectTo(d.pathParams,c.path(),c.search())).replace()),f.when(d).then(function(){if(d){var a=e.extend({},d.resolve),c,b;e.forEach(a,function(d,c){a[c]=e.isString(d)?n.get(d):n.invoke(d)});e.isDefined(c=d.template)?e.isFunction(c)&&(c=c(d.params)):e.isDefined(b=d.templateUrl)&&(e.isFunction(b)&&(b=b(d.params)),b=l.getTrustedResourceUrl(b),e.isDefined(b)&&(d.loadedTemplateUrl=b,c=q.get(b,
-{cache:v}).then(function(a){return a.data})));e.isDefined(c)&&(a.$template=c);return f.all(a)}}).then(function(c){d==r.current&&(d&&(d.locals=c,e.copy(d.params,b)),a.$broadcast("$routeChangeSuccess",d,m))},function(c){d==r.current&&a.$broadcast("$routeChangeError",d,m,c)})}function t(){var a,b;e.forEach(k,function(f,k){var p;if(p=!b){var s=c.path();p=f.keys;var l={};if(f.regexp)if(s=f.regexp.exec(s)){for(var g=1,q=s.length;g<q;++g){var n=p[g-1],r="string"==typeof s[g]?decodeURIComponent(s[g]):s[g];
-n&&r&&(l[n.name]=r)}p=l}else p=null;else p=null;p=a=p}p&&(b=h(f,{params:e.extend({},c.search(),a),pathParams:a}),b.$$route=f)});return b||k[null]&&h(k[null],{params:{},pathParams:{}})}function u(a,c){var b=[];e.forEach((a||"").split(":"),function(a,d){if(0===d)b.push(a);else{var e=a.match(/(\w+)(.*)/),f=e[1];b.push(c[f]);b.push(e[2]||"");delete c[f]}});return b.join("")}var x=!1,r={routes:k,reload:function(){x=!0;a.$evalAsync(g)}};a.$on("$locationChangeSuccess",g);return r}]});h.provider("$routeParams",
-function(){this.$get=function(){return{}}});h.directive("ngView",u);h.directive("ngView",z);u.$inject=["$route","$anchorScroll","$animate"];z.$inject=["$compile","$controller","$route"]})(window,window.angular);
-//# sourceMappingURL=angular-route.min.js.map
-
-(function(p,f,n){'use strict';f.module("ngCookies",["ng"]).factory("$cookies",["$rootScope","$browser",function(d,b){var c={},g={},h,k=!1,l=f.copy,m=f.isUndefined;b.addPollFn(function(){var a=b.cookies();h!=a&&(h=a,l(a,g),l(a,c),k&&d.$apply())})();k=!0;d.$watch(function(){var a,e,d;for(a in g)m(c[a])&&b.cookies(a,n);for(a in c)(e=c[a],f.isString(e))?e!==g[a]&&(b.cookies(a,e),d=!0):f.isDefined(g[a])?c[a]=g[a]:delete c[a];if(d)for(a in e=b.cookies(),c)c[a]!==e[a]&&(m(e[a])?delete c[a]:c[a]=e[a])});
-return c}]).factory("$cookieStore",["$cookies",function(d){return{get:function(b){return(b=d[b])?f.fromJson(b):b},put:function(b,c){d[b]=f.toJson(c)},remove:function(b){delete d[b]}}}])})(window,window.angular);
-//# sourceMappingURL=angular-cookies.min.js.map
-
-(function(H,a,A){'use strict';function D(p,g){g=g||{};a.forEach(g,function(a,c){delete g[c]});for(var c in p)p.hasOwnProperty(c)&&("$"!==c.charAt(0)&&"$"!==c.charAt(1))&&(g[c]=p[c]);return g}var v=a.$$minErr("$resource"),C=/^(\.[a-zA-Z_$][0-9a-zA-Z_$]*)+$/;a.module("ngResource",["ng"]).factory("$resource",["$http","$q",function(p,g){function c(a,c){this.template=a;this.defaults=c||{};this.urlParams={}}function t(n,w,l){function r(h,d){var e={};d=x({},w,d);s(d,function(b,d){u(b)&&(b=b());var k;if(b&&
-b.charAt&&"@"==b.charAt(0)){k=h;var a=b.substr(1);if(null==a||""===a||"hasOwnProperty"===a||!C.test("."+a))throw v("badmember",a);for(var a=a.split("."),f=0,c=a.length;f<c&&k!==A;f++){var g=a[f];k=null!==k?k[g]:A}}else k=b;e[d]=k});return e}function e(a){return a.resource}function f(a){D(a||{},this)}var F=new c(n);l=x({},B,l);s(l,function(h,d){var c=/^(POST|PUT|PATCH)$/i.test(h.method);f[d]=function(b,d,k,w){var q={},n,l,y;switch(arguments.length){case 4:y=w,l=k;case 3:case 2:if(u(d)){if(u(b)){l=
-b;y=d;break}l=d;y=k}else{q=b;n=d;l=k;break}case 1:u(b)?l=b:c?n=b:q=b;break;case 0:break;default:throw v("badargs",arguments.length);}var t=this instanceof f,m=t?n:h.isArray?[]:new f(n),z={},B=h.interceptor&&h.interceptor.response||e,C=h.interceptor&&h.interceptor.responseError||A;s(h,function(a,b){"params"!=b&&("isArray"!=b&&"interceptor"!=b)&&(z[b]=G(a))});c&&(z.data=n);F.setUrlParams(z,x({},r(n,h.params||{}),q),h.url);q=p(z).then(function(b){var d=b.data,k=m.$promise;if(d){if(a.isArray(d)!==!!h.isArray)throw v("badcfg",
-h.isArray?"array":"object",a.isArray(d)?"array":"object");h.isArray?(m.length=0,s(d,function(b){m.push(new f(b))})):(D(d,m),m.$promise=k)}m.$resolved=!0;b.resource=m;return b},function(b){m.$resolved=!0;(y||E)(b);return g.reject(b)});q=q.then(function(b){var a=B(b);(l||E)(a,b.headers);return a},C);return t?q:(m.$promise=q,m.$resolved=!1,m)};f.prototype["$"+d]=function(b,a,k){u(b)&&(k=a,a=b,b={});b=f[d].call(this,b,this,a,k);return b.$promise||b}});f.bind=function(a){return t(n,x({},w,a),l)};return f}
-var B={get:{method:"GET"},save:{method:"POST"},query:{method:"GET",isArray:!0},remove:{method:"DELETE"},"delete":{method:"DELETE"}},E=a.noop,s=a.forEach,x=a.extend,G=a.copy,u=a.isFunction;c.prototype={setUrlParams:function(c,g,l){var r=this,e=l||r.template,f,p,h=r.urlParams={};s(e.split(/\W/),function(a){if("hasOwnProperty"===a)throw v("badname");!/^\d+$/.test(a)&&(a&&RegExp("(^|[^\\\\]):"+a+"(\\W|$)").test(e))&&(h[a]=!0)});e=e.replace(/\\:/g,":");g=g||{};s(r.urlParams,function(d,c){f=g.hasOwnProperty(c)?
-g[c]:r.defaults[c];a.isDefined(f)&&null!==f?(p=encodeURIComponent(f).replace(/%40/gi,"@").replace(/%3A/gi,":").replace(/%24/g,"$").replace(/%2C/gi,",").replace(/%20/g,"%20").replace(/%26/gi,"&").replace(/%3D/gi,"=").replace(/%2B/gi,"+"),e=e.replace(RegExp(":"+c+"(\\W|$)","g"),function(a,c){return p+c})):e=e.replace(RegExp("(/?):"+c+"(\\W|$)","g"),function(a,c,d){return"/"==d.charAt(0)?d:c+d})});e=e.replace(/\/+$/,"")||"/";e=e.replace(/\/\.(?=\w+($|\?))/,".");c.url=e.replace(/\/\\\./,"/.");s(g,function(a,
-e){r.urlParams[e]||(c.params=c.params||{},c.params[e]=a)})}};return t}])})(window,window.angular);
-//# sourceMappingURL=angular-resource.min.js.map
-
-(function(p,h,q){'use strict';function E(a){var e=[];s(e,h.noop).chars(a);return e.join("")}function k(a){var e={};a=a.split(",");var d;for(d=0;d<a.length;d++)e[a[d]]=!0;return e}function F(a,e){function d(a,b,d,g){b=h.lowercase(b);if(t[b])for(;f.last()&&u[f.last()];)c("",f.last());v[b]&&f.last()==b&&c("",b);(g=w[b]||!!g)||f.push(b);var l={};d.replace(G,function(a,b,e,c,d){l[b]=r(e||c||d||"")});e.start&&e.start(b,l,g)}function c(a,b){var c=0,d;if(b=h.lowercase(b))for(c=f.length-1;0<=c&&f[c]!=b;c--);
-if(0<=c){for(d=f.length-1;d>=c;d--)e.end&&e.end(f[d]);f.length=c}}var b,g,f=[],l=a;for(f.last=function(){return f[f.length-1]};a;){g=!0;if(f.last()&&x[f.last()])a=a.replace(RegExp("(.*)<\\s*\\/\\s*"+f.last()+"[^>]*>","i"),function(b,a){a=a.replace(H,"$1").replace(I,"$1");e.chars&&e.chars(r(a));return""}),c("",f.last());else{if(0===a.indexOf("\x3c!--"))b=a.indexOf("--",4),0<=b&&a.lastIndexOf("--\x3e",b)===b&&(e.comment&&e.comment(a.substring(4,b)),a=a.substring(b+3),g=!1);else if(y.test(a)){if(b=a.match(y))a=
-a.replace(b[0],""),g=!1}else if(J.test(a)){if(b=a.match(z))a=a.substring(b[0].length),b[0].replace(z,c),g=!1}else K.test(a)&&(b=a.match(A))&&(a=a.substring(b[0].length),b[0].replace(A,d),g=!1);g&&(b=a.indexOf("<"),g=0>b?a:a.substring(0,b),a=0>b?"":a.substring(b),e.chars&&e.chars(r(g)))}if(a==l)throw L("badparse",a);l=a}c()}function r(a){if(!a)return"";var e=M.exec(a);a=e[1];var d=e[3];if(e=e[2])n.innerHTML=e.replace(/</g,"&lt;"),e="textContent"in n?n.textContent:n.innerText;return a+e+d}function B(a){return a.replace(/&/g,
-"&amp;").replace(N,function(a){return"&#"+a.charCodeAt(0)+";"}).replace(/</g,"&lt;").replace(/>/g,"&gt;")}function s(a,e){var d=!1,c=h.bind(a,a.push);return{start:function(a,g,f){a=h.lowercase(a);!d&&x[a]&&(d=a);d||!0!==C[a]||(c("<"),c(a),h.forEach(g,function(d,f){var g=h.lowercase(f),k="img"===a&&"src"===g||"background"===g;!0!==O[g]||!0===D[g]&&!e(d,k)||(c(" "),c(f),c('="'),c(B(d)),c('"'))}),c(f?"/>":">"))},end:function(a){a=h.lowercase(a);d||!0!==C[a]||(c("</"),c(a),c(">"));a==d&&(d=!1)},chars:function(a){d||
-c(B(a))}}}var L=h.$$minErr("$sanitize"),A=/^<\s*([\w:-]+)((?:\s+[\w:-]+(?:\s*=\s*(?:(?:"[^"]*")|(?:'[^']*')|[^>\s]+))?)*)\s*(\/?)\s*>/,z=/^<\s*\/\s*([\w:-]+)[^>]*>/,G=/([\w:-]+)(?:\s*=\s*(?:(?:"((?:[^"])*)")|(?:'((?:[^'])*)')|([^>\s]+)))?/g,K=/^</,J=/^<\s*\//,H=/\x3c!--(.*?)--\x3e/g,y=/<!DOCTYPE([^>]*?)>/i,I=/<!\[CDATA\[(.*?)]]\x3e/g,N=/([^\#-~| |!])/g,w=k("area,br,col,hr,img,wbr");p=k("colgroup,dd,dt,li,p,tbody,td,tfoot,th,thead,tr");q=k("rp,rt");var v=h.extend({},q,p),t=h.extend({},p,k("address,article,aside,blockquote,caption,center,del,dir,div,dl,figure,figcaption,footer,h1,h2,h3,h4,h5,h6,header,hgroup,hr,ins,map,menu,nav,ol,pre,script,section,table,ul")),
-u=h.extend({},q,k("a,abbr,acronym,b,bdi,bdo,big,br,cite,code,del,dfn,em,font,i,img,ins,kbd,label,map,mark,q,ruby,rp,rt,s,samp,small,span,strike,strong,sub,sup,time,tt,u,var")),x=k("script,style"),C=h.extend({},w,t,u,v),D=k("background,cite,href,longdesc,src,usemap"),O=h.extend({},D,k("abbr,align,alt,axis,bgcolor,border,cellpadding,cellspacing,class,clear,color,cols,colspan,compact,coords,dir,face,headers,height,hreflang,hspace,ismap,lang,language,nohref,nowrap,rel,rev,rows,rowspan,rules,scope,scrolling,shape,size,span,start,summary,target,title,type,valign,value,vspace,width")),
-n=document.createElement("pre"),M=/^(\s*)([\s\S]*?)(\s*)$/;h.module("ngSanitize",[]).provider("$sanitize",function(){this.$get=["$$sanitizeUri",function(a){return function(e){var d=[];F(e,s(d,function(c,b){return!/^unsafe/.test(a(c,b))}));return d.join("")}}]});h.module("ngSanitize").filter("linky",["$sanitize",function(a){var e=/((ftp|https?):\/\/|(mailto:)?[A-Za-z0-9._%+-]+@)\S*[^\s.;,(){}<>]/,d=/^mailto:/;return function(c,b){function g(a){a&&m.push(E(a))}function f(a,c){m.push("<a ");h.isDefined(b)&&
-(m.push('target="'),m.push(b),m.push('" '));m.push('href="');m.push(a);m.push('">');g(c);m.push("</a>")}if(!c)return c;for(var l,k=c,m=[],n,p;l=k.match(e);)n=l[0],l[2]==l[3]&&(n="mailto:"+n),p=l.index,g(k.substr(0,p)),f(n,l[0].replace(d,"")),k=k.substring(p+l[0].length);g(k);return a(m.join(""))}}])})(window,window.angular);
-//# sourceMappingURL=angular-sanitize.min.js.map
-
 /*! ngStorage 0.3.0 | Copyright (c) 2013 Gias Kay Lee | MIT License */"use strict";!function(){function a(a){return["$rootScope","$window",function(b,c){for(var d,e,f,g=c[a]||(console.warn("This browser does not support Web Storage!"),{}),h={$default:function(a){for(var b in a)angular.isDefined(h[b])||(h[b]=a[b]);return h},$reset:function(a){for(var b in h)"$"===b[0]||delete h[b];return h.$default(a)}},i=0;i<g.length;i++)(f=g.key(i))&&"ngStorage-"===f.slice(0,10)&&(h[f.slice(10)]=angular.fromJson(g.getItem(f)));return d=angular.copy(h),b.$watch(function(){e||(e=setTimeout(function(){if(e=null,!angular.equals(h,d)){angular.forEach(h,function(a,b){angular.isDefined(a)&&"$"!==b[0]&&g.setItem("ngStorage-"+b,angular.toJson(a)),delete d[b]});for(var a in d)g.removeItem("ngStorage-"+a);d=angular.copy(h)}},100))}),"localStorage"===a&&c.addEventListener&&c.addEventListener("storage",function(a){"ngStorage-"===a.key.slice(0,10)&&(a.newValue?h[a.key.slice(10)]=angular.fromJson(a.newValue):delete h[a.key.slice(10)],d=angular.copy(h),b.$apply())}),h}]}angular.module("ngStorage",[]).factory("$localStorage",a("localStorage")).factory("$sessionStorage",a("sessionStorage"))}();
 (function(e){if(typeof define==="function"&&define.amd){define(["jquery"],e)}else{e(jQuery)}})(function(e){function n(e){return u.raw?e:encodeURIComponent(e)}function r(e){return u.raw?e:decodeURIComponent(e)}function i(e){return n(u.json?JSON.stringify(e):String(e))}function s(e){if(e.indexOf('"')===0){e=e.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\")}try{e=decodeURIComponent(e.replace(t," "));return u.json?JSON.parse(e):e}catch(n){}}function o(t,n){var r=u.raw?t:s(t);return e.isFunction(n)?n(r):r}var t=/\+/g;var u=e.cookie=function(t,s,a){if(s!==undefined&&!e.isFunction(s)){a=e.extend({},u.defaults,a);if(typeof a.expires==="number"){var f=a.expires,l=a.expires=new Date;l.setDate(l.getDate()+f)}return document.cookie=[n(t),"=",i(s),a.expires?"; expires="+a.expires.toUTCString():"",a.path?"; path="+a.path:"",a.domain?"; domain="+a.domain:"",a.secure?"; secure":""].join("")}var c=t?undefined:{};var h=document.cookie?document.cookie.split("; "):[];for(var p=0,d=h.length;p<d;p++){var v=h[p].split("=");var m=r(v.shift());var g=v.join("=");if(t&&t===m){c=o(g,s);break}if(!t&&(g=o(g))!==undefined){c[m]=g}}return c};u.defaults={};e.removeCookie=function(t,n){if(e.cookie(t)===undefined){return false}e.cookie(t,"",e.extend({},n,{expires:-1}));return!e.cookie(t)}})
+'use strict';
+ 
+/*
+ * AngularJS Toaster
+ * Version: 0.4.1
+ *
+ * Copyright 2013 Jiri Kavulak.  
+ * All Rights Reserved.  
+ * Use, reproduction, distribution, and modification of this code is subject to the terms and 
+ * conditions of the MIT license, available at http://www.opensource.org/licenses/mit-license.php
+ *
+ * Author: Jiri Kavulak
+ * Related to project of John Papa and Hans Fjällemark
+ */
+ 
+angular.module('toaster', ['ngAnimate'])
+.service('toaster', ['$rootScope', function ($rootScope) {
+    this.pop = function (type, title, body, timeout, bodyOutputType) {
+        this.toast = {
+            type: type,
+            title: title,
+            body: body,
+            timeout: timeout,
+            bodyOutputType: bodyOutputType
+        };
+        $rootScope.$broadcast('toaster-newToast');
+    };
+}])
+.constant('toasterConfig', {
+  				'tap-to-dismiss': true,
+					'newest-on-top': true,
+					//'fade-in': 1000,            // done in css
+					//'on-fade-in': undefined,    // not implemented
+					//'fade-out': 1000,           // done in css
+					// 'on-fade-out': undefined,  // not implemented
+					//'extended-time-out': 1000,    // not implemented
+					'time-out': 5000, // Set timeOut and extendedTimeout to 0 to make it sticky
+					'icon-classes': {
+						error: 'toast-error',
+						info: 'toast-info',
+						success: 'toast-success',
+						warning: 'toast-warning'
+					},
+					'body-output-type': '', // Options: '', 'trustedHtml', 'template'
+					'body-template': 'toasterBodyTmpl.html',
+					'icon-class': 'toast-info',
+					'position-class': 'toast-top-right',
+					'title-class': 'toast-title',
+					'message-class': 'toast-message'
+				})
+.directive('toasterContainer', ['$compile', '$timeout', '$sce', 'toasterConfig', 'toaster',
+function ($compile, $timeout, $sce, toasterConfig, toaster) {
+  return {
+    replace: true,
+    restrict: 'EA',
+    link: function (scope, elm, attrs){
+      
+      var id = 0;
+      
+      var mergedConfig = toasterConfig;
+      if (attrs.toasterOptions) {
+          angular.extend(mergedConfig, scope.$eval(attrs.toasterOptions));
+      }
+      
+      scope.config = {
+          position: mergedConfig['position-class'],
+          title: mergedConfig['title-class'],
+          message: mergedConfig['message-class'],
+          tap: mergedConfig['tap-to-dismiss']
+      };
+      
+      function addToast (toast){
+        toast.type = mergedConfig['icon-classes'][toast.type];
+        if (!toast.type)
+            toast.type = mergedConfig['icon-class'];
+        
+        id++;
+        angular.extend(toast, { id: id });
+
+	// Set the toast.bodyOutputType to the default if it isn't set
+	toast.bodyOutputType = toast.bodyOutputType || mergedConfig['body-output-type']
+        switch(toast.bodyOutputType)
+        {
+          case 'trustedHtml':
+            toast.html = $sce.trustAsHtml(toast.body);
+            break;
+          case 'template':
+            toast.bodyTemplate = mergedConfig['body-template'];
+            break;
+        }
+        
+        var timeout = typeof(toast.timeout) == "number" ? toast.timeout : mergedConfig['time-out'];
+        if (timeout > 0)
+            setTimeout(toast, timeout);
+        
+        if (mergedConfig['newest-on-top'] === true)
+            scope.toasters.unshift(toast);
+        else
+            scope.toasters.push(toast);
+      }
+      
+      function setTimeout(toast, time){
+          toast.timeout= $timeout(function (){ 
+              scope.removeToast(toast.id);
+            }, time);
+      }
+      
+      scope.toasters = [];
+      scope.$on('toaster-newToast', function () {
+        addToast(toaster.toast);
+      });
+    },
+    controller: ['$scope', '$element', '$attrs', function($scope, $element, $attrs) {
+      
+      $scope.stopTimer = function(toast){
+        if(toast.timeout)
+          $timeout.cancel(toast.timeout);
+      };
+      
+      $scope.removeToast = function (id){
+        var i = 0;
+        for (i; i < $scope.toasters.length; i++){
+            if($scope.toasters[i].id === id)
+                break;
+        }
+        $scope.toasters.splice(i, 1);
+      };
+      
+      $scope.remove = function(id){
+        if ($scope.config.tap === true){
+            $scope.removeToast(id);
+        }
+      };
+    }],
+    template:
+    '<div  id="toast-container" ng-class="config.position">' +
+        '<div ng-repeat="toaster in toasters" class="toast" ng-class="toaster.type" ng-click="remove(toaster.id)" ng-mouseover="stopTimer(toaster)">' +
+          '<div ng-class="config.title">{{toaster.title}}</div>' +
+          '<div ng-class="config.message" ng-switch on="toaster.bodyOutputType">' +
+            '<div ng-switch-when="trustedHtml" ng-bind-html="toaster.html"></div>' +
+            '<div ng-switch-when="template"><div ng-include="toaster.bodyTemplate"></div></div>' +
+            '<div ng-switch-default >{{toaster.body}}</div>' +
+          '</div>' +
+        '</div>' +
+    '</div>'
+  };
+}]);

@@ -50,6 +50,7 @@ module.exports = function (grunt) {
                     "manager/components/fullcalendar/fullcalendar.css",
                     "manager/components/jquery.gritter/js/jquery.gritter.css",
                     "manager/components/bootstrap-daterangepicker/daterangepicker-bs3.css",
+                    "manager/components/angular-toaster/toaster.css",
                     "manager/resources/css/all.css"
                 ],
                 dest: "manager/resources/css/<%= pkg.name %>.css"
@@ -61,22 +62,25 @@ module.exports = function (grunt) {
                     "manager/components/script.js",
                     "manager/components/jquery-ui/ui/minified/jquery-ui.min.js",
                     "manager/components/bootstrap/dist/js/bootstrap.min.js",
-                    "manager/components/angular-jquery/dist/angular-jquery.min.js",
-                    "manager/components/jquery-todo/js/paddystodolist.js",
-                    "manager/components/fullcalendar/fullcalendar.min.js",
-                    "manager/components/jquery.gritter/css/jquery.gritter.min.css",
+                    "manager/components/angular-animate/angular-animate.js",
                     "manager/components/angular-route/angular-route.min.js",
                     "manager/components/angular-cookies/angular-cookies.min.js",
                     "manager/components/angular-resource/angular-resource.min.js",
                     "manager/components/angular-sanitize/angular-sanitize.min.js",
+                    "manager/components/angular-jquery/dist/angular-jquery.min.js",
+                    "manager/components/jquery-todo/js/paddystodolist.js",
+                    "manager/components/fullcalendar/fullcalendar.min.js",
+                    "manager/components/jquery.gritter/css/jquery.gritter.min.css",
                     "manager/components/ngstorage/ngStorage.min.js",
-                    "manager/components/jQuery-Cookie/jquery.cookie.min.js"
+                    "manager/components/jQuery-Cookie/jquery.cookie.min.js",
+                    "manager/components/angular-toaster/toaster.js"
                 ],
                 dest: "manager/resources/js/<%= pkg.name %>_components.js"
             },
             js: {
                 src: [
-                    'manager/scripts/**/*.js'
+                    'manager/scripts/**/*.js',
+                    'manager/resources/js/all.js'
                 ],
                 dest: 'manager/resources/js/<%= pkg.name %>.js'
               }
@@ -106,7 +110,7 @@ module.exports = function (grunt) {
                     filter: 'isFile'
                 },
                 {
-                    src: ['manager/components/angular/angular.min.js.map'],
+                    src: ['manager/components/angular/angular.min.js.map', 'manager/components/angular-animate/angular-animate.min.js.map'],
                     dest: 'manager/resources/js/',
                     expand: true,
                     flatten: true,
@@ -162,7 +166,7 @@ module.exports = function (grunt) {
                 tasks: ['concat:css']
             },
             js: {
-                files: ['manager/scripts/**/*.js'],
+                files: ['manager/scripts/**/*.js', 'manager/resources/js/all.js'],
                 tasks: ['jshint', 'concat:js']
             }
         },

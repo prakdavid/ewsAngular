@@ -1,5 +1,5 @@
 /*! ews 2014-02-12 */
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage']);
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster']);
   
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
@@ -36,69 +36,6 @@ app.config(['$httpProvider','$routeProvider',
     }]
 );
 
-var app = angular.module('ews');
-
-app.controller('UserSettingController', function($scope, $routeParams) {
-    console.log($routeParams.id);
-});
-var app = angular.module('ews');
-
-app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
-	$scope.currentUser = $localStorage.session;
-
-	$http({
-		url: 'api/modules/dispatcher.php',
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json' },
-		data: { 'class':   'Account','function':'getUserList'}
-	}).success(function(data, status, headers, config) {
-		$scope.userList = data.users;
-	}) .error(function(data, status, headers, config) {
-		// SessionService.setUserAuthenticated(false);
-	});
-
-	$scope.accountType = ['student','enterprise'];
-	$scope.user = {
-		account_name: $scope.currentUser.accountname,
-		account_mail: $scope.currentUser.accountmail,
-		account_type: $scope.accountType[$scope.currentUser.userrole]
-	};
-
-	// pour instant le password est en clair, je me hacherai plus tard
-	$scope.edit = function(){
-		$scope.data = {
-			'class':   'Account',
-			'function':'edit',
-			'data': {
-				'account_name': $scope.user.account_name,
-				'account_mail': $scope.user.account_mail,
-				'account_type': $scope.user.account_type
-			}
-		};
-		$http({
-			url: 'api/modules/dispatcher.php',
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			data: $scope.data
-		}).success(function(data, status, headers, config) {
-			console.log(data);
-		}) .error(function(data, status, headers, config) {
-			// SessionService.setUserAuthenticated(false);
-		});
-	};
-	$scope.delete = function(){
-		$http({
-			url: 'api/modules/dispatcher.php',
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			data: { 'class':   'Account','function':'delete'}
-		}).success(function(data, status, headers, config) {
-			console.log(data);
-		}) .error(function(data, status, headers, config) {
-			// SessionService.setUserAuthenticated(false);
-		});
-	};
-});
 var app = angular.module('ews');
 
 app.controller('DashboardController', function($scope, $http) {
@@ -158,12 +95,8 @@ app.controller('LoginController', function($scope, $http, $location, $route, $lo
 });
 var app = angular.module('ews');
 
-app.controller('MainCtrl', function($scope, $location, $route, $cookies, $http, $localStorage) {
+app.controller('MainController', function($scope, $location, $route, $cookies, $http, $localStorage) {
 	$scope.isUserLooged = ($cookies.session !== undefined) ? true : false;
-	$scope.currentUser = $localStorage.session;
-	// $cookies.session = "eyJfZnJlc2giOnRydWUsIl9pZCI6eyIgYiI6Ik9EUXlPVFptT1RBd1l6ZzVZV1EzWW1RMk1XSTJORE0xWTJaaU1HRXpNelE9In0sInVzZXJfaWQiOiIxIn0.BdqXJw.DQbGH8tqXBZ2MGbCFAF4_omBMZY";
-	// console.log($cookies.session);
-	// delete $cookies.session;
 
 	// On surveille la route
 	$scope.$on("$routeChangeStart", function(event, next, current) {
@@ -184,25 +117,12 @@ app.controller('MainCtrl', function($scope, $location, $route, $cookies, $http, 
 			headers: { 'Content-Type': 'application/json' },
 			data: { 'class':   'Clouds','function':'cloudaccount'}
 		}).success(function(data, status, headers, config) {
-			console.log(data);
+			$localStorage.cloudaccountsbyname = data.cloudaccountsbyname;
+			$localStorage.cloudaccountsbyid   = data.cloudaccountsbyid;
 		}).error(function(data, status, headers, config) {
 		});
 	};
-	// $scope.getStateVm();
-
-	$scope.logout = function () {
-		console.log("log out");
-		$http({
-			url: 'api/modules/dispatcher.php',
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			data: { 'class':   'Account','function':'logout'}
-		}).success(function(data, status, headers, config) {
-			$location.path('/login');
-			window.location.reload();
-		}).error(function(data, status, headers, config) {
-		});
-	};
+	$scope.getStateVm();
 });
 var app = angular.module('ews');
 
@@ -236,6 +156,71 @@ app.controller('RegisterController', function($scope, $rootScope, $http, $locati
 });
 var app = angular.module('ews');
 
+app.controller('AccountSettingController', function($scope, $http, $location, $localStorage, toaster) {
+	$scope.currentUser = $localStorage.session;
+
+	$http({
+		url: 'api/modules/dispatcher.php',
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		data: { 'class':   'Account','function':'getUserList'}
+	}).success(function(data, status, headers, config) {
+		$scope.userList = data.users;
+	}) .error(function(data, status, headers, config) {
+		// SessionService.setUserAuthenticated(false);
+	});
+
+	$scope.accountType = ['student','enterprise'];
+	$scope.user = {
+		account_name: $scope.currentUser.accountname,
+		account_mail: $scope.currentUser.accountmail,
+		account_type: $scope.accountType[$scope.currentUser.userrole]
+	};
+
+	// pour instant le password est en clair, je me hacherai plus tard
+	$scope.edit = function(){
+		$scope.data = {
+			'class':   'Account',
+			'function':'edit',
+			'data': {
+				'account_name': $scope.user.account_name,
+				'account_mail': $scope.user.account_mail,
+				'account_type': $scope.user.account_type
+			}
+		};
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: $scope.data
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+			toaster.pop('success', "Account Edit", "Sucessed");
+		}) .error(function(data, status, headers, config) {
+			toaster.pop('error', "Account Edit", "Failed");
+		});
+	};
+	$scope.delete = function(){
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Account','function':'delete'}
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+			toaster.pop('success', "Delete Account", "Sucessed");
+		}) .error(function(data, status, headers, config) {
+			toaster.pop('error', "Delete Account", "Failed");
+		});
+	};
+});
+var app = angular.module('ews');
+
+app.controller('UserSettingController', function($scope, $routeParams) {
+    console.log($routeParams.id);
+});
+var app = angular.module('ews');
+
 app.directive('breadcrumbs', function () {
     return {
       restrict: 'E',
@@ -252,6 +237,26 @@ app.directive('breadcrumbs', function () {
 });
 var app = angular.module('ews');
 
+app.controller('SideMenuController', function($scope, $localStorage) {
+    $scope.currentUser         = $localStorage.session;
+    $scope.cloudaccountsbyname = $localStorage.cloudaccountsbyname;
+    $scope.cloudaccountsbyid   = $localStorage.cloudaccountsbyid;
+});
+var app = angular.module('ews');
+
+app.directive('sidemenu', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'scripts/directives/sidemenu/template.html',
+      controller:  'SideMenuController',
+      scope: {
+        title: '@'
+      }
+
+    };
+});
+var app = angular.module('ews');
+
 app.controller('testController', function($scope) {
     console.log("testController");
     console.log($scope);
@@ -264,6 +269,38 @@ app.directive('test', function () {
       restrict: 'E',
       templateUrl: 'scripts/directives/test/template.html',
       controller:  'testController',
+      scope: {
+        title: '@'
+      }
+
+    };
+});
+var app = angular.module('ews');
+
+app.controller('TopMenuController', function($scope, $http,  $location, $localStorage) {
+	$scope.currentUser = $localStorage.session;
+	 
+	$scope.logout = function () {
+		console.log("log out");
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Account','function':'logout'}
+		}).success(function(data, status, headers, config) {
+			$location.path('/login');
+			window.location.reload();
+		}).error(function(data, status, headers, config) {
+		});
+	};
+});
+var app = angular.module('ews');
+
+app.directive('topmenu', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'scripts/directives/topmenu/template.html',
+      controller:  'TopMenuController',
       scope: {
         title: '@'
       }
@@ -303,3 +340,4 @@ app.service('SessionService', function(){
         return session;
     };
 });
+

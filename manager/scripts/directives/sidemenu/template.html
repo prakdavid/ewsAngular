@@ -1,0 +1,57 @@
+<div id="sidebar" class="sidebar">
+	<div class="sidebar-menu nav-collapse">
+		<div class="divide-20"></div>
+		<!-- SEARCH BAR -->
+		<div id="search-bar">
+			<input class="search" type="text" placeholder="Search"><i class="fa fa-search search-icon"></i>
+		</div>
+		<!-- /SEARCH BAR -->
+		
+		<!-- SIDEBAR MENU -->
+		<ul>
+			<li class="active">
+				<a ng-href="#/dashboard">
+				<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
+				</a>
+			</li>
+			<li class="has-sub">
+				<a href="javascript:;" class="">
+				<i class="fa fa-bookmark-o fa-fw"></i> <span class="menu-text">Clouds</span>
+				<span class="arrow"></span>
+				</a>
+				<ul class="sub">
+					<li><a class="" href="#"><span class="sub-menu-text">Cloud Accounts</span></a></li>
+					<li class="has-sub-sub" ng-if="cloudaccountsbyname.AWS">
+						<a class="" href="javascript:;">
+							<span class="sub-menu-text">Amazon Web Services</span>
+							<span class="arrow"></span>
+						</a>
+						<ul class="sub-sub">
+							<li ng-repeat="cloud in cloudaccountsbyname.AWS"><a class="" href="#/clouds/instance/{{cloud.cloudaccountid}}"><span class="sub-sub-menu-text">{{cloud.cloudaccountname}}</span></a></li>
+						</ul>
+					</li>
+					<li class="has-sub-sub" ng-if="cloudaccountsbyname.EWS">
+						<a class="" href="javascript:;">
+							<span class="sub-menu-text">Eucalyptus</span>
+							<span class="arrow"></span>
+						</a>
+						<ul class="sub-sub">
+							<li><a ng-repeat="cloud in cloudaccountsbyname.EWS" class="" href="#/clouds/instance/{{cloud.cloudaccountid}}"><span class="sub-sub-menu-text">{{cloud.cloudaccountname}}</span></a></li>
+						</ul>
+					</li>
+					<li class="has-sub-sub" ng-if="cloudaccountsbyname.OWS">
+						<a class="" href="javascript:;">
+							<span class="sub-menu-text">OWS</span>
+							<span class="arrow"></span>
+						</a>
+						<ul class="sub-sub">
+							<li><a ng-repeat="cloud in cloudaccountsbyname.OWS" class="" href="#/clouds/instance/{{cloud.cloudaccountid}}"><span class="sub-sub-menu-text">{{cloud.cloudaccountname}}</span></a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+		</ul>
+		<!-- /SIDEBAR MENU -->
+	</div>
+</div>
+<!-- /SIDEBAR -->

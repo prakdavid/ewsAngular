@@ -15,6 +15,7 @@
                 </div>
             </div>
             <!-- /PAGE HEADER -->
+            <toaster-container> </toaster-container>
             <!-- CONTENT -->
             <div class="row">
                 <div class="col-md-6">
@@ -66,7 +67,7 @@
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" ng-click="edit()">Edit</button>
+                    <button class="btn btn-primary" data-dismiss="modal" ng-click="edit()">Edit</button>
                   </div>
                 </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->
@@ -83,7 +84,7 @@
                   </div>
                   <div class="modal-footer">
                     <button class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button class="btn btn-danger" ng-click="delete()">Delete</button>
+                    <button class="btn btn-danger" data-dismiss="modal" ng-click="delete()">Delete</button>
                   </div>
                 </div><!-- /.modal-content -->
               </div><!-- /.modal-dialog -->

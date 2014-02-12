@@ -1,6 +1,6 @@
 var app = angular.module('ews');
 
-app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
+app.controller('AccountSettingController', function($scope, $http, $location, $localStorage, toaster) {
 	$scope.currentUser = $localStorage.session;
 
 	$http({
@@ -39,8 +39,9 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 			data: $scope.data
 		}).success(function(data, status, headers, config) {
 			console.log(data);
+			toaster.pop('success', "Account Edit", "Sucessed");
 		}) .error(function(data, status, headers, config) {
-			// SessionService.setUserAuthenticated(false);
+			toaster.pop('error', "Account Edit", "Failed");
 		});
 	};
 	$scope.delete = function(){
@@ -51,8 +52,9 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 			data: { 'class':   'Account','function':'delete'}
 		}).success(function(data, status, headers, config) {
 			console.log(data);
+			toaster.pop('success', "Delete Account", "Sucessed");
 		}) .error(function(data, status, headers, config) {
-			// SessionService.setUserAuthenticated(false);
+			toaster.pop('error', "Delete Account", "Failed");
 		});
 	};
 });

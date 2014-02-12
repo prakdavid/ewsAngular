@@ -1,4 +1,4 @@
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage']);
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster']);
   
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
