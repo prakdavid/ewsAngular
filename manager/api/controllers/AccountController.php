@@ -41,6 +41,36 @@ class Account
 		Session::delete();
 	}
 
+	public function edit($data)
+	{
+		if (empty($data) === false)
+		{
+			$curl = new Curl(URL_API . "account/" . $_SESSION['session']['accountid'] . "/modify", $data);
+			$response = $curl->put();
+			$response = json_decode($response, true);
+			if (!(isset($response['error']) and !empty($response['error'])))
+			{
+				$session['session'] = array(
+					'accountmail' => $_POST['account_mail'],
+					'accountname' => $_POST['account_name'],
+					'accounttype' => $_POST['account_type']
+				);
+				Session::update($session);
+			} else {
+				header("HTTP/1.0 ". $response['error']);
+			}
+		} else {
+			header("HTTP/1.0 400 Bad Request");
+		}
+	}
+
+	public function delete()
+	{
+		// $curl = new Curl(URL_API . 'account/' . $_SESSION['session']['accountid'] . '/delete');
+		// $response = $curl->delete();
+		echo "Must delete account";
+	}
+
 	public function getUserList()
 	{	
 		$curl = new Curl(URL_API . 'account/' . $_SESSION['session']['accountid'] . '/users/list');

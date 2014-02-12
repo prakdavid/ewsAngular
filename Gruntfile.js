@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                     "manager/components/fullcalendar/fullcalendar.css",
                     "manager/components/jquery.gritter/js/jquery.gritter.css",
                     "manager/components/bootstrap-daterangepicker/daterangepicker-bs3.css",
-                    "manager/resources/css/main.css"
+                    "manager/resources/css/all.css"
                 ],
                 dest: "manager/resources/css/<%= pkg.name %>.css"
             },

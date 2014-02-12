@@ -1,4 +1,4 @@
-/*! ews 2014-02-11 */
+/*! ews 2014-02-12 */
 var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage']);
   
 app.config(['$httpProvider','$routeProvider',
@@ -35,7 +35,6 @@ var app = angular.module('ews');
 
 app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
 	$scope.currentUser = $localStorage.session;
-	console.log($scope.currentUser);
 
 	$http({
 		url: 'api/modules/dispatcher.php',
@@ -50,8 +49,8 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 
 	$scope.accountType = ['student','enterprise'];
 	$scope.user = {
-		accountname: $scope.currentUser.accountname,
-		accountmail: $scope.currentUser.accountmail,
+		account_name: $scope.currentUser.accountname,
+		account_mail: $scope.currentUser.accountmail,
 		account_type: $scope.accountType[$scope.currentUser.userrole]
 	};
 
@@ -60,13 +59,34 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 		$scope.data = {
 			'class':   'Account',
 			'function':'edit',
-			'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+			'data': {
+				'account_name': $scope.user.account_name,
+				'account_mail': $scope.user.account_mail,
+				'account_type': $scope.user.account_type
+			}
 		};
-		console.log("edit");
-
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: $scope.data
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+		}) .error(function(data, status, headers, config) {
+			// SessionService.setUserAuthenticated(false);
+		});
 	};
 	$scope.delete = function(){
-		console.log("delete");
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Account','function':'delete'}
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+		}) .error(function(data, status, headers, config) {
+			// SessionService.setUserAuthenticated(false);
+		});
 	};
 });
 var app = angular.module('ews');
@@ -230,8 +250,28 @@ var app = angular.module('ews');
 app.directive('sidemenu', function () {
     return {
         restrict:    'E',
-        templateUrl: 'app/scripts/directives/sidemenu/template.html',
+        templateUrl: 'scripts/directives/sidemenu/template.html',
         controller:  'SideMenuController'
+    };
+});
+var app = angular.module('ews');
+
+app.controller('testController', function($scope) {
+    console.log("testController");
+    console.log($scope);
+     
+});
+var app = angular.module('ews');
+
+app.directive('test', function () {
+    return {
+      restrict: 'E',
+      templateUrl: 'scripts/directives/test/template.html',
+      controller:  'testController',
+      scope: {
+        title: '@'
+      }
+
     };
 });
 var app = angular.module('ews');

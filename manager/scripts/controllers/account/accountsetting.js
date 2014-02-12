@@ -2,7 +2,6 @@ var app = angular.module('ews');
 
 app.controller('AccountSettingController', function($scope, $http, $location, $localStorage) {
 	$scope.currentUser = $localStorage.session;
-	console.log($scope.currentUser);
 
 	$http({
 		url: 'api/modules/dispatcher.php',
@@ -17,8 +16,8 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 
 	$scope.accountType = ['student','enterprise'];
 	$scope.user = {
-		accountname: $scope.currentUser.accountname,
-		accountmail: $scope.currentUser.accountmail,
+		account_name: $scope.currentUser.accountname,
+		account_mail: $scope.currentUser.accountmail,
 		account_type: $scope.accountType[$scope.currentUser.userrole]
 	};
 
@@ -27,12 +26,33 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 		$scope.data = {
 			'class':   'Account',
 			'function':'edit',
-			'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
+			'data': {
+				'account_name': $scope.user.account_name,
+				'account_mail': $scope.user.account_mail,
+				'account_type': $scope.user.account_type
+			}
 		};
-		console.log("edit");
-
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: $scope.data
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+		}) .error(function(data, status, headers, config) {
+			// SessionService.setUserAuthenticated(false);
+		});
 	};
 	$scope.delete = function(){
-		console.log("delete");
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: { 'class':   'Account','function':'delete'}
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+		}) .error(function(data, status, headers, config) {
+			// SessionService.setUserAuthenticated(false);
+		});
 	};
 });
