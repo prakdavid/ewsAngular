@@ -14,6 +14,11 @@ app.config(['$httpProvider','$routeProvider',
                 controller:         'AccountSettingController',
                 requireLogin:       true
             }).
+            when('/account/usersettings/:id', {
+                templateUrl:        '../partials/account/usersettings.html',
+                controller:         'UserSettingController',
+                requireLogin:       true
+            }).
             when('/login', {
                 templateUrl:        '../partials/login.html',
                 controller:         'LoginController',
