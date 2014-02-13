@@ -1,4 +1,4 @@
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster']);
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
   
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
@@ -17,6 +17,11 @@ app.config(['$httpProvider','$routeProvider',
             when('/account/usersettings/:id', {
                 templateUrl:        '../partials/account/usersettings.html',
                 controller:         'UserSettingController',
+                requireLogin:       true
+            }).
+            when('/clouds/instance/:id', {
+                templateUrl:        '../partials/instance.html',
+                controller:         'InstanceController',
                 requireLogin:       true
             }).
             when('/login', {

@@ -67,6 +67,7 @@ module.exports = function (grunt) {
                     "manager/components/angular-cookies/angular-cookies.min.js",
                     "manager/components/angular-resource/angular-resource.min.js",
                     "manager/components/angular-sanitize/angular-sanitize.min.js",
+                    "manager/components/ng-table/ng-table.js",
                     "manager/components/angular-jquery/dist/angular-jquery.min.js",
                     "manager/components/jquery-todo/js/paddystodolist.js",
                     "manager/components/fullcalendar/fullcalendar.min.js",

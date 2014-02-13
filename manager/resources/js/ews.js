@@ -1,5 +1,5 @@
-/*! ews 2014-02-12 */
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster']);
+/*! ews 2014-02-13 */
+var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
   
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
@@ -18,6 +18,11 @@ app.config(['$httpProvider','$routeProvider',
             when('/account/usersettings/:id', {
                 templateUrl:        '../partials/account/usersettings.html',
                 controller:         'UserSettingController',
+                requireLogin:       true
+            }).
+            when('/clouds/instance/:id', {
+                templateUrl:        '../partials/instance.html',
+                controller:         'InstanceController',
                 requireLogin:       true
             }).
             when('/login', {
@@ -63,6 +68,82 @@ app.controller('DashboardController', function($scope, $http) {
     // {
     //     console.log('error');
     // });
+});
+var app = angular.module('ews');
+
+app.controller('InstanceController', function($scope, $routeParams, $http, $location, $localStorage, $filter, ngTableParams) {
+    $scope.currentUser = $localStorage.session;
+    console.log($localStorage.testVMS);
+    console.log("iiciicic");
+
+    $http({
+        url: 'api/modules/dispatcher.php',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        data: { 'class':   'CloudsAjax','function':'instanceByCloudAccountId','data': {'id': $routeParams.id}}
+    }).success(function(data, status, headers, config) {
+        console.log(data);
+        $localStorage.testVMS = data;
+        $scope.cloudaccountname = data.cloudaccountname;
+        $scope.cloudname        = data.cloudname;
+        $scope.fileds           = data.fields;
+        $scope.vms              = data.vms;
+        switch (data.cloudname) {
+            case 'AWS':
+                $scope.title = "Amazon Web Services VM's";
+                $scope.subtitle = "List AWS Vm's for account" + data.cloudaccountname;
+                break;
+            case 'EWS':
+                $scope.title = "Eucalyptus VM's";
+                $scope.subtitle = "List EWS Vm's for account" + data.cloudaccountname;
+                break;
+            case 'OWS':
+                $scope.title = "OWS VM's";
+                $scope.subtitle = "List OWS Vm's for account" + data.cloudaccountname;
+                break;
+        }
+
+    }) .error(function(data, status, headers, config) {
+        // SessionService.setUserAuthenticated(false);
+    });
+
+    var data = [{name: "Moroni", age: 50},
+                {name: "Tiancum", age: 43},
+                {name: "Jacob", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Enos", age: 34},
+                {name: "Tiancum", age: 43},
+                {name: "toto", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Enos", age: 34},
+                {name: "Tiancum", age: 43},
+                {name: "Jacob", age: 27},
+                {name: "lolo", age: 29},
+                {name: "titi", age: 34},
+                {name: "Tiancum", age: 43},
+                {name: "lol", age: 27},
+                {name: "Nephi", age: 29},
+                {name: "Enos", age: 34}];
+
+    $scope.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10,           // count per page
+        sorting: {
+            name: 'asc'     // initial sorting
+        }
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            var filteredData = params.filter() ?
+                                $filter('filter')(data, $scope.searchText) :
+                                data;
+            var orderedData = params.sorting() ?
+                                $filter('orderBy')(filteredData, params.orderBy()) :
+                                data;
+                params.total(orderedData.length); // set total for recalc pagination
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
 });
 var app = angular.module('ews');
 
@@ -216,8 +297,39 @@ app.controller('AccountSettingController', function($scope, $http, $location, $l
 });
 var app = angular.module('ews');
 
-app.controller('UserSettingController', function($scope, $routeParams) {
-    console.log($routeParams.id);
+app.controller('UserSettingController', function($scope, $routeParams, $http, toaster) {
+	console.log($routeParams.id);
+	$scope.profil = {
+		user_name: "toto",
+		last_name: "Last Name",
+		user_password: "test",
+		confrim_password: "",
+		user_mail: "toto@gmail.com",
+	};
+	$scope.edit = function(){
+		$scope.data = {
+			'class':   'Account',
+			'function':'edit',
+			'data': {
+				'user_name':        $scope.profil.user_name,
+				'last_name':        $scope.profil.last_name,
+				'user_mail':        $scope.profil.user_mail,
+				'user_password':    $scope.profil.user_password,
+				'confrim_password': $scope.profil.confrim_password
+			}
+		};
+		$http({
+			url: 'api/modules/dispatcher.php',
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			data: $scope.data
+		}).success(function(data, status, headers, config) {
+			console.log(data);
+			toaster.pop('success', "Edit Profil", "Sucessed");
+		}) .error(function(data, status, headers, config) {
+			toaster.pop('error', "Edit Profil", "Failed");
+		});
+	};
 });
 var app = angular.module('ews');
 
