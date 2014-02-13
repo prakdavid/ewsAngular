@@ -1,31 +1,54 @@
 <!doctype html>
-<html ng-app="ews">
-	<head>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-		<meta charset="utf-8">
-		<title>EWS-Network | Dashboard</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
-		<!-- FONTS -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
-		<!-- EWS CSS -->
-		<link rel="stylesheet" href="resources/css/ews.css">
-		<!-- Components js resources -->
-		<script src="resources/js/ews_components.js"></script>
-		<!-- livereload -->
-		<script src="http://localhost:35729/livereload.js"></script>
-	</head>
-	<body ng-controller="MainController">
-		<topmenu title="coucou" ng-if="isUserLooged"></topmenu>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<title>EWS-Network | Dashboard</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="shortcut icon" type="image/x-icon" href="resources/images/favicon.ico" />
+	<!-- FONTS -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700' rel='stylesheet' type='text/css'>
+	<!-- EWS CSS -->
+	<link rel="stylesheet" href="resources/css/ews.css">
+	<!-- Components js resources -->
+	<script src="resources/js/ews_components.js"></script>
+	<!-- livereload -->
+	<script src="http://localhost:35729/livereload.js"></script>
+</head>
+<body ng-app="ews" class="auth-app wait-auth">
+	<div id="login-page">
+		<div id="loginbox">
+			<div id="login-inner" ng:controller="LoginController">
+				<form ng-submit="login()">
+					<p>
+						<label class="control-label">Username</label>
+						<input type="text" placeholder="Username" ng-model="user_mail" required/>
+					</p>
+					<p>
+						<label class="control-label">Password</label>
+						<input type="password" placeholder="Password" ng-model="user_password" required/><br/>
+					</p>
+					<p>
+						<button type="submit" class="btn btn-primary">Login</button>
+					</p>
+				</form>
+			</div>
+			<div class="clear"></div>
+		</div>
+	</div>
+
+	<div id="content-page" ng-controller="MainController">
+		<topmenu title="coucou"></topmenu>
 		<section id="page">
-			<sidemenu title="coucou" ng-if="isUserLooged"></sidemenu>
+			<sidemenu title="coucou"></sidemenu>
 			<div id="main-content">
 				<div ng-view></div>
 			</div>
 		</section>
-		<!-- EWS JS -->
-		<script src="resources/js/ews.js"></script>
-	</body>
+	</div>
+	<!-- EWS JS -->
+	<script src="resources/js/ews.js"></script>
+</body>
 </html>

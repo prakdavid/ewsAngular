@@ -11,7 +11,6 @@ app.controller('TopMenuController', function($scope, $http,  $location, $localSt
 			headers: { 'Content-Type': 'application/json' },
 			data: { 'class':   'Account','function':'logout'}
 		}).success(function(data, status, headers, config) {
-			$location.path('/login');
 			window.location.reload();
 		}).error(function(data, status, headers, config) {
 		});

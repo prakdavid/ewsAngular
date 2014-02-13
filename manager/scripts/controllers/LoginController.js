@@ -1,6 +1,6 @@
-var app = angular.module('ews');
+var app = angular.module('login',['http-auth-interceptor']);
 
-app.controller('LoginController', function($scope, $http, $location, $route, $localStorage, $cookies) {
+app.controller('LoginController', function($scope, $http, $location, $localStorage, $cookies, authService) {
     // pour instant le password est en clair, je me hacherai plus tard
     $scope.login = function(){
         $scope.data = {
@@ -18,8 +18,8 @@ app.controller('LoginController', function($scope, $http, $location, $route, $lo
         }).success(function(data, status, headers, config)
         {
             $localStorage.session = data.session;
-            $location.path('/dashboard');
-            window.location.reload();
+            authService.loginConfirmed();
+            console.log(data);
         })
         .error(function(data, status, headers, config)
         {

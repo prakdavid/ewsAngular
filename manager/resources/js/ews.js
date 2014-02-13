@@ -1,6 +1,17 @@
 /*! ews 2014-02-13 */
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
-  
+var app = angular.module('ews',
+    [
+        'ngRoute',
+        'ngCookies',
+        'ngStorage',
+        'ngAnimate',
+        'toaster',
+        'ngTable',
+        'http-auth-interceptor',
+        'login',
+        'main'
+    ]);
+
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
         $routeProvider.
@@ -25,11 +36,6 @@ app.config(['$httpProvider','$routeProvider',
                 controller:         'InstanceController',
                 requireLogin:       true
             }).
-            when('/login', {
-                templateUrl:        '../partials/login.html',
-                controller:         'LoginController',
-                requireLogin:       false
-            }).
             when('/register', {
                 templateUrl:        '../partials/register.html',
                 controller:         'RegisterController',
@@ -38,8 +44,38 @@ app.config(['$httpProvider','$routeProvider',
             otherwise({
                 redirectTo:         '/dashboard'
             });
-    }]
-);
+        }]
+        );
+
+app.directive('authApp', function($cookies, authService) {
+    return {
+        restrict: 'C',
+        link: function(scope, elem, attrs) {
+            //once Angular is started, remove class:
+            elem.removeClass('wait-auth');
+            
+            var login = elem.find('#login-page');
+            var main  = elem.find('#content-page');
+            
+            if ($cookies.session !== undefined) {
+                authService.loginConfirmed();
+                login.hide();
+            } else {
+                main.hide();
+            }
+            
+            scope.$on('event:auth-loginRequired', function() {
+                login.slideDown('slow', function() {
+                    main.hide();
+                });
+            });
+            scope.$on('event:auth-loginConfirmed', function() {
+                main.show();
+                login.slideUp();
+            });
+        }
+    };
+});
 
 var app = angular.module('ews');
 
@@ -145,9 +181,9 @@ app.controller('InstanceController', function($scope, $routeParams, $http, $loca
         }
     });
 });
-var app = angular.module('ews');
+var app = angular.module('login',['http-auth-interceptor']);
 
-app.controller('LoginController', function($scope, $http, $location, $route, $localStorage, $cookies) {
+app.controller('LoginController', function($scope, $http, $location, $localStorage, $cookies, authService) {
     // pour instant le password est en clair, je me hacherai plus tard
     $scope.login = function(){
         $scope.data = {
@@ -165,8 +201,8 @@ app.controller('LoginController', function($scope, $http, $location, $route, $lo
         }).success(function(data, status, headers, config)
         {
             $localStorage.session = data.session;
-            $location.path('/dashboard');
-            window.location.reload();
+            authService.loginConfirmed();
+            console.log(data);
         })
         .error(function(data, status, headers, config)
         {
@@ -174,22 +210,11 @@ app.controller('LoginController', function($scope, $http, $location, $route, $lo
         });
     };
 });
-var app = angular.module('ews');
+var app = angular.module('main', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
 
 app.controller('MainController', function($scope, $location, $route, $cookies, $http, $localStorage) {
 	$scope.isUserLooged = ($cookies.session !== undefined) ? true : false;
 
-	// On surveille la route
-	$scope.$on("$routeChangeStart", function(event, next, current) {
-		// Si dans route la variable requireLogin est true, alors on check l'authentication
-		if (next.requireLogin) {
-			// Auth/session check here
-			if ($cookies.session === undefined) {
-				$location.path('/login');
-				event.preventDefault();
-			}
-		}
-	});
 
 	$scope.getStateVm = function() {
 		$http({
@@ -203,7 +228,7 @@ app.controller('MainController', function($scope, $location, $route, $cookies, $
 		}).error(function(data, status, headers, config) {
 		});
 	};
-	$scope.getStateVm();
+	// $scope.getStateVm();
 });
 var app = angular.module('ews');
 
@@ -400,7 +425,6 @@ app.controller('TopMenuController', function($scope, $http,  $location, $localSt
 			headers: { 'Content-Type': 'application/json' },
 			data: { 'class':   'Account','function':'logout'}
 		}).success(function(data, status, headers, config) {
-			$location.path('/login');
 			window.location.reload();
 		}).error(function(data, status, headers, config) {
 		});

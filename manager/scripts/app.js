@@ -1,5 +1,16 @@
-var app = angular.module('ews', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
-  
+var app = angular.module('ews',
+    [
+        'ngRoute',
+        'ngCookies',
+        'ngStorage',
+        'ngAnimate',
+        'toaster',
+        'ngTable',
+        'http-auth-interceptor',
+        'login',
+        'main'
+    ]);
+
 app.config(['$httpProvider','$routeProvider',
     function($httpProvider, $routeProvider) {
         $routeProvider.
@@ -24,11 +35,6 @@ app.config(['$httpProvider','$routeProvider',
                 controller:         'InstanceController',
                 requireLogin:       true
             }).
-            when('/login', {
-                templateUrl:        '../partials/login.html',
-                controller:         'LoginController',
-                requireLogin:       false
-            }).
             when('/register', {
                 templateUrl:        '../partials/register.html',
                 controller:         'RegisterController',
@@ -37,5 +43,35 @@ app.config(['$httpProvider','$routeProvider',
             otherwise({
                 redirectTo:         '/dashboard'
             });
-    }]
-);
+        }]
+        );
+
+app.directive('authApp', function($cookies, authService) {
+    return {
+        restrict: 'C',
+        link: function(scope, elem, attrs) {
+            //once Angular is started, remove class:
+            elem.removeClass('wait-auth');
+            
+            var login = elem.find('#login-page');
+            var main  = elem.find('#content-page');
+            
+            if ($cookies.session !== undefined) {
+                authService.loginConfirmed();
+                login.hide();
+            } else {
+                main.hide();
+            }
+            
+            scope.$on('event:auth-loginRequired', function() {
+                login.slideDown('slow', function() {
+                    main.hide();
+                });
+            });
+            scope.$on('event:auth-loginConfirmed', function() {
+                main.show();
+                login.slideUp();
+            });
+        }
+    };
+});

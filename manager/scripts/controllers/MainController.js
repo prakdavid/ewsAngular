@@ -1,19 +1,8 @@
-var app = angular.module('ews');
+var app = angular.module('main', ['ngRoute', 'ngCookies', 'ngStorage', 'ngAnimate', 'toaster', 'ngTable']);
 
 app.controller('MainController', function($scope, $location, $route, $cookies, $http, $localStorage) {
 	$scope.isUserLooged = ($cookies.session !== undefined) ? true : false;
 
-	// On surveille la route
-	$scope.$on("$routeChangeStart", function(event, next, current) {
-		// Si dans route la variable requireLogin est true, alors on check l'authentication
-		if (next.requireLogin) {
-			// Auth/session check here
-			if ($cookies.session === undefined) {
-				$location.path('/login');
-				event.preventDefault();
-			}
-		}
-	});
 
 	$scope.getStateVm = function() {
 		$http({
@@ -27,5 +16,5 @@ app.controller('MainController', function($scope, $location, $route, $cookies, $
 		}).error(function(data, status, headers, config) {
 		});
 	};
-	$scope.getStateVm();
+	// $scope.getStateVm();
 });
