@@ -8236,7 +8236,7 @@ div[data-role="editor-toolbar"] {
 }
 /* Login Screen */
 .login {
-  background: url("../img/light_noise_diagonal.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: url("../images/light_noise_diagonal.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
   height: 100%;
   min-height: 100%;
 }
@@ -8245,7 +8245,7 @@ div[data-role="editor-toolbar"] {
   text-align: center;
 }
 .login-box {
-  background: url("../img/lockscreen.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
+  background: url("../imagesg/lockscreen.png") repeat scroll 0 0 rgba(0, 0, 0, 0);
   color: #FFFFFF;
   border-radius: 7px 7px 7px 7px;
   margin: 50px auto;

@@ -9,6 +9,7 @@ app.controller('LoginController', function($scope, $http, $location, $localStora
             // 'data':    {'user_mail':'raphael.merrot@gmail.com', 'user_password':'cerise'}
             'data': {'user_mail': $scope.user_mail, 'user_password': $scope.user_password }
         };
+        console.log($scope.data);
 
         $http({
             url: 'api/modules/dispatcher.php',

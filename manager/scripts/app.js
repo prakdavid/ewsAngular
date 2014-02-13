@@ -17,28 +17,23 @@ app.config(['$httpProvider','$routeProvider',
             // Faudrait mettre le cas ou on est pas loggé
             when('/dashboard', {
                 templateUrl:        '../partials/dashboard.html',
-                controller:         'DashboardController',
-                requireLogin:       true
+                controller:         'DashboardController'
             }).
             when('/account/settings', {
                 templateUrl:        '../partials/account/accountsettings.html',
-                controller:         'AccountSettingController',
-                requireLogin:       true
+                controller:         'AccountSettingController'
             }).
             when('/account/usersettings/:id', {
                 templateUrl:        '../partials/account/usersettings.html',
-                controller:         'UserSettingController',
-                requireLogin:       true
+                controller:         'UserSettingController'
             }).
             when('/clouds/instance/:id', {
                 templateUrl:        '../partials/instance.html',
-                controller:         'InstanceController',
-                requireLogin:       true
+                controller:         'InstanceController'
             }).
             when('/register', {
                 templateUrl:        '../partials/register.html',
-                controller:         'RegisterController',
-                requireLogin:       false
+                controller:         'RegisterController'
             }).
             otherwise({
                 redirectTo:         '/dashboard'
