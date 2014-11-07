@@ -1,7 +1,7 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
+var lrSnippet       = require('connect-livereload')({port: LIVERELOAD_PORT});
+var mountFolder     = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
@@ -16,8 +16,8 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'app/resources/js/<%= pkg.name %>.js',
-                dest: 'app/resources/js/<%= pkg.name %>.js'
+                src: 'src/resources/js/<%= pkg.name %>.js',
+                dest: 'src/resources/js/<%= pkg.name %>.js'
             }
         },
         cssmin: {
@@ -28,7 +28,7 @@ module.exports = function (grunt) {
             },
             js: {
                 files: {
-                    "app/resources/css/<%= pkg.name %>.css": ["app/resources/css/*.css"]
+                    "src/resources/css/<%= pkg.name %>.css": ["app/resources/css/*.css"]
                 }
             }
         },
@@ -39,69 +39,69 @@ module.exports = function (grunt) {
             },
             css: {
                 src: [
-                    "app/components/bootstrap/dist/css/bootstrap.min.css",
-                    "app/components/bootstrap/dist/css/bootstrap-responsive.min.css",
-                    "app/components/font-awesome/css/font-awesome.min.css",
-                    "app/components/cloud-admin/cloud-admin.min.css",
-                    "app/components/cloud-admin/themes/default.css",
-                    "app/components/cloud-admin/themes/responsive.min.css",
-                    "app/components/cloud-admin/animatecss/animate.min.css",
-                    "app/components/jquery-todo/css/styles.css",
-                    "app/components/fullcalendar/fullcalendar.css",
-                    "app/components/jquery.gritter/js/jquery.gritter.css",
-                    "app/components/bootstrap-daterangepicker/daterangepicker-bs3.css",
-                    "app/resources/css/main.css"
+                    "src/resources/library/bootstrap/dist/css/bootstrap.min.css",
+                    "src/resources/library/bootstrap/dist/css/bootstrap-responsive.min.css",
+                    "src/resources/library/font-awesome/css/font-awesome.min.css",
+                    "src/resources/library/cloud-admin/cloud-admin.min.css",
+                    "src/resources/library/cloud-admin/themes/default.css",
+                    "src/resources/library/cloud-admin/themes/responsive.min.css",
+                    "src/resources/library/cloud-admin/animatecss/animate.min.css",
+                    "src/resources/library/jquery-todo/css/styles.css",
+                    "src/resources/library/fullcalendar/fullcalendar.css",
+                    "src/resources/library/jquery.gritter/js/jquery.gritter.css",
+                    "src/resources/library/bootstrap-daterangepicker/daterangepicker-bs3.css",
+                    "src/resources/css/main.css"
                 ],
-                dest: "app/resources/css/<%= pkg.name %>.css"
+                dest: "src/resources/css/<%= pkg.name %>.css"
             },
             components: {
                 src: [
-                    "app/components/jquery/jquery.min.js",
-                    "app/components/jquery-ui/ui/minified/jquery-ui.min.js",
-                    "app/components/bootstrap/dist/js/bootstrap.min.js",
-                    "app/components/angular/angular.min.js",
-                    "app/components/angular-jquery/dist/angular-jquery.min.js",
-                    "app/components/jquery-todo/js/paddystodolist.js",
-                    "app/components/fullcalendar/fullcalendar.min.js",
-                    "app/components/jquery.gritter/css/jquery.gritter.min.css",
-                    "app/components/angular-route/angular-route.js"
+                    "src/resources/library/jquery/jquery.min.js",
+                    "src/resources/library/jquery-ui/ui/minified/jquery-ui.min.js",
+                    "src/resources/library/bootstrap/dist/js/bootstrap.min.js",
+                    "src/resources/library/angular/angular.min.js",
+                    "src/resources/library/angular-jquery/dist/angular-jquery.min.js",
+                    "src/resources/library/jquery-todo/js/paddystodolist.js",
+                    "src/resources/library/fullcalendar/fullcalendar.min.js",
+                    "src/resources/library/jquery.gritter/css/jquery.gritter.min.css",
+                    "src/resources/library/angular-route/angular-route.js"
                 ],
-                dest: "app/resources/js/<%= pkg.name %>_components.js"
+                dest: "src/resources/js/<%= pkg.name %>_components.js"
             },
             js: {
                 src: [
-                    'app/scripts/**/*.js'
+                    'src/app/**/*.js'
                 ],
-                dest: 'app/resources/js/<%= pkg.name %>.js'
+                dest: 'src/resources/js/<%= pkg.name %>.js'
               }
         },
         copy: {
             others: {
                 files: [
                 {
-                    src: ['app/components/font-awesome/fonts/*'],
-                    dest: 'app/resources/fonts/',
+                    src: ['src/resources/library/font-awesome/fonts/*'],
+                    dest: 'src/resources/fonts/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/bootstrap/fonts/*'],
-                    dest: 'app/resources/fonts/',
+                    src: ['src/resources/library/bootstrap/fonts/*'],
+                    dest: 'src/resources/fonts/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/jquery.gritter/images/*'],
-                    dest: 'app/resources/images/',
+                    src: ['src/resources/library/jquery.gritter/images/*'],
+                    dest: 'src/resources/images/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
                 },
                 {
-                    src: ['app/components/angular/angular.min.js.map'],
-                    dest: 'app/resources/js/',
+                    src: ['src/resources/library/angular/angular.min.js.map'],
+                    dest: 'src/resources/js/',
                     expand: true,
                     flatten: true,
                     filter: 'isFile'
@@ -125,7 +125,7 @@ module.exports = function (grunt) {
                     undef: false,
                 },
                 files: {
-                  src: ['app/scripts/**/*.js']
+                  src: ['src/app/**/*.js']
                 }
             }
         },
@@ -134,7 +134,7 @@ module.exports = function (grunt) {
                 nospawn: false
             },
             less: {
-                files: ['app/styles/*.less'],
+                files: ['src/resources/css/*.less'],
                 tasks: ['less:server']
             },
             livereload: {
@@ -142,18 +142,18 @@ module.exports = function (grunt) {
                     livereload: LIVERELOAD_PORT
                 },
                 files: [
-                    'app/*.html',
-                    'app/styles/{,*/}*.css',
-                    'app/scripts/{,*/}*.js',
-                    'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+                    'src/*.html',
+                    'src/resources/css/{,*/}*.css',
+                    'src/app/{,*/}*.js',
+                    'src/resources/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
                 ]
             },
             css: {
-                files: ['app/resources/css/*.css'],
+                files: ['src/resources/css/*.css'],
                 tasks: ['concat:css']
             },
             js: {
-                files: ['app/scripts/**/*.js'],
+                files: ['src/app/**/*.js'],
                 tasks: ['jshint', 'concat:js']
             }
         },
@@ -182,10 +182,10 @@ module.exports = function (grunt) {
         less: {
             server: {
                 options: {
-                    paths: ['app/components/bootstrap/less', 'app/styles']
+                    paths: ['src/resources/library/bootstrap/less', 'src/styles']
                 },
                 files: {
-                    'app/resources/css/main.css': 'app/resources/css/main.less'
+                    'src/resources/css/main.css': 'src/resources/css/main.less'
                 }
             }
         }
